@@ -1080,3 +1080,71 @@ add_action('admin_bar_menu', 'vf_remove_post_from_admin_bar', 999);
 function vf_remove_post_from_admin_bar($wp_admin_bar) {
     $wp_admin_bar->remove_node('new-post');
 }
+
+/**
+ * ============================================================
+ * List all child product categories of Clubs & National Teams
+ * ============================================================
+ *
+ * Trigger via: /wp-admin/?vf_list_cats=1
+ * Outputs JSON with term_id, slug, name, parent_id for each child category.
+ */
+add_action( 'admin_init', 'vf_list_child_product_cats' );
+function vf_list_child_product_cats() {
+    if ( empty( $_GET['vf_list_cats'] ) || $_GET['vf_list_cats'] !== '1' ) {
+        return;
+    }
+    if ( ! current_user_can( 'manage_woocommerce' ) ) {
+        wp_die( 'Unauthorized.' );
+    }
+
+    $clubs_parent_id          = 1569;
+    $national_teams_parent_id = 1570;
+
+    $club_children = get_terms( array(
+        'taxonomy'   => 'product_cat',
+        'child_of'   => $clubs_parent_id,
+        'hide_empty' => false,
+        'orderby'    => 'name',
+        'order'      => 'ASC',
+    ) );
+
+    $national_children = get_terms( array(
+        'taxonomy'   => 'product_cat',
+        'child_of'   => $national_teams_parent_id,
+        'hide_empty' => false,
+        'orderby'    => 'name',
+        'order'      => 'ASC',
+    ) );
+
+    $output = array(
+        'clubs'          => array(),
+        'national_teams' => array(),
+    );
+
+    if ( ! is_wp_error( $club_children ) ) {
+        foreach ( $club_children as $term ) {
+            $output['clubs'][] = array(
+                'term_id'   => $term->term_id,
+                'slug'      => $term->slug,
+                'name'      => $term->name,
+                'parent_id' => $term->parent,
+            );
+        }
+    }
+
+    if ( ! is_wp_error( $national_children ) ) {
+        foreach ( $national_children as $term ) {
+            $output['national_teams'][] = array(
+                'term_id'   => $term->term_id,
+                'slug'      => $term->slug,
+                'name'      => $term->name,
+                'parent_id' => $term->parent,
+            );
+        }
+    }
+
+    header( 'Content-Type: application/json; charset=utf-8' );
+    echo json_encode( $output, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE );
+    exit;
+}
