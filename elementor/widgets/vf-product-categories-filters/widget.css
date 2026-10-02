@@ -1,0 +1,709 @@
+/**
+ * VF Product Categories Filters - Widget Styles
+ * Primary colors: #111 (Black) and #fff (White)
+ * Fonts: Staatliches (Titles) and Inter (Body / UI)
+ */
+
+/* ==========================================================================
+   Root Variables & Container (Ông -> Cha)
+   ========================================================================== */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper {
+    --vf-font-title: 'Staatliches', Impact, 'Inter', sans-serif;
+    --vf-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --vf-color-black: #111111;
+    --vf-color-white: #ffffff;
+    --vf-grid-cols: 5;
+    --vf-grid-gap: 24px;
+    --vf-card-radius: 16px;
+    --vf-card-aspect-ratio: 1 / 1;
+    --vf-title-size: 28px;
+    --vf-count-size: 16px;
+
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* ==========================================================================
+   Filter Bar Header (Columns Left: Pills | Right: Sort & Search)
+   ========================================================================== */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    box-sizing: border-box;
+    width: 100%;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-bar-left {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-bar-left {
+        width: 100%;
+    }
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+    margin-left: auto;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-bar-right {
+        width: 100%;
+        margin-left: 0;
+        flex-direction: row;
+        gap: 10px;
+    }
+}
+
+/* ==========================================================================
+   Pill Filter Groups
+   ========================================================================== */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group {
+        overflow-x: auto;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* 1px Gray Divider between Continent & League */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-divider {
+    height: 1px;
+    background-color: #e5e7eb;
+    width: 100%;
+    margin: 18px 0 22px 0;
+    border: none;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-divider {
+        margin: 14px 0 16px 0;
+    }
+}
+
+/* Sub-pills (Leagues row) */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group--sub {
+    margin-bottom: 24px;
+    gap: 12px;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group--sub {
+        margin-bottom: 18px;
+    }
+}
+
+/* ==========================================================================
+   Pill Filter Buttons
+   ========================================================================== */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-btn {
+    font-family: var(--vf-font-title) !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 22px;
+    font-size: 18px;
+    line-height: 1.25;
+    border-radius: 8px;
+    border: 1.5px solid #777 !important;
+    background-color: transparent !important;
+    color: var(--vf-color-black) !important;
+    cursor: pointer;
+    text-decoration: none !important;
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    user-select: none;
+    outline: none;
+    box-shadow: none;
+    box-sizing: border-box;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-btn {
+        padding: 7px 18px;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-btn:hover {
+    background-color: var(--vf-color-black) !important;
+    color: var(--vf-color-white) !important;
+    border-color: var(--vf-color-black) !important;
+    transform: translateY(-1px);
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-btn.is-active {
+    background-color: var(--vf-color-black) !important;
+    color: var(--vf-color-white) !important;
+    border-color: var(--vf-color-black) !important;
+    cursor: default;
+    box-shadow: 0 4px 12px rgba(17, 17, 17, 0.16);
+    transform: none;
+}
+
+/* Secondary League Sub-Pills */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group--sub .vf-filter-btn {
+    padding: 8px 18px 6px;
+    font-size: 17px;
+    border-color: #d1d5db !important;
+    color: #3b424b !important;
+    background-color: #f9fafb !important;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group--sub .vf-filter-btn {
+        padding: 7px 14px 6px;
+        font-size: 16px;
+    }
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group--sub .vf-filter-btn:hover,
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group--sub .vf-filter-btn.is-active {
+    background-color: var(--vf-color-black) !important;
+    color: var(--vf-color-white) !important;
+    border-color: var(--vf-color-black) !important;
+}
+
+/* ==========================================================================
+   Sort Select Dropdown
+   ========================================================================== */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-sort-wrapper,
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-dropdown-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-select {
+    font-family: var(--vf-font-title) !important;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #ffffff;
+    color: var(--vf-color-black);
+    border: 1.5px solid #666;
+    border-radius: 8px;
+    padding: 0 36px 0 18px;
+    height: 42px;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-select {
+        height: 40px;
+        font-size: 15px;
+        padding: 0 32px 0 14px;
+        flex: 1;
+    }
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-select:hover,
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-select:focus {
+    border-color: var(--vf-color-black);
+    box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.12);
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-sort-wrapper::after,
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-dropdown-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4.5px solid transparent;
+    border-right: 4.5px solid transparent;
+    border-top: 5px solid var(--vf-color-black);
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   Search Box
+   ========================================================================== */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-search {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    min-width: 300px;
+    box-sizing: border-box;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-search {
+        min-width: 0;
+        max-width: 100%;
+        flex: 1.5;
+    }
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: var(--vf-color-black) !important;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+    opacity: 0.85;
+    z-index: 2;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-search-input {
+    font-family: var(--vf-font-body) !important;
+    width: 100% !important;
+    height: 42px !important;
+    padding: 0 36px 0 42px !important;
+    border: 1.5px solid #555 !important;
+    border-radius: 8px !important;
+    background-color: #ffffff !important;
+    color: var(--vf-color-black) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 42px !important;
+    outline: none !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    box-sizing: border-box !important;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-search-input {
+        height: 40px !important;
+        font-size: 13.5px !important;
+        line-height: 40px !important;
+        padding-left: 38px !important;
+    }
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-search-input::placeholder {
+    color: #8c8c8c !important;
+    font-weight: 400 !important;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-search-input:focus {
+    border-color: var(--vf-color-black) !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 0 0 3.5px rgba(17, 17, 17, 0.12), 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-search-clear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: #eeeeee;
+    border: none !important;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: #555555;
+    font-size: 11px;
+    line-height: 1;
+    padding: 0;
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-search-clear:hover {
+    background-color: var(--vf-color-black);
+    color: var(--vf-color-white);
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-search-clear.is-visible {
+    display: flex;
+}
+
+/* Result Counter */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-counter {
+    font-family: var(--vf-font-body) !important;
+    font-size: 14px;
+    color: #555555;
+    font-weight: 500;
+    margin-top: 14px;
+    margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   Category Grid Layout
+   ========================================================================== */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-cat-grid {
+    display: grid !important;
+    grid-template-columns: repeat(var(--vf-grid-cols, 5), 1fr) !important;
+    gap: var(--vf-grid-gap, 24px) !important;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 20px;
+    transition: opacity 0.25s ease;
+}
+@media screen and (max-width: 1300px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-cat-grid {
+        grid-template-columns: repeat( 4, 1fr) !important;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-cat-grid {
+        grid-template-columns: repeat(var(--vf-grid-cols-tablet, 3), 1fr) !important;
+        gap: var(--vf-grid-gap-tablet, 16px) !important;
+    }
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-cat-grid {
+        grid-template-columns: repeat(var(--vf-grid-cols-mobile, 2), 1fr) !important;
+        gap: var(--vf-grid-gap-mobile, 14px) !important;
+    }
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-cat-grid.is-loading {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   Category Card Item
+   ========================================================================== */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-cat-card {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    aspect-ratio: var(--vf-card-aspect-ratio, 1 / 1) !important;
+    min-height: var(--vf-card-min-height, auto);
+    border-radius: var(--vf-card-radius, 16px) !important;
+    overflow: hidden !important;
+    text-decoration: none !important;
+    background-color: #1a1a1a !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1) !important;
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.35s ease, opacity 0.3s ease !important;
+    will-change: transform;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-cat-card {
+        border-radius: 12px !important;
+    }
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-cat-card:hover {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24) !important;
+}
+
+/* Card Image Layer */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-image-wrap {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    z-index: 1 !important;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    display: block !important;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    transform-origin: center center !important;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-cat-card:hover .vf-card-image {
+    transform: scale(1.08) !important;
+}
+
+/* Placeholder pattern */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-image-wrap--placeholder {
+    background: radial-gradient(circle at 50% 40%, #2a2a2a 0%, #111111 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-placeholder-icon {
+    width: 44px;
+    height: 44px;
+    opacity: 0.18;
+    fill: #ffffff;
+}
+
+/* Gradient Overlay */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-overlay {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.02) 0%,
+        rgba(0, 0, 0, 0.3) 42%,
+        rgba(0, 0, 0, 0.78) 75%,
+        rgba(0, 0, 0, 0.94) 100%
+    ) !important;
+    z-index: 2 !important;
+    transition: background 0.35s ease !important;
+    pointer-events: none !important;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-cat-card:hover .vf-card-overlay {
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.1) 0%,
+        rgba(0, 0, 0, 0.42) 42%,
+        rgba(0, 0, 0, 0.85) 75%,
+        rgba(0, 0, 0, 0.98) 100%
+    ) !important;
+}
+
+/* Card Content / Typography */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-content {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    padding: 20px 12px !important;
+    text-align: center !important;
+    z-index: 3 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    box-sizing: border-box !important;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-content {
+        padding: 12px 8px !important;
+    }
+}
+
+/* Team Name / Category Title */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-title {
+    font-family: var(--vf-font-title) !important;
+    font-size: var(--vf-title-size, 24px) !important;
+    font-weight: 400 !important;
+    line-height: 1.15 !important;
+    letter-spacing: 0.8px !important;
+    text-transform: uppercase !important;
+    color: #ffffff !important;
+    margin: 0 0 5px 0 !important;
+    padding: 0 !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7) !important;
+    transition: color 0.25s ease !important;
+    word-break: break-word !important;
+}
+@media screen and (max-width: 1024px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-title {
+        font-size: 20px !important;
+    }
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-title {
+        font-size: 17px !important;
+        letter-spacing: 0.5px !important;
+        margin-bottom: 2px !important;
+    }
+}
+
+/* Product Count */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-count {
+    font-family: var(--vf-font-body) !important;
+    font-size: var(--vf-count-size, 16px) !important;
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+    color: rgba(255, 255, 255, 0.88) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-count {
+        font-size: 13px !important;
+    }
+}
+
+/* ==========================================================================
+   Pagination Navigation (Bottom)
+   ========================================================================== */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 50px;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-page-btn {
+    font-family: var(--vf-font-title) !important;
+    font-size: 18px !important;
+    line-height: 1;
+    min-width: 46px;
+    height: 42px;
+    padding: 0 14px;
+    border-radius: 4px !important;
+    border: 1.5px solid #999 !important;
+    background-color: transparent !important;
+    color: var(--vf-color-black) !important;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-page-btn:hover {
+    background-color: var(--vf-color-black) !important;
+    color: var(--vf-color-white) !important;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-page-btn.is-active {
+    background-color: var(--vf-color-black) !important;
+    color: var(--vf-color-white) !important;
+    cursor: default;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-page-dots {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    font-size: 18px;
+    color: #666666;
+}
+
+/* ==========================================================================
+   Filtered States & Animations
+   ========================================================================== */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-cat-card.is-hidden {
+    display: none !important;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-cat-card.is-fading-in {
+    animation: vfCardFadeIn 0.35s ease forwards;
+}
+
+@keyframes vfCardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Empty State */
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-empty-state {
+    grid-column: 1 / -1 !important;
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #fafafa;
+    border: 1.5px dashed #d1d5db;
+    border-radius: 16px;
+    margin: 20px 0;
+    box-sizing: border-box;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-empty-state.is-visible {
+    display: block;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-empty-icon {
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 14px auto;
+    stroke: #888888;
+    stroke-width: 1.5;
+    fill: none;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-empty-title {
+    font-family: var(--vf-font-title) !important;
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    color: var(--vf-color-black) !important;
+    margin: 0 0 8px 0 !important;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-empty-text {
+    font-family: var(--vf-font-body) !important;
+    font-size: 14px !important;
+    color: #666666 !important;
+    margin: 0 0 20px 0 !important;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-empty-reset-btn {
+    font-family: var(--vf-font-body) !important;
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 24px;
+    background-color: var(--vf-color-black) !important;
+    color: var(--vf-color-white) !important;
+    border: 1.5px solid var(--vf-color-black) !important;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-empty-reset-btn:hover {
+    background-color: #333333 !important;
+    border-color: #333333 !important;
+    transform: translateY(-1px);
+}
