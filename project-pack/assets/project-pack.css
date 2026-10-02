@@ -1,0 +1,90 @@
+body.single-product form.cart table.variations td.label, .single-product form.cart table.variations th.label {
+    width: auto;
+    display: table-cell;
+    font-weight: bold;
+}
+.single-product form.cart table.variations td.label, .single-product form.cart table.variations td.value select {
+    color: #111;
+    border-color: #333;
+}
+
+body.woocommerce-cart .actions{
+    margin-top: 12px;
+}
+body.woocommerce-cart .product-quantity select,
+body.woocommerce-cart .product-price .quantity-select select,
+body.woocommerce-wishlist .xstore-wishlist-apply-actions select{
+    border-color: #111;
+    color: #111;
+}
+body.woocommerce-checkout .payment_box{
+    padding-left: 0;
+}
+body.woocommerce-edit-account .show-password-input{
+    display: none;
+}
+body.user-registration-page .ur-frontend-form .user-registration-form__input{
+    margin-top: -2px;
+}
+body.user-registration-page .ur-reset-password-btn{
+    margin-top: 12px;
+}
+body.user-registration-page .ur-frontend-form .ur-button-container .button.ur-submit-button{
+    border: 1px solid var(--et_btn-dark-br-color);
+    color: var(--et_btn-dark-color);
+    line-height: 125%;
+    padding: 12px 25px;
+    font-size: 16px;
+    min-height: 46px;
+}
+body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid>div .user-registration-Button,
+body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid>div .user-registration-Buttonn,
+body.user-registration-page .ur-frontend-form.login .ur-reset-password-btn{
+    background: var(--et_btn-dark-bg-color);
+    border: 1px solid var(--et_btn-dark-br-color);
+    color: var(--et_btn-dark-color);
+    min-height: 46px;
+    line-height: 125%;
+    padding: 12px 25px;
+    font-size: 16px;
+}
+body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid>div .user-registration-Button:hover,
+body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid>div .user-registration-Buttonn:hover,
+body.user-registration-page .ur-frontend-form.login .ur-reset-password-btn:hover{
+    background: var(--et_btn-dark-color);
+    color: var(--et_btn-dark-bg-color);
+}
+@media screen and (max-width: 767.98px) {
+    body.single-product .product_title{
+        font-size: 48px;
+    }
+}
+
+@media screen and (max-width: 640.98px) {
+    body.single-product .product_title{
+        font-size: 36px;
+    }
+     body.single-product .custom-acf-rating{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    body.single-product .custom-acf-rating .rating-count{
+        margin-left: 0;
+    }
+    body.single-product p.price{
+        font-size: 28px;
+    }
+    body.single-product table.variations select{
+        width: 100%;
+    }
+    body.single-product #jp-relatedposts .jp-relatedposts-items-visual{
+        margin-right: 0;
+    }
+    body.single-product .related-products-wrapper{
+        margin-top: 20px;
+    }
+    body.woocommerce-cart .cart_totals h2{
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+    }
+}
