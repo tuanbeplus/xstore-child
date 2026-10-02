@@ -1083,68 +1083,339 @@ function vf_remove_post_from_admin_bar($wp_admin_bar) {
 
 /**
  * ============================================================
- * List all child product categories of Clubs & National Teams
+ * Bulk Update ACF Data for Product Categories (Clubs & National Teams)
  * ============================================================
  *
- * Trigger via: /wp-admin/?vf_list_cats=1
- * Outputs JSON with term_id, slug, name, parent_id for each child category.
+ * Trigger:
+ *   /wp-admin/?vf_update_acf_cats=1            → Execute update
+ *   /wp-admin/?vf_update_acf_cats=1&dry_run=1  → Preview only (no writes)
+ *
+ * ACF fields updated:
+ *   - prod_cat_continent  (europe|south_america|north_america|asia|africa|oceania)
+ *   - prod_cat_league     (premier_league|la_liga|serie_a|bundesliga|ligue_1|
+ *                          primeira_liga|eredivisie|scottish_premiership|
+ *                          brasileirao_serie_a|argentina_primera_division|
+ *                          liga_mx|chile_primera_division|paraguay_primera_division)
+ *
+ * Remove this function after use.
  */
-add_action( 'admin_init', 'vf_list_child_product_cats' );
-function vf_list_child_product_cats() {
-    if ( empty( $_GET['vf_list_cats'] ) || $_GET['vf_list_cats'] !== '1' ) {
+add_action( 'admin_init', 'vf_bulk_update_acf_product_cats' );
+function vf_bulk_update_acf_product_cats() {
+    if ( empty( $_GET['vf_update_acf_cats'] ) || $_GET['vf_update_acf_cats'] !== '1' ) {
         return;
     }
     if ( ! current_user_can( 'manage_woocommerce' ) ) {
         wp_die( 'Unauthorized.' );
     }
+    if ( ! function_exists( 'update_field' ) ) {
+        wp_die( 'ACF plugin is not active.' );
+    }
 
-    $clubs_parent_id          = 1569;
-    $national_teams_parent_id = 1570;
+    $dry_run = ! empty( $_GET['dry_run'] );
 
-    $club_children = get_terms( array(
-        'taxonomy'   => 'product_cat',
-        'child_of'   => $clubs_parent_id,
-        'hide_empty' => false,
-        'orderby'    => 'name',
-        'order'      => 'ASC',
-    ) );
+    // ── Club mapping: term_id => [ continent, league ] ───────
+    // League = '' when no matching ACF league choice exists.
+    $club_map = array(
+        // Premier League — England
+        1503 => array( 'europe', 'premier_league' ),   // Arsenal
+        1505 => array( 'europe', 'premier_league' ),   // Aston Villa
+        1879 => array( 'europe', 'premier_league' ),   // Blackburn
+        1515 => array( 'europe', 'premier_league' ),   // Chelsea
+        1521 => array( 'europe', 'premier_league' ),   // Everton
+        1532 => array( 'europe', 'premier_league' ),   // Leeds United
+        1848 => array( 'europe', 'premier_league' ),   // Leicester City
+        1533 => array( 'europe', 'premier_league' ),   // Liverpool
+        1535 => array( 'europe', 'premier_league' ),   // Man City
+        1536 => array( 'europe', 'premier_league' ),   // Man United
+        1542 => array( 'europe', 'premier_league' ),   // Newcastle
+        1545 => array( 'europe', 'premier_league' ),   // Nottingham
+        1557 => array( 'europe', 'premier_league' ),   // Tottenham
+        1560 => array( 'europe', 'premier_league' ),   // West Ham United
 
-    $national_children = get_terms( array(
-        'taxonomy'   => 'product_cat',
-        'child_of'   => $national_teams_parent_id,
-        'hide_empty' => false,
-        'orderby'    => 'name',
-        'order'      => 'ASC',
-    ) );
+        // La Liga — Spain
+        1506 => array( 'europe', 'la_liga' ),          // Athletic Bilbao
+        1507 => array( 'europe', 'la_liga' ),          // Atletico Madrid
+        1864 => array( 'europe', 'la_liga' ),          // Atlético Osasuna
+        1508 => array( 'europe', 'la_liga' ),          // Barcelona
+        1902 => array( 'europe', 'la_liga' ),          // Cádiz CF
+        1872 => array( 'europe', 'la_liga' ),          // Celta Vigo
+        1890 => array( 'europe', 'la_liga' ),          // Córdoba CF
+        1888 => array( 'europe', 'la_liga' ),          // Deportivo de La Coruña
+        1877 => array( 'europe', 'la_liga' ),          // Espanyol
+        1884 => array( 'europe', 'la_liga' ),          // Malaga
+        1895 => array( 'europe', 'la_liga' ),          // Rayo Vallecano de Madrid
+        1817 => array( 'europe', 'la_liga' ),          // Real Betis
+        1551 => array( 'europe', 'la_liga' ),          // Real Madrid
+        1886 => array( 'europe', 'la_liga' ),          // Real Oviedo
+        1896 => array( 'europe', 'la_liga' ),          // Real Sociedad
+        1897 => array( 'europe', 'la_liga' ),          // Real Valladolid
+        1871 => array( 'europe', 'la_liga' ),          // Real Zaragoza
+        1894 => array( 'europe', 'la_liga' ),          // Sevilla
+        1889 => array( 'europe', 'la_liga' ),          // Sporting de Gijon
+        1901 => array( 'europe', 'la_liga' ),          // Valencia
+        1876 => array( 'europe', 'la_liga' ),          // Villarreal
 
-    $output = array(
-        'clubs'          => array(),
-        'national_teams' => array(),
+        // Serie A — Italy
+        1500 => array( 'europe', 'serie_a' ),          // AC Milan
+        1504 => array( 'europe', 'serie_a' ),          // AS Roma
+        1522 => array( 'europe', 'serie_a' ),          // Florence (Fiorentina)
+        1525 => array( 'europe', 'serie_a' ),          // Inter Milan
+        1530 => array( 'europe', 'serie_a' ),          // Juventus
+        1531 => array( 'europe', 'serie_a' ),          // Lazio
+        1540 => array( 'europe', 'serie_a' ),          // Napoli
+        1546 => array( 'europe', 'serie_a' ),          // Parma
+        1905 => array( 'europe', 'serie_a' ),          // Perugia
+        1552 => array( 'europe', 'serie_a' ),          // Sampdoria
+
+        // Bundesliga — Germany
+        1509 => array( 'europe', 'bundesliga' ),       // Bayern
+        1818 => array( 'europe', 'bundesliga' ),       // Borussia Dortmund
+        1519 => array( 'europe', 'bundesliga' ),       // Dortmund
+        1904 => array( 'europe', 'bundesliga' ),       // Schalke
+        1898 => array( 'europe', 'bundesliga' ),       // SV Werder Bremen
+
+        // Ligue 1 — France
+        1534 => array( 'europe', 'ligue_1' ),          // Lyon
+        1537 => array( 'europe', 'ligue_1' ),          // Marseille
+        1549 => array( 'europe', 'ligue_1' ),          // PSG
+
+        // Primeira Liga — Portugal
+        1511 => array( 'europe', 'primeira_liga' ),    // Benfica
+        1547 => array( 'europe', 'primeira_liga' ),    // Porto
+        1865 => array( 'europe', 'primeira_liga' ),    // Sporting Lisbon
+
+        // Eredivisie — Netherlands
+        1501 => array( 'europe', 'eredivisie' ),       // Ajax
+        1900 => array( 'europe', 'eredivisie' ),       // PSV Eindhoven
+
+        // Scottish Premiership — Scotland
+        1514 => array( 'europe', 'scottish_premiership' ), // Celtic
+        1550 => array( 'europe', 'scottish_premiership' ), // Rangers
+
+        // Brasileirão Série A — Brazil
+        1875 => array( 'south_america', 'brasileirao_serie_a' ), // Athletico Paranaense
+        1845 => array( 'south_america', 'brasileirao_serie_a' ), // Atlético Mineiro
+        1869 => array( 'south_america', 'brasileirao_serie_a' ), // Bahia
+        1854 => array( 'south_america', 'brasileirao_serie_a' ), // Botafogo
+        1853 => array( 'south_america', 'brasileirao_serie_a' ), // Corinthians
+        1855 => array( 'south_america', 'brasileirao_serie_a' ), // Cruzeiro
+        1844 => array( 'south_america', 'brasileirao_serie_a' ), // Flamengo
+        1816 => array( 'south_america', 'brasileirao_serie_a' ), // Fluminense
+        1861 => array( 'south_america', 'brasileirao_serie_a' ), // Gremio
+        1849 => array( 'south_america', 'brasileirao_serie_a' ), // Palmeiras
+        1847 => array( 'south_america', 'brasileirao_serie_a' ), // Santos
+        1867 => array( 'south_america', 'brasileirao_serie_a' ), // Sao Paulo
+        1857 => array( 'south_america', 'brasileirao_serie_a' ), // Vasco da Gama
+        1882 => array( 'south_america', 'brasileirao_serie_a' ), // Vitória
+
+        // Argentina Primera División
+        1512 => array( 'south_america', 'argentina_primera_division' ), // Boca Juniors
+        1866 => array( 'south_america', 'argentina_primera_division' ), // River Plate
+
+        // Liga MX — Mexico
+        1892 => array( 'north_america', 'liga_mx' ),   // América
+        1868 => array( 'north_america', 'liga_mx' ),   // Chivas Guadalajara
+
+        // Chile Primera División
+        1846 => array( 'south_america', 'chile_primera_division' ),    // Colo Colo
+        1870 => array( 'south_america', 'chile_primera_division' ),    // Deportivo Universidad Católica
+        1887 => array( 'south_america', 'chile_primera_division' ),    // University of Chile
+
+        // Paraguay Primera División
+        1863 => array( 'south_america', 'paraguay_primera_division' ), // Cerro Porteño
+
+        // Clubs with continent only (no matching league in ACF choices)
+        1903 => array( 'europe', '' ),                 // Galatasaray (Turkey)
+        1881 => array( 'europe', '' ),                 // Red Star Belgrade (Serbia)
+        1860 => array( 'north_america', '' ),           // Inter Miami (MLS)
+        1856 => array( 'north_america', '' ),           // LA Galaxy (MLS)
     );
 
-    if ( ! is_wp_error( $club_children ) ) {
-        foreach ( $club_children as $term ) {
-            $output['clubs'][] = array(
-                'term_id'   => $term->term_id,
-                'slug'      => $term->slug,
-                'name'      => $term->name,
-                'parent_id' => $term->parent,
-            );
+    // ── National Team mapping: term_id => continent ──────────
+    $national_map = array(
+        // Europe
+        1510 => 'europe',    // Belgium
+        1517 => 'europe',    // Croatia
+        1518 => 'europe',    // Denmark
+        1520 => 'europe',    // England
+        1878 => 'europe',    // Finland
+        1523 => 'europe',    // France
+        1524 => 'europe',    // Germany
+        1862 => 'europe',    // Hungary
+        1526 => 'europe',    // Ireland
+        1527 => 'europe',    // Italy
+        1541 => 'europe',    // Netherlands
+        1544 => 'europe',    // Northern Ireland
+        1851 => 'europe',    // Norway
+        1548 => 'europe',    // Portugal
+        1553 => 'europe',    // Scotland
+        1893 => 'europe',    // Serbia
+        1554 => 'europe',    // Soviet Union
+        1555 => 'europe',    // Spain
+        1556 => 'europe',    // Sweden
+        1559 => 'europe',    // Wales
+        1561 => 'europe',    // Yugoslavia
+        // South America
+        1502 => 'south_america', // Argentina
+        1513 => 'south_america', // Brazil
+        1850 => 'south_america', // Chile
+        1516 => 'south_america', // Colombia
+        1899 => 'south_america', // Venezuela
+        // North / Central America
+        1528 => 'north_america', // Jamaica
+        1538 => 'north_america', // Mexico
+        1885 => 'north_america', // Panama
+        1558 => 'north_america', // United States
+        // Asia
+        1529 => 'asia',          // Japan
+        1873 => 'asia',          // Korea
+        // Africa
+        1539 => 'africa',        // Morocco
+        1543 => 'africa',        // Nigeria
+        1852 => 'africa',        // Senegal
+    );
+
+    // ── Execute updates ──────────────────────────────────────
+    $results = array(
+        'updated' => array(),
+        'skipped' => array(),
+    );
+
+    // Process clubs
+    foreach ( $club_map as $term_id => $data ) {
+        $term = get_term( $term_id, 'product_cat' );
+        if ( ! $term || is_wp_error( $term ) ) {
+            continue;
+        }
+
+        $continent = $data[0];
+        $league    = $data[1];
+        $term_key  = 'product_cat_' . $term_id;
+
+        if ( ! $dry_run ) {
+            update_field( 'prod_cat_continent', $continent, $term_key );
+            if ( $league ) {
+                update_field( 'prod_cat_league', $league, $term_key );
+            } else {
+                update_field( 'prod_cat_league', '', $term_key );
+            }
+        }
+
+        $results['updated'][] = array(
+            'id'        => $term_id,
+            'name'      => $term->name,
+            'type'      => 'club',
+            'continent' => $continent,
+            'league'    => $league ?: '—',
+        );
+    }
+
+    // Process national teams
+    foreach ( $national_map as $term_id => $continent ) {
+        $term = get_term( $term_id, 'product_cat' );
+        if ( ! $term || is_wp_error( $term ) ) {
+            continue;
+        }
+
+        $term_key = 'product_cat_' . $term_id;
+
+        if ( ! $dry_run ) {
+            update_field( 'prod_cat_continent', $continent, $term_key );
+            update_field( 'prod_cat_league', '', $term_key );
+        }
+
+        $results['updated'][] = array(
+            'id'        => $term_id,
+            'name'      => $term->name,
+            'type'      => 'national',
+            'continent' => $continent,
+            'league'    => '—',
+        );
+    }
+
+    // Find unmapped clubs (not in $club_map)
+    $all_club_children = get_terms( array(
+        'taxonomy'   => 'product_cat',
+        'child_of'   => 1569,
+        'hide_empty' => false,
+    ) );
+    if ( ! is_wp_error( $all_club_children ) ) {
+        foreach ( $all_club_children as $term ) {
+            if ( ! isset( $club_map[ $term->term_id ] ) ) {
+                $results['skipped'][] = array(
+                    'id'   => $term->term_id,
+                    'slug' => $term->slug,
+                    'name' => $term->name,
+                    'type' => 'club',
+                );
+            }
         }
     }
 
-    if ( ! is_wp_error( $national_children ) ) {
-        foreach ( $national_children as $term ) {
-            $output['national_teams'][] = array(
-                'term_id'   => $term->term_id,
-                'slug'      => $term->slug,
-                'name'      => $term->name,
-                'parent_id' => $term->parent,
-            );
+    // Find unmapped national teams
+    $all_national_children = get_terms( array(
+        'taxonomy'   => 'product_cat',
+        'child_of'   => 1570,
+        'hide_empty' => false,
+    ) );
+    if ( ! is_wp_error( $all_national_children ) ) {
+        foreach ( $all_national_children as $term ) {
+            if ( ! isset( $national_map[ $term->term_id ] ) ) {
+                $results['skipped'][] = array(
+                    'id'   => $term->term_id,
+                    'slug' => $term->slug,
+                    'name' => $term->name,
+                    'type' => 'national',
+                );
+            }
         }
     }
 
-    header( 'Content-Type: application/json; charset=utf-8' );
-    echo json_encode( $output, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE );
+    // ── Output report ────────────────────────────────────────
+    header( 'Content-Type: text/html; charset=utf-8' );
+    echo '<div style="font-family:monospace;max-width:960px;margin:40px auto;padding:20px;">';
+    echo '<h1>🏟️ VF — Bulk ACF Category Update</h1>';
+    if ( $dry_run ) {
+        echo '<p style="color:#e67e22;font-weight:bold;font-size:16px;">⚠️ DRY RUN — No data was written.</p>';
+    } else {
+        echo '<p style="color:#27ae60;font-weight:bold;font-size:16px;">✅ Data has been written to the database.</p>';
+    }
+
+    // Updated table
+    echo '<h2 style="color:#27ae60;">Updated (' . count( $results['updated'] ) . ')</h2>';
+    if ( ! empty( $results['updated'] ) ) {
+        echo '<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:13px;">';
+        echo '<tr style="background:#222;color:#fff;"><th>ID</th><th>Name</th><th>Type</th><th>Continent</th><th>League</th></tr>';
+        foreach ( $results['updated'] as $r ) {
+            echo '<tr>';
+            echo '<td>' . esc_html( $r['id'] ) . '</td>';
+            echo '<td>' . esc_html( $r['name'] ) . '</td>';
+            echo '<td>' . esc_html( $r['type'] ) . '</td>';
+            echo '<td>' . esc_html( $r['continent'] ) . '</td>';
+            echo '<td>' . esc_html( $r['league'] ) . '</td>';
+            echo '</tr>';
+        }
+        echo '</table>';
+    }
+
+    // Skipped table
+    if ( ! empty( $results['skipped'] ) ) {
+        echo '<h2 style="color:#e74c3c;">⚠️ Skipped / Unmapped (' . count( $results['skipped'] ) . ')</h2>';
+        echo '<p>These categories have no mapping. Add their term_id to the arrays above if needed.</p>';
+        echo '<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:13px;">';
+        echo '<tr style="background:#c0392b;color:#fff;"><th>ID</th><th>Slug</th><th>Name</th><th>Type</th></tr>';
+        foreach ( $results['skipped'] as $r ) {
+            echo '<tr>';
+            echo '<td>' . esc_html( $r['id'] ) . '</td>';
+            echo '<td>' . esc_html( $r['slug'] ) . '</td>';
+            echo '<td>' . esc_html( $r['name'] ) . '</td>';
+            echo '<td>' . esc_html( $r['type'] ) . '</td>';
+            echo '</tr>';
+        }
+        echo '</table>';
+    }
+
+    echo '<hr><p style="color:#888;">Generated at: ' . current_time( 'Y-m-d H:i:s' ) . '</p>';
+    echo '</div>';
     exit;
 }

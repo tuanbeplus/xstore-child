@@ -1,0 +1,756 @@
+{
+    "clubs": [
+        {
+            "term_id": 1500,
+            "slug": "ac-milan",
+            "name": "AC Milan",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1501,
+            "slug": "ajax",
+            "name": "Ajax",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1892,
+            "slug": "america",
+            "name": "América",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1858,
+            "slug": "aniquiladores-fc",
+            "name": "Aniquiladores FC",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1503,
+            "slug": "arsenal",
+            "name": "Arsenal",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1504,
+            "slug": "as-roma",
+            "name": "AS Roma",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1505,
+            "slug": "aston-villa",
+            "name": "Aston Villa",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1506,
+            "slug": "athletic-bilbao",
+            "name": "Athletic Bilbao",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1875,
+            "slug": "athletico-paranaense",
+            "name": "Athletico Paranaense",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1507,
+            "slug": "atletico-madrid",
+            "name": "Atletico Madrid",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1845,
+            "slug": "atletico-mineiro",
+            "name": "Atlético Mineiro",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1864,
+            "slug": "atletico-osasuna",
+            "name": "Atlético Osasuna",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1869,
+            "slug": "bahia",
+            "name": "Bahia",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1508,
+            "slug": "barcelona",
+            "name": "Barcelona",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1509,
+            "slug": "bayern",
+            "name": "Bayern",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1511,
+            "slug": "benfica",
+            "name": "Benfica",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1879,
+            "slug": "blackburn",
+            "name": "Blackburn",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1512,
+            "slug": "boca-juniors",
+            "name": "Boca Juniors",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1818,
+            "slug": "borussia-dortmund",
+            "name": "Borussia Dortmund",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1854,
+            "slug": "botafogo",
+            "name": "Botafogo",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1902,
+            "slug": "cadiz-cf",
+            "name": "Cádiz CF",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1872,
+            "slug": "celta-vigo",
+            "name": "Celta Vigo",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1514,
+            "slug": "celtic",
+            "name": "Celtic",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1863,
+            "slug": "cerro-porteno",
+            "name": "Cerro Porteño",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1515,
+            "slug": "chelsea",
+            "name": "Chelsea",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1868,
+            "slug": "chivas-guadalajara",
+            "name": "Chivas Guadalajara",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1846,
+            "slug": "colo-colo",
+            "name": "Colo Colo",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1890,
+            "slug": "cordoba-cf",
+            "name": "Córdoba CF",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1853,
+            "slug": "corinthians",
+            "name": "Corinthians",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1855,
+            "slug": "cruzeiro",
+            "name": "Cruzeiro",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1888,
+            "slug": "deportivo-de-la-coruna",
+            "name": "Deportivo de La Coruña",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1870,
+            "slug": "deportivo-universidad-catolica",
+            "name": "Deportivo Universidad Católica",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1519,
+            "slug": "dortmund",
+            "name": "Dortmund",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1859,
+            "slug": "el-barrio",
+            "name": "El Barrio",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1877,
+            "slug": "espanyol",
+            "name": "Espanyol",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1521,
+            "slug": "everton",
+            "name": "Everton",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1844,
+            "slug": "flamengo",
+            "name": "Flamengo",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1522,
+            "slug": "florence",
+            "name": "Florence",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1816,
+            "slug": "fluminense",
+            "name": "Fluminense",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1903,
+            "slug": "galatasaray",
+            "name": "Galatasaray",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1861,
+            "slug": "gremio",
+            "name": "Gremio",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1860,
+            "slug": "inter-miami",
+            "name": "Inter Miami",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1525,
+            "slug": "inter-milan",
+            "name": "Inter Milan",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1530,
+            "slug": "juventus",
+            "name": "Juventus",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1856,
+            "slug": "la-galaxy",
+            "name": "LA Galaxy",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1531,
+            "slug": "lazio",
+            "name": "Lazio",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1532,
+            "slug": "leeds-united",
+            "name": "Leeds United",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1848,
+            "slug": "leicester-city",
+            "name": "Leicester City",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1533,
+            "slug": "liverpool",
+            "name": "Liverpool",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1534,
+            "slug": "lyon",
+            "name": "Lyon",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1884,
+            "slug": "malaga",
+            "name": "Malaga",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1535,
+            "slug": "man-city",
+            "name": "Man City",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1536,
+            "slug": "man-united",
+            "name": "Man United",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1537,
+            "slug": "marseille",
+            "name": "Marseille",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1540,
+            "slug": "napoli",
+            "name": "Napoli",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1542,
+            "slug": "newcastle",
+            "name": "Newcastle",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1545,
+            "slug": "nottingham",
+            "name": "Nottingham",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1849,
+            "slug": "palmeiras",
+            "name": "Palmeiras",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1546,
+            "slug": "parma",
+            "name": "Parma",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1905,
+            "slug": "perugia",
+            "name": "Perugia",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1883,
+            "slug": "polo",
+            "name": "Polo",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1547,
+            "slug": "porto",
+            "name": "Porto",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1549,
+            "slug": "psg",
+            "name": "PSG",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1900,
+            "slug": "psv-eindhoven",
+            "name": "PSV Eindhoven",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1550,
+            "slug": "rangers",
+            "name": "Rangers",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1895,
+            "slug": "rayo-vallecano-de-madrid",
+            "name": "Rayo Vallecano de Madrid",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1817,
+            "slug": "real-betis",
+            "name": "Real Betis",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1551,
+            "slug": "real-madrid",
+            "name": "Real Madrid",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1886,
+            "slug": "real-oviedo",
+            "name": "Real Oviedo",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1896,
+            "slug": "real-sociedad",
+            "name": "Real Sociedad",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1897,
+            "slug": "real-valladolid",
+            "name": "Real Valladolid",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1871,
+            "slug": "real-zaragoza",
+            "name": "Real Zaragoza",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1881,
+            "slug": "red-star-belgrade",
+            "name": "Red Star Belgrade",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1866,
+            "slug": "river-plate",
+            "name": "River Plate",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1880,
+            "slug": "saiyans-fc",
+            "name": "Saiyans FC",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1552,
+            "slug": "sampdoria",
+            "name": "Sampdoria",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1847,
+            "slug": "santos",
+            "name": "Santos",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1867,
+            "slug": "sao-paulo",
+            "name": "Sao Paulo",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1904,
+            "slug": "schalke",
+            "name": "Schalke",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1894,
+            "slug": "sevilla-clubs",
+            "name": "Sevilla",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1889,
+            "slug": "sporting-de-gijon",
+            "name": "Sporting de Gijon",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1865,
+            "slug": "sporting-lisbon",
+            "name": "Sporting Lisbon",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1898,
+            "slug": "sv-werder-bremen",
+            "name": "SV Werder Bremen",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1557,
+            "slug": "tottenham",
+            "name": "Tottenham",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1887,
+            "slug": "university-of-chile",
+            "name": "University of Chile",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1901,
+            "slug": "valencia",
+            "name": "Valencia",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1857,
+            "slug": "vasco-da-gama",
+            "name": "Vasco da Gama",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1876,
+            "slug": "villarreal",
+            "name": "Villarreal",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1882,
+            "slug": "vitoria",
+            "name": "Vitória",
+            "parent_id": 1569
+        },
+        {
+            "term_id": 1560,
+            "slug": "west-ham-united",
+            "name": "West Ham United",
+            "parent_id": 1569
+        }
+    ],
+    "national_teams": [
+        {
+            "term_id": 1502,
+            "slug": "argentina",
+            "name": "Argentina",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1510,
+            "slug": "belgium",
+            "name": "Belgium",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1513,
+            "slug": "brazil",
+            "name": "Brazil",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1850,
+            "slug": "chile",
+            "name": "Chile",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1516,
+            "slug": "colombia",
+            "name": "Colombia",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1517,
+            "slug": "croatia",
+            "name": "Croatia",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1518,
+            "slug": "denmark",
+            "name": "Denmark",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1520,
+            "slug": "england",
+            "name": "England",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1878,
+            "slug": "finland",
+            "name": "Finland",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1523,
+            "slug": "france",
+            "name": "France",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1524,
+            "slug": "germany",
+            "name": "Germany",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1862,
+            "slug": "hungary",
+            "name": "Hungary",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1526,
+            "slug": "ireland",
+            "name": "Ireland",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1527,
+            "slug": "italy",
+            "name": "Italy",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1528,
+            "slug": "jamaica",
+            "name": "Jamaica",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1529,
+            "slug": "japan",
+            "name": "Japan",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1873,
+            "slug": "korea",
+            "name": "Korea",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1538,
+            "slug": "mexico",
+            "name": "Mexico",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1539,
+            "slug": "morocco",
+            "name": "Morocco",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1541,
+            "slug": "netherlands",
+            "name": "Netherlands",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1543,
+            "slug": "nigeria",
+            "name": "Nigeria",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1544,
+            "slug": "northern-ireland",
+            "name": "Northern Ireland",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1851,
+            "slug": "norway",
+            "name": "Norway",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1885,
+            "slug": "panama",
+            "name": "Panama",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1548,
+            "slug": "portugal",
+            "name": "Portugal",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1553,
+            "slug": "scotland",
+            "name": "Scotland",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1852,
+            "slug": "senegal",
+            "name": "Senegal",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1893,
+            "slug": "serbia",
+            "name": "Serbia",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1554,
+            "slug": "soviet-union",
+            "name": "Soviet Union",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1555,
+            "slug": "spain",
+            "name": "Spain",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1556,
+            "slug": "sweden",
+            "name": "Sweden",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1558,
+            "slug": "united-states",
+            "name": "United States",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1899,
+            "slug": "venezuela",
+            "name": "Venezuela",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1559,
+            "slug": "wales",
+            "name": "Wales",
+            "parent_id": 1570
+        },
+        {
+            "term_id": 1561,
+            "slug": "yugoslavia",
+            "name": "Yugoslavia",
+            "parent_id": 1570
+        }
+    ]
+}
