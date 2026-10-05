@@ -14,32 +14,33 @@ if ( function_exists( 'opcache_reset' ) ) {
     opcache_reset();
 }
 
-$inc_dir = get_stylesheet_directory() . '/inc/';
+define("THEME_VERSION", "2.0.2");
+define('INC_DIR', get_stylesheet_directory() . '/inc/');
 
 /**
  * 1. Helper functions & utilities
  */
-require_once $inc_dir . 'helpers.php';
+require_once INC_DIR . 'helpers.php';
 
 /**
  * 2. General theme hooks, enqueues, optimizations, admin tweaks
  */
-require_once $inc_dir . 'hooks.php';
+require_once INC_DIR . 'hooks.php';
 
 /**
  * 3. Custom shortcodes (currency switcher, category descriptions, etc.)
  */
-require_once $inc_dir . 'shortcodes.php';
+require_once INC_DIR . 'shortcodes.php';
 
 /**
  * 4. WooCommerce customizations (order status, ratings, shipping estimates, size guide, etc.)
  */
-require_once $inc_dir . 'woo.php';
+require_once INC_DIR . 'woo.php';
 
 /**
  * 5. Admin tools (Regenerate Variations tool)
  */
-require_once $inc_dir . 'regenerate-variations.php';
+require_once INC_DIR . 'regenerate-variations.php';
 
 /**
  * 6. Elementor Custom Widgets
