@@ -20,6 +20,7 @@
 
         var parentId = parseInt($wrapper.data('parent-id'), 10) || 0;
         var perPage = parseInt($wrapper.data('per-page'), 10) || 15;
+        var hideEmpty = $wrapper.data('hide-empty') === 'yes' ? 'yes' : 'no';
 
         var $grid = $wrapper.find('.vf-cat-grid');
         var $paginationWrap = $wrapper.find('.vf-pagination-wrapper');
@@ -126,6 +127,7 @@
                 league: activeLeague,
                 search: activeSearch,
                 sort: activeSort,
+                hide_empty: hideEmpty,
                 page: currentPage,
                 per_page: perPage,
                 base_url: getPageUrl(currentPage)

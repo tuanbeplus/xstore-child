@@ -936,9 +936,11 @@ class Widget_VFProductCategoriesFilters extends Widget_Base {
         }
 
         // 2. Query Child Categories
+        $is_hide_empty = ! empty( $settings['hide_empty'] ) && 'yes' === $settings['hide_empty'];
+
         $query_args = [
             'taxonomy'   => 'product_cat',
-            'hide_empty' => ( 'yes' === $settings['hide_empty'] ),
+            'hide_empty' => false, // Filtered manually below using real WC product count
             'orderby'    => ! empty( $settings['orderby'] ) ? $settings['orderby'] : 'name',
             'order'      => ! empty( $settings['order'] ) ? $settings['order'] : 'ASC',
         ];
@@ -980,6 +982,13 @@ class Widget_VFProductCategoriesFilters extends Widget_Base {
         }
 
         foreach ( $child_terms as $term ) {
+            $product_count = vf_get_category_product_count( $term );
+
+            // Hide empty categories
+            if ( $is_hide_empty && $product_count <= 0 ) {
+                continue;
+            }
+
             // Retrieve ACF / Meta
             $continent = '';
             $league    = '';
@@ -1037,7 +1046,7 @@ class Widget_VFProductCategoriesFilters extends Widget_Base {
                 'id'        => $term->term_id,
                 'name'      => $term->name,
                 'slug'      => $term->slug,
-                'count'     => $term->count,
+                'count'     => $product_count,
                 'link'      => $term_link,
                 'image_url' => $image_url,
                 'continent' => $continent,
@@ -1073,11 +1082,11 @@ class Widget_VFProductCategoriesFilters extends Widget_Base {
         $initial_count = count( $paged_initial );
 
         if ( $total_categories === 0 ) {
-            $count_text = __( 'Showing 0 categories', 'xstore-child' );
+            $count_text = __( 'Showing 0 teams', 'xstore-child' );
         } elseif ( $total_categories <= $per_page ) {
             $count_text = sprintf(
                 /* translators: %d: total categories */
-                __( 'Showing %d of %d categories', 'xstore-child' ),
+                __( 'Showing %d of %d teams', 'xstore-child' ),
                 $total_categories,
                 $total_categories
             );
@@ -1086,7 +1095,7 @@ class Widget_VFProductCategoriesFilters extends Widget_Base {
             $end_num    = $offset + $initial_count;
             $count_text = sprintf(
                 /* translators: 1: start count, 2: end count, 3: total categories */
-                __( 'Showing %1$d–%2$d of %3$d categories', 'xstore-child' ),
+                __( 'Showing %1$d-%2$d of %3$d teams', 'xstore-child' ),
                 $start_num,
                 $end_num,
                 $total_categories
@@ -1094,7 +1103,7 @@ class Widget_VFProductCategoriesFilters extends Widget_Base {
         }
         ?>
 
-        <div class="vf-cat-filters-wrapper" data-parent-id="<?php echo esc_attr( $parent_id ); ?>" data-per-page="<?php echo esc_attr( $per_page ); ?>" data-current-page="<?php echo esc_attr( $current_page ); ?>">
+        <div class="vf-cat-filters-wrapper" data-parent-id="<?php echo esc_attr( $parent_id ); ?>" data-per-page="<?php echo esc_attr( $per_page ); ?>" data-current-page="<?php echo esc_attr( $current_page ); ?>" data-hide-empty="<?php echo $is_hide_empty ? 'yes' : 'no'; ?>">
 
             <?php if ( $show_continent_pills || $show_search ) : ?>
                 <div class="vf-filter-bar">

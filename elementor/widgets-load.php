@@ -32,7 +32,7 @@ class ElementorWidgets {
             'vf-cat-filters-style',
             get_stylesheet_directory_uri() . '/elementor/widgets/vf-product-categories-filters/widget.css',
             [],
-            '1.0.0'
+            time()
         );
     }
 
@@ -41,7 +41,7 @@ class ElementorWidgets {
             'vf-cat-filters-script',
             get_stylesheet_directory_uri() . '/elementor/widgets/vf-product-categories-filters/widget.js',
             [ 'jquery' ],
-            '1.0.0',
+            time(),
             true
         );
 

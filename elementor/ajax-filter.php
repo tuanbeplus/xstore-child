@@ -42,6 +42,20 @@ function vf_get_category_league( $term_id ) {
 }
 
 /**
+ * Get real product count of a category.
+ * Prefers WooCommerce's `product_count_product_cat` term meta (respects hidden /
+ * out-of-stock visibility and includes sub-categories), falls back to $term->count.
+ */
+function vf_get_category_product_count( $term ) {
+    $count   = (int) $term->count;
+    $wc_meta = get_term_meta( $term->term_id, 'product_count_product_cat', true );
+    if ( '' !== $wc_meta && false !== $wc_meta && null !== $wc_meta ) {
+        $count = (int) $wc_meta;
+    }
+    return $count;
+}
+
+/**
  * Render single category card HTML
  */
 function vf_render_single_category_card( $cat_data, $settings = [] ) {
@@ -266,6 +280,7 @@ function vf_ajax_filter_product_categories() {
     $sort        = ! empty( $_POST['sort'] ) ? sanitize_text_field( wp_unslash( $_POST['sort'] ) ) : 'name_asc';
     $page        = ! empty( $_POST['page'] ) ? max( 1, absint( $_POST['page'] ) ) : 1;
     $base_url    = ! empty( $_POST['base_url'] ) ? esc_url_raw( wp_unslash( $_POST['base_url'] ) ) : '';
+    $hide_empty  = ! empty( $_POST['hide_empty'] ) && 'yes' === $_POST['hide_empty'];
     $per_page    = 15; // 15 categories per page as requested
 
     if ( 0 === $parent_id ) {
@@ -296,6 +311,13 @@ function vf_ajax_filter_product_categories() {
     $filtered_data = [];
 
     foreach ( $terms as $term ) {
+        $product_count = vf_get_category_product_count( $term );
+
+        // 0. Hide empty categories
+        if ( $hide_empty && $product_count <= 0 ) {
+            continue;
+        }
+
         $term_continent = vf_get_category_continent( $term->term_id );
         $term_league    = vf_get_category_league( $term->term_id );
 
@@ -331,7 +353,7 @@ function vf_ajax_filter_product_categories() {
             'id'        => $term->term_id,
             'name'      => $term->name,
             'slug'      => $term->slug,
-            'count'     => (int) $term->count,
+            'count'     => $product_count,
             'link'      => $term_link,
             'image_url' => $image_url,
             'continent' => $term_continent,

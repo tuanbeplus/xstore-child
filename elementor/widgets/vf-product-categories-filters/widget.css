@@ -38,7 +38,7 @@
 }
 @media screen and (max-width: 767px) {
     .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-bar {
-        flex-direction: column;
+        flex-direction: column-reverse;
         align-items: stretch;
         gap: 14px;
     }
@@ -101,7 +101,7 @@
     height: 1px;
     background-color: #e5e7eb;
     width: 100%;
-    margin: 18px 0 22px 0;
+    margin: 20px 0 24px 0;
     border: none;
 }
 @media screen and (max-width: 767px) {
@@ -112,8 +112,9 @@
 
 /* Sub-pills (Leagues row) */
 .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group--sub {
-    margin-bottom: 24px;
+    margin-bottom: 32px;
     gap: 12px;
+    max-width: 1024px;
 }
 @media screen and (max-width: 767px) {
     .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group--sub {
@@ -508,11 +509,6 @@
     justify-content: flex-end !important;
     box-sizing: border-box !important;
 }
-@media screen and (max-width: 767px) {
-    .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-content {
-        padding: 12px 8px !important;
-    }
-}
 
 /* Team Name / Category Title */
 .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-title {
@@ -531,12 +527,12 @@
 }
 @media screen and (max-width: 1024px) {
     .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-title {
-        font-size: 20px !important;
+        font-size: 22px !important;
     }
 }
 @media screen and (max-width: 767px) {
     .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-card-title {
-        font-size: 17px !important;
+        font-size: 20px !important;
         letter-spacing: 0.5px !important;
         margin-bottom: 2px !important;
     }
@@ -611,6 +607,7 @@
 
 .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-page-btn.is-active {
     background-color: var(--vf-color-black) !important;
+    border-color: var(--vf-color-black) !important;
     color: var(--vf-color-white) !important;
     cursor: default;
 }

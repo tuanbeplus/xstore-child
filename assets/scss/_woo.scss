@@ -1,0 +1,133 @@
+/* ==========================================================================
+   WooCommerce Global & Page Tweaks
+   ========================================================================== */
+
+/* Category Description Boxes (Top & Bottom) */
+.wrapper-des-top-category {
+    padding: 40px 15px 0 15px;
+
+    p {
+        color: #111111;
+        font-size: 16px;
+    }
+
+    a {
+        font-weight: bold;
+        font-size: 16px;
+        color: #16FC03;
+    }
+}
+
+.wrapper-des-bottom-category {
+    padding: 0 15px 0 15px;
+
+    p {
+        color: #111111;
+        font-size: 16px;
+    }
+
+    a {
+        font-weight: bold;
+        font-size: 16px;
+        color: #16FC03;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .wrapper-des-top-category {
+        padding: 30px 5px 0 5px;
+    }
+
+    .wrapper-des-bottom-category {
+        padding: 0 5px 0 5px;
+    }
+}
+
+/* ==========================================================================
+   Cart Page
+   ========================================================================== */
+body.woocommerce-cart {
+    .actions {
+        margin-top: 12px;
+    }
+
+    .product-quantity select,
+    .product-price .quantity-select select {
+        border-color: #111111;
+        color: #111111;
+    }
+
+    .cart_totals h2 {
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+    }
+}
+
+/* ==========================================================================
+   Wishlist Page
+   ========================================================================== */
+body.woocommerce-wishlist {
+    .xstore-wishlist-apply-actions select {
+        border-color: #111111;
+        color: #111111;
+    }
+}
+
+/* ==========================================================================
+   Checkout Page
+   ========================================================================== */
+body.woocommerce-checkout {
+    .payment_box {
+        padding-left: 0;
+    }
+}
+
+/* ==========================================================================
+   My Account / Edit Account Page
+   ========================================================================== */
+body.woocommerce-edit-account {
+    .show-password-input {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   User Registration Page
+   ========================================================================== */
+body.user-registration-page {
+    .ur-frontend-form .user-registration-form__input {
+        margin-top: -2px;
+    }
+
+    .ur-reset-password-btn {
+        margin-top: 12px;
+    }
+
+    .ur-frontend-form .ur-button-container .button.ur-submit-button {
+        border: 1px solid var(--et_btn-dark-br-color);
+        color: var(--et_btn-dark-color);
+        line-height: 125%;
+        padding: 12px 25px;
+        font-size: 16px;
+        min-height: 46px;
+    }
+
+    #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button,
+    .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Buttonn,
+    .ur-frontend-form.login .ur-reset-password-btn {
+        background: var(--et_btn-dark-bg-color);
+        border: 1px solid var(--et_btn-dark-br-color);
+        color: var(--et_btn-dark-color);
+        min-height: 46px;
+        line-height: 125%;
+        padding: 12px 25px;
+        font-size: 16px;
+    }
+
+    #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:hover,
+    .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Buttonn:hover,
+    .ur-frontend-form.login .ur-reset-password-btn:hover {
+        background: var(--et_btn-dark-color);
+        color: var(--et_btn-dark-bg-color);
+    }
+}
