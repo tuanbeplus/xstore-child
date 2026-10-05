@@ -1,0 +1,56 @@
+# ==========================================================================
+# Operating System Files
+# ==========================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ==========================================================================
+# Editor & IDE Directories / Files
+# ==========================================================================
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.suo
+*.ntvs*
+*.njsproj
+*.swp
+*.swo
+*~
+
+# ==========================================================================
+# Build Tools & Package Managers
+# ==========================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.sass-cache/
+
+# Source Maps (uncomment if source maps should not be committed)
+# *.css.map
+# *.js.map
+
+# ==========================================================================
+# Environment & Sensitive Files
+# ==========================================================================
+.env
+.env.local
+.env.*.local
+sftp-config.json
+
+# ==========================================================================
+# Logs & Temporary Files
+# ==========================================================================
+*.log
+*.tmp
+*.bak
+error_log
+debug.log
