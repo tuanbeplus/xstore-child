@@ -114,7 +114,7 @@
 .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group--sub {
     margin-bottom: 32px;
     gap: 12px;
-    max-width: 1024px;
+    max-width: 1200px;
 }
 @media screen and (max-width: 767px) {
     .elementor-widget-vf-product-categories-filters .vf-cat-filters-wrapper .vf-filter-group--sub {

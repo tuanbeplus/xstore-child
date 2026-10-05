@@ -156,6 +156,7 @@ xstore-child/
 | `[currency_selector]` | Enhanced currency selector with flag & symbol mapping initialized with Select2. |
 | `[box_description_top_category]` | Top category description with mobile accordion toggle ("Read More / Read Less") from ACF Options. |
 | `[box_description_bot_category]` | Bottom SEO category description from ACF Options. |
+| `[vf_seo_block]` | Expandable scrollable SEO text block for homepage and archives with internal links and custom parameters (`title`, `subtitle`, `max_height`). (Alias: `[block_seo]`). |
 
 ---
 

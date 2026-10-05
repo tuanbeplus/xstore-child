@@ -8,16 +8,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Enqueue Parent and Child Theme Styles
- */
-add_action( 'wp_enqueue_scripts', 'theme_enqueue_styles', 1001 );
-function theme_enqueue_styles() {
-    if ( function_exists( 'etheme_child_styles' ) ) {
-        etheme_child_styles();
-    }
-}
-
-/**
  * Enqueue Child Theme Custom Assets (main.css and main.js)
  */
 add_action( 'wp_enqueue_scripts', 'enqueue_child_theme_assets' );

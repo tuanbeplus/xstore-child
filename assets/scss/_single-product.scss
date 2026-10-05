@@ -2,6 +2,29 @@
    Single Product Styles
    ========================================================================== */
 
+/* Reset unwanted borders injected by parent theme / Kirki customizer */
+body.single-product.woocommerce,
+body.single-product {
+    .page-heading,
+    .product_title,
+    .woocommerce-product-gallery.images-wrapper,
+    .et_product-block > .price,
+    .et_product-block .et_connect-block > .price,
+    .woocommerce-product-rating,
+    .woocommerce-product-details__short-description,
+    .single-product-builder form.cart,
+    form.cart,
+    .product_meta,
+    .single-product-socials,
+    .woocommerce-tabs,
+    .related-products-wrapper,
+    .upsell-products-wrapper,
+    .cross-sell-products-wrapper,
+    .bought-together-products {
+        border: none !important;
+    }
+}
+
 body.single-product.woocommerce {
     /* -------------------------------------------------------------------------
        1. Page Heading & Breadcrumbs
@@ -79,6 +102,10 @@ body.single-product.woocommerce {
                 line-height: 1.1;
                 text-align: center;
                 padding-right: 40px;
+                @media (max-width: 767px) {
+                    font-size: 24px;
+                    padding-right: 30px;
+                }
             }
         }
 
@@ -94,6 +121,9 @@ body.single-product.woocommerce {
     .woocommerce-tabs {
         max-width: 1024px;
         margin: 50px auto 0;
+        @media (max-width: 767px) {
+            margin: 30px auto 0;
+        }
 
         &.horizontal .wc-tabs .et-woocommerce-tab {
             font-weight: 600;
@@ -205,6 +235,34 @@ body.single-product.woocommerce {
                     margin-top: 20px;
                     font-family: Staatliches;
                 }
+            }
+        }
+    }
+
+    .related-products-wrapper {
+        margin-top: 50px;
+        @media (max-width: 767px) {
+            margin-top: 30px;
+        }
+        .related-products {
+            .product {
+                .product-title {
+                    font-size: 24px;
+                    line-height: 1.2;
+                    @media (max-width: 767px) {
+                        font-size: 20px;
+                    }
+                }
+                .price {
+                    font-weight: 600;
+                }
+                .button.add_to_cart_button {
+                    display: none !important;
+                }
+            }
+            .swiper-button-next, 
+            .swiper-button-prev {
+                color: #111;
             }
         }
     }

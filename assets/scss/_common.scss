@@ -1067,9 +1067,138 @@ body .wcap-modal .popup-model-content  p{
          left: 50%;
     }
     body .wcap-modal .popup-model-content h1{
-        
         font-size: 24px !important;
-        
+    }
+}
+
+/* ==========================================================================
+   Home & Archive SEO Content Block (.seo-wrapper)
+   ========================================================================== */
+.seo-wrapper {
+    padding: 0 1.5vw;
+    width: 100%;
+    max-width: 1600px;
+    box-sizing: border-box;
+
+    @media (max-width: 768px) {
+        padding: 0 1.25rem;
+        margin: 1.5rem auto;
+    }
+
+    .seo-title {
+        font-family: var(--font-title, "Staatliches", "Inter", sans-serif);
+        font-size: 1.5rem;
+        line-height: 1.25;
+        margin-bottom: 0.5rem;
+        color: #111111;
+        letter-spacing: 0.2px;
+    }
+
+    .seo-subtitle {
+        font-family: "Inter", sans-serif;
+        font-size: 1rem;
+        color: #555555;
+        margin-bottom: 0.85rem;
+        line-height: 1.45;
+    }
+
+    .seo-scroll-container {
+        position: relative;
+        max-height: 200px;
+        overflow: hidden;
+
+        &::after {
+            content: "";
+            pointer-events: none;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
+            z-index: 1;
+        }
+    }
+
+    .seo-scroll {
+        overflow-y: auto;
+        padding-right: 0.75rem;
+        padding-bottom: 2.25rem;
+        line-height: 1.5;
+        font-size: 0.85rem;
+        color: #222222;
+        height: 180px;
+        scrollbar-width: thin;
+        scrollbar-color: #cccccc transparent;
+
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #cccccc;
+            border-radius: 3px;
+
+            &:hover {
+                background: #999999;
+            }
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin: 0 0 0.75rem;
+            color: #333333;
+            line-height: 1.55;
+
+            strong {
+                color: #111111;
+            }
+
+            a {
+                color: #111111;
+                font-weight: 600;
+                text-decoration: underline;
+                text-underline-offset: 2px;
+                transition: color 0.2s ease;
+
+                &:hover {
+                    color: #16FC03;
+                }
+            }
+        }
+
+        h2 {
+            font-family: var(--font-title, "Staatliches", "Inter", sans-serif);
+            font-size: 1.25rem;
+            margin: 1.2rem 0 0.4rem;
+            color: #111111;
+            letter-spacing: 0.2px;
+        }
+    }
+
+    .seo-links {
+        font-size: 1rem;
+        line-height: 1.7;
+        word-break: break-word;
+        margin-bottom: 0.6rem;
+
+        a {
+            color: #111111;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+
+            &:hover {
+                color: #16FC03;
+            }
+        }
+
+        span {
+            margin: 0 0.45rem;
+            color: #bbbbbb;
+            user-select: none;
+        }
     }
 }
 

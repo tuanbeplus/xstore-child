@@ -9,11 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Reset OPcache if available during development/updates
-if ( function_exists( 'opcache_reset' ) ) {
-    opcache_reset();
-}
-
 define("THEME_VERSION", "2.0.2");
 define('INC_DIR', get_stylesheet_directory() . '/inc/');
 

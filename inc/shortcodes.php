@@ -257,3 +257,125 @@ function get_data_box_description_bot_category() {
     return ob_get_clean();
 }
 add_shortcode( 'box_description_bot_category', 'get_data_box_description_bot_category' );
+
+/**
+ * SEO Footer / Homepage text block [vf_seo_block] or [block_seo]
+ *
+ * Usage:
+ * [vf_seo_block]
+ * [vf_seo_block title="Custom Title" max_height="200px"]
+ */
+function vf_seo_block_shortcode( $atts = array() ) {
+    $atts = shortcode_atts( array(
+        'title'      => 'Vintage Football Shop - The Home of Classic & Retro Football Shirts',
+        'subtitle'   => 'The Home of the Collector. Explore our collection of 1,000+ authentic retro football shirts across the Premier League, Serie A, La Liga, Bundesliga, National Teams & Iconic Legends.',
+        'max_height' => '180px',
+    ), $atts, 'vf_seo_block' );
+
+    ob_start();
+    ?>
+    <!-- Block SEO -->
+    <div class="seo-wrapper">
+        <div class="seo-title"><?php echo esc_html( $atts['title'] ); ?></div>
+        <div class="seo-subtitle"><?php echo esc_html( $atts['subtitle'] ); ?></div>
+
+        <div class="seo-scroll-container" style="max-height: <?php echo esc_attr( $atts['max_height'] ); ?>;">
+            <div class="seo-scroll" style="height: <?php echo esc_attr( $atts['max_height'] ); ?>;">
+                <p>Welcome to <strong>Vintage Football Shop</strong>, the ultimate destination for retro football shirts and classic soccer jerseys. Our extensive range of vintage football shirts spans decades of history, offering collectors and fans the chance to own a piece of football heritage. Whether you’re looking for a retro kit from your favourite club or a classic national team jersey, you’ll find it here.</p>
+
+                <p>Explore our unmatched archive covering the world's most prestigious leagues and tournaments. From rare 1970s and 1980s classics to iconic 1990s and 2000s shirts, we bring football history back to life with premium quality fabrics, authentic stitch detailing, and era-accurate sponsor designs. Don't miss our exclusive <strong>Buy 2 Get 1 Free</strong> offer and enjoy fast worldwide shipping on all orders.</p>
+
+                <h2>Popular Leagues &amp; Competitions:</h2>
+                <div class="seo-links">
+                    <a href="https://vintagefootball.shop/clubs/">Premier League</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/">La Liga</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/">Serie A</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/">Bundesliga</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/">Ligue 1</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/">World Cup Classics</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/">European Championship</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/">Champions League Classics</a>
+                </div>
+
+                <h2>Popular Clubs:</h2>
+                <div class="seo-links">
+                    <a href="https://vintagefootball.shop/clubs/real-madrid/">Real Madrid</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/barcelona/">Barcelona</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/man-united/">Manchester United</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/liverpool/">Liverpool</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/arsenal/">Arsenal</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/chelsea/">Chelsea</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/man-city/">Manchester City</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/ac-milan/">AC Milan</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/inter-milan/">Inter Milan</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/juventus/">Juventus</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/bayern/">Bayern Munich</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/borussia-dortmund/">Borussia Dortmund</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/psg/">Paris Saint-Germain</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/ajax/">Ajax</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/atletico-madrid/">Atletico Madrid</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/tottenham/">Tottenham</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/newcastle/">Newcastle United</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/as-roma/">AS Roma</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/napoli/">Napoli</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/boca-juniors/">Boca Juniors</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/celtic/">Celtic</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/benfica/">Benfica</a>
+                </div>
+
+                <h2>Popular National Teams:</h2>
+                <div class="seo-links">
+                    <a href="https://vintagefootball.shop/national-teams/brazil/">Brazil</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/argentina/">Argentina</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/france/">France</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/germany/">Germany</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/italy/">Italy</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/england/">England</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/portugal/">Portugal</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/spain/">Spain</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/netherlands/">Netherlands</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/japan/">Japan</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/colombia/">Colombia</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/mexico/">Mexico</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/nigeria/">Nigeria</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/morocco/">Morocco</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/scotland/">Scotland</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/wales/">Wales</a>
+                </div>
+
+                <h2>Iconic Legends:</h2>
+                <div class="seo-links">
+                    <a href="https://vintagefootball.shop/legends/messi/">Lionel Messi</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/cr7/">Cristiano Ronaldo</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/maradona/">Diego Maradona</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/ronaldo/">Ronaldo Nazário</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/ronaldinho/">Ronaldinho</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/zinedine-zidane/">Zinedine Zidane</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/david-beckham/">David Beckham</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/rooney/">Wayne Rooney</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/maldini/">Paolo Maldini</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/thierry-henry/">Thierry Henry</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/drogba/">Didier Drogba</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/andres-iniesta/">Andrés Iniesta</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/roberto-carlos/">Roberto Carlos</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/zlatan-ibrahimovic/">Zlatan Ibrahimović</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/gianluigi-buffon/">Gianluigi Buffon</a>
+                </div>
+
+                <h2>Shop By Category &amp; Offers:</h2>
+                <div class="seo-links">
+                    <a href="https://vintagefootball.shop/shop/">All Collections</a><span>|</span>
+                    <a href="https://vintagefootball.shop/clubs/">Club Retro Shirts</a><span>|</span>
+                    <a href="https://vintagefootball.shop/national-teams/">National Retro Kits</a><span>|</span>
+                    <a href="https://vintagefootball.shop/legends/">Legends Shirts</a><span>|</span>
+                    <a href="https://vintagefootball.shop/kids/">Kids Retro Kits</a><span>|</span>
+                    <a href="https://vintagefootball.shop/shop/">Buy 2 Get 1 Free Deals</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode( 'vf_seo_block', 'vf_seo_block_shortcode' );
+add_shortcode( 'block_seo', 'vf_seo_block_shortcode' );
