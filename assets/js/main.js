@@ -20,6 +20,27 @@ jQuery(document).ready(function () {
 	} else {
 		jQuery('.wrapper-template-mobile-club').css('height', 'auto');
 	}
+
+	// Initialize Currency Selector Select2
+	if (jQuery.fn.select2) {
+		const $currencyWrap = jQuery('.wrapper-header-currency');
+		const $currencySelect = $currencyWrap.find('form select');
+		if ($currencySelect.length) {
+			$currencySelect.select2({
+				width: '115px',
+				minimumResultsForSearch: Infinity,
+				dropdownParent: $currencyWrap,
+				templateResult: function (state) {
+					if (!state.id) return state.text;
+					return jQuery('<span>' + state.text + '</span>');
+				},
+				templateSelection: function (state) {
+					if (!state.id) return state.text;
+					return jQuery('<span>' + state.text + '</span>');
+				}
+			});
+		}
+	}
 });
 
 jQuery(window).on('resize', function () {
@@ -382,3 +403,76 @@ jQuery(function ($) {
 	setTimeout(initVariationSwatches, 400);
 });
 
+(function ($) {
+	'use strict';
+	const siteHeader = $('header.elementor-location-header');
+	const siteBody = $('html body.wp-child-theme-xstore-child');
+
+	/* Set --header-height (full, top bar visible) and --topbar-height.
+	   Body margin uses the full height so it never changes while scrolling. */
+	function setHeaderHeight() {
+		if (!siteHeader.length) return;
+		/* Prefer a visible #header-top-bar; fall back to the header's first
+		   top-level section (Elementor may use a different mobile section) */
+		let topBar = siteHeader.find('#header-top-bar').filter(':visible').first();
+		if (!topBar.length) {
+			topBar = siteHeader
+				.find('.elementor-top-section, .e-parent')
+				.filter(':visible')
+				.first();
+		}
+		const topBarHeight = topBar.length
+			? Math.round(topBar[0].getBoundingClientRect().height)
+			: 0;
+		const height = siteHeader[0].offsetHeight;
+
+		const root = document.documentElement.style;
+		root.setProperty('--header-height', height + 'px');
+		root.setProperty('--topbar-height', topBarHeight + 'px');
+	}
+
+	/* Handle sticky header: purely class toggle on body/header */
+	function handleStickyHeader() {
+		const $body = $('body');
+		const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+		if (y > 15) {
+			$body.addClass('sticky');
+			siteHeader.addClass('is-sticky');
+		} else {
+			$body.removeClass('sticky');
+			siteHeader.removeClass('is-sticky');
+		}
+	}
+
+	// Viewport Height
+	function setViewportHeight() {
+		const viewportHeight = window.innerHeight;
+
+		document.documentElement.style.setProperty(
+			'--viewport-height',
+			viewportHeight + 'px'
+		);
+	}
+
+	/* Initialize */
+	$(function () {
+		setHeaderHeight();
+		setViewportHeight();
+		handleStickyHeader();
+
+		$(window).on('load', function () {
+			setHeaderHeight();
+			setTimeout(setHeaderHeight, 300);
+		});
+
+		$(window).on('resize orientationchange', function () {
+			setHeaderHeight();
+			setViewportHeight();
+			handleStickyHeader();
+		});
+
+		/* Direct execution on scroll for instant reaction on mobile touch gestures */
+		window.addEventListener('scroll', handleStickyHeader, { passive: true });
+	});
+
+})(jQuery);

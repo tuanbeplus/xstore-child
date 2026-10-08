@@ -78,6 +78,11 @@ The styling architecture has been refactored from legacy CSS into modular SCSS p
 - **VF Product Categories Filters (`elementor/widgets/vf-product-categories-filters/`):**
   - Custom Elementor widget providing interactive category filters.
   - Supports AJAX product count calculation, active filter indicators, parent/child hierarchy toggles, hide-empty categories option, and responsive drawer support.
+- **VF Hero Slider (`elementor/widgets/vf-hero-slider/`):**
+  - High-performance, lightweight carousel widget designed for homepage and category hero banners.
+  - Features responsive `<picture>` tags with separate desktop, tablet, and mobile image sources for zero layout shift (CLS).
+  - Smooth GPU-accelerated fade-in image animations and staggered fade-in-up content animations.
+  - Custom repeater items with badge, headline (Staatliches font), description, primary & secondary CTA buttons, custom overlays, swipe gesture handling, autoplay timer with progress bar, and keyboard navigation.
 
 ### 5. Interactive Size Guide
 - **Dynamic Sizing Tab (`inc/woo.php`):**

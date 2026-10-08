@@ -17,16 +17,31 @@ function enqueue_child_theme_assets() {
         'main-style',
         get_stylesheet_directory_uri() . '/assets/css/main.css',
         array(),
-        filemtime( get_stylesheet_directory() . '/assets/css/main.css' ),
+        THEME_VERSION,
         'all'
+    );
+
+    // Enqueue Select2 for currency switcher if not already enqueued
+    wp_enqueue_style(
+        'select2-cdn',
+        'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css',
+        array(),
+        '4.0.13'
+    );
+    wp_enqueue_script(
+        'select2-cdn',
+        'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js',
+        array( 'jquery' ),
+        '4.0.13',
+        true
     );
 
     // Enqueue JS
     wp_enqueue_script(
         'main-script',
         get_stylesheet_directory_uri() . '/assets/js/main.js',
-        array( 'jquery' ),
-        filemtime( get_stylesheet_directory() . '/assets/js/main.js' ),
+        array( 'jquery', 'select2-cdn' ),
+        THEME_VERSION,
         true
     );
 
@@ -128,7 +143,8 @@ function vfs_custom_admin_bar_css() {
         #wpadminbar #wp-admin-bar-et-top-bar-general-menu,
         #wpadminbar #wp-admin-bar-et-top-bar-theme-builders-menu,
         #wpadminbar #wp-admin-bar-weglot,
-        #wpadminbar #wp-admin-bar-et-top-bar-xstore-sales-booster {
+        #wpadminbar #wp-admin-bar-et-top-bar-xstore-sales-booster,
+        #wpadminbar #wp-admin-bar-elementor_inspector {
             display: none !important;
         }
     </style>

@@ -24,6 +24,7 @@ class ElementorWidgets {
     public function widgets_list() {
         return [
             'vf-product-categories-filters',
+            'vf-hero-slider',
         ];
     }
 
@@ -32,7 +33,14 @@ class ElementorWidgets {
             'vf-cat-filters-style',
             get_stylesheet_directory_uri() . '/elementor/widgets/vf-product-categories-filters/widget.css',
             [],
-            '2.0.3'
+            THEME_VERSION
+        );
+
+        wp_register_style(
+            'vf-hero-slider-style',
+            get_stylesheet_directory_uri() . '/elementor/widgets/vf-hero-slider/widget.css',
+            [],
+            THEME_VERSION
         );
     }
 
@@ -41,7 +49,7 @@ class ElementorWidgets {
             'vf-cat-filters-script',
             get_stylesheet_directory_uri() . '/elementor/widgets/vf-product-categories-filters/widget.js',
             [ 'jquery' ],
-            '2.0.3',
+            THEME_VERSION,
             true
         );
 
@@ -52,6 +60,14 @@ class ElementorWidgets {
                 'ajax_url' => admin_url( 'admin-ajax.php' ),
                 'nonce'    => wp_create_nonce( 'vf_filter_nonce' ),
             ]
+        );
+
+        wp_register_script(
+            'vf-hero-slider-script',
+            get_stylesheet_directory_uri() . '/elementor/widgets/vf-hero-slider/widget.js',
+            [ 'jquery' ],
+            THEME_VERSION,
+            true
         );
     }
 
@@ -92,6 +108,16 @@ class ElementorWidgets {
                 $widgets_manager->register( $widget_instance );
             } elseif ( method_exists( $widgets_manager, 'register_widget_type' ) ) {
                 $widgets_manager->register_widget_type( $widget_instance );
+            }
+        }
+
+        // Register VF Hero Slider
+        if ( class_exists( 'VintageFootballElementorWidgets\Widgets\VFHeroSlider\Widget_VFHeroSlider' ) ) {
+            $slider_instance = new Widgets\VFHeroSlider\Widget_VFHeroSlider();
+            if ( method_exists( $widgets_manager, 'register' ) ) {
+                $widgets_manager->register( $slider_instance );
+            } elseif ( method_exists( $widgets_manager, 'register_widget_type' ) ) {
+                $widgets_manager->register_widget_type( $slider_instance );
             }
         }
     }

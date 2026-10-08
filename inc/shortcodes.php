@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Currency switcher shortcode [currency_switcher]
+ * Fallback to custom CURCY selector if WooPayments template tag is not available.
  */
 function custom_currency_switcher_shortcode() {
     if ( function_exists( 'wc_get_currency_switcher_markup' ) ) {
@@ -19,143 +20,87 @@ function custom_currency_switcher_shortcode() {
         $args = array();
         return wc_get_currency_switcher_markup( $instance, $args );
     }
-    return '';
+    return get_data_currency_shortcode();
 }
 add_shortcode( 'currency_switcher', 'custom_currency_switcher_shortcode' );
 
 /**
- * Currency switcher select2 initialize on footer
- */
-function custom_currency_switcher() {
-    ?>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script>
-        jQuery(document).ready(function($) {
-            $('.wrapper-header-currency form select').select2({
-                width: '115px',
-                templateResult: formatCurrency,
-                templateSelection: formatCurrency
-            });
-
-            function formatCurrency(state) {
-                if (!state.id) {
-                    return state.text;
-                }
-                return $('<span>' + state.text + '</span>');
-            }
-        });
-    </script>
-    <?php
-}
-add_action( 'wp_footer', 'custom_currency_switcher', 998 );
-
-/**
- * Currency selector shortcode [currency_selector]
+ * Currency selector shortcode [currency_selector] for CURCY (WooCommerce Multi Currency)
  */
 function get_data_currency_shortcode() {
     $currencies = get_option( 'woo_multi_currency_params' );
-    if ( ! empty( $currencies ) ) {
-        $country_cu = $currencies['currency'];
-        $currency_symbols = array();
-        $flag_symbols = array();
-        $symbol_map = [
-            "USD" => "$",   "EUR" => "€",   "GBP" => "£",   "JPY" => "¥",
-            "KRW" => "₩",   "RUB" => "₽",   "INR" => "₹",   "TRY" => "₺",
-            "THB" => "฿",   "VND" => "₫",   "AED" => "د.إ", "CAD" => "C$",
-            "AUD" => "A$",  "NZD" => "NZ$", "CHF" => "CHF", "DKK" => "kr",
-            "HKD" => "HK$", "NOK" => "NOK", "SEK" => "SEK", "SGD" => "SGD",
-            "ZAR" => "R",   "PHP" => "₱",   "MXN" => "MX$", "BRL" => "R$",
-            "ARS" => "ARS$","CLP" => "CLP$","COP" => "COP$","PEN" => "S/",
-            "CZK" => "Kč",  "HUF" => "Ft",  "PLN" => "zł",  "ILS" => "₪",
-            "NGN" => "₦",   "EGP" => "EGP", "TZS" => "TSh", "KES" => "KSh",
-            "PKR" => "₨",   "BDT" => "৳",   "HNL" => "L",   "GYD" => "G$",
-            "BZD" => "BZ$", "JMD" => "J$",  "TTD" => "TT$", "PAB" => "B/.",
-            "GTQ" => "Q",   "XOF" => "CFA", "XPF" => "F",   "MAD" => "MAD",
-            "GMD" => "D",   "MWK" => "MK",  "ZMW" => "ZMW", "UGX" => "UGX",
-            "MZN" => "MZN", "BWP" => "BWP", "LSL" => "LSL", "SZL" => "SZL"
-        ];
-
-        $flag_map = [
-            "USD" => "🇺🇸", "EUR" => "🇪🇺", "GBP" => "🇬🇧", "JPY" => "🇯🇵",
-            "KRW" => "🇰🇷", "RUB" => "🇷🇺", "INR" => "🇮🇳", "TRY" => "🇹🇷",
-            "THB" => "🇹🇭", "VND" => "🇻🇳", "AED" => "🇦🇪", "CAD" => "🇨🇦",
-            "AUD" => "🇦🇺", "NZD" => "🇳🇿", "CHF" => "🇨🇭", "DKK" => "🇩🇰",
-            "HKD" => "🇭🇰", "NOK" => "NOK", "SEK" => "SEK", "SGD" => "🇸🇬",
-            "ZAR" => "🇿🇦", "PHP" => "🇵🇭", "MXN" => "🇲🇽", "BRL" => "🇧🇷",
-            "ARS" => "🇦🇷", "CLP" => "🇨🇱", "COP" => "🇨🇴", "PEN" => "🇵🇪",
-            "CZK" => "🇨🇿", "HUF" => "🇭🇺", "PLN" => "🇵🇱", "ILS" => "🇮🇱",
-            "NGN" => "₦",   "EGP" => "EGP", "TZS" => "TSh", "KES" => "KSh",
-            "PKR" => "₨",   "BDT" => "৳",   "HNL" => "L",   "GYD" => "G$",
-            "BZD" => "BZ$", "JMD" => "J$",  "TTD" => "TT$", "PAB" => "B/.",
-            "GTQ" => "Q",   "XOF" => "🇫🇷", "XPF" => "🇫🇷", "MAD" => "🇲🇦",
-            "GMD" => "🇬🇲", "MWK" => "🇲🇼", "ZMW" => "🇿🇲", "UGX" => "UGX",
-            "MZN" => "🇲🇿", "BWP" => "🇧🇼", "LSL" => "🇱🇸", "SZL" => "SZL"
-        ];
-
-        foreach ( $country_cu as $currency ) {
-            if ( isset( $symbol_map[ $currency ] ) ) {
-                $currency_symbols[ $symbol_map[ $currency ] ] = $currency;
-            }
-        }
-
-        foreach ( $country_cu as $currency ) {
-            if ( isset( $flag_map[ $currency ] ) ) {
-                $flag_symbols[ $currency ] = $flag_map[ $currency ];
-            }
-        }
-
-        $output = '';
-        if ( ! empty( $currency_symbols ) ) {
-            $output .= '<div class="wrapper-header-currency">';
-            $output .= '<form>';
-            $output .= '<select id="currency-select" name="wmc-currency" aria-label="Select currency" onchange="this.form.submit()">';
-            
-            foreach ( $currency_symbols as $key => $value ) {
-                $output .= '<option value="' . esc_attr( $value ) . '">' . $flag_symbols[ $value ] . ' ' . esc_html( $key . ' ' . $value ) . '</option>';
-            }
-            $output .= '</select>';
-            $output .= '</form>';
-            $output .= '</div>';
-            
-            $output .= '<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">';
-            $output .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>';
-            $output .= '<script>
-                    jQuery(document).ready(function($) {
-                        $(".wrapper-header-currency form select").select2({
-                            width: "118px",
-                            templateResult: formatCurrency,
-                            templateSelection: formatCurrency
-                        });
-
-                        function formatCurrency(state) {
-                            if (!state.id) {
-                                return state.text;
-                            }
-                            return $("<span>" + state.text + "</span>");
-                        }
-                    });
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const activeCurrency = document.querySelector(".wmc-currency.wmc-active");
-                        if (activeCurrency) {
-                            const currency = activeCurrency.getAttribute("data-currency");
-                            if (currency) {
-                                localStorage.setItem("selectedCurrency", currency);
-                            }
-                        }
-                        const savedCurrency = localStorage.getItem("selectedCurrency");
-                        if (savedCurrency) {
-                            const selectEl = document.getElementById("currency-select");
-                            if (selectEl) {
-                                selectEl.value = savedCurrency;
-                            }
-                        }
-                    });
-                </script>';
-        }
-        return $output;
+    if ( empty( $currencies ) || empty( $currencies['currency'] ) ) {
+        return '';
     }
-    return '';
+
+    $country_cu = $currencies['currency'];
+
+    // Get current active currency from CURCY (Premium or Free), fallback to WooCommerce or cookie
+    $current_currency = '';
+    if ( class_exists( 'WOOMULTI_CURRENCY_Data' ) ) {
+        $current_currency = WOOMULTI_CURRENCY_Data::get_ins()->get_current_currency();
+    } elseif ( class_exists( 'WOOMULTI_CURRENCY_F_Data' ) ) {
+        $current_currency = WOOMULTI_CURRENCY_F_Data::get_ins()->get_current_currency();
+    } elseif ( ! empty( $_COOKIE['wmc_current_currency'] ) ) {
+        $current_currency = sanitize_text_field( $_COOKIE['wmc_current_currency'] );
+    } elseif ( function_exists( 'get_woocommerce_currency' ) ) {
+        $current_currency = get_woocommerce_currency();
+    }
+
+    $symbol_map = [
+        "USD" => "$",   "EUR" => "€",   "GBP" => "£",   "JPY" => "¥",
+        "KRW" => "₩",   "RUB" => "₽",   "INR" => "₹",   "TRY" => "₺",
+        "THB" => "฿",   "VND" => "₫",   "AED" => "د.إ", "CAD" => "C$",
+        "AUD" => "A$",  "NZD" => "NZ$", "CHF" => "CHF", "DKK" => "kr",
+        "HKD" => "HK$", "NOK" => "NOK", "SEK" => "SEK", "SGD" => "SGD",
+        "ZAR" => "R",   "PHP" => "₱",   "MXN" => "MX$", "BRL" => "R$",
+        "ARS" => "ARS$","CLP" => "CLP$","COP" => "COP$","PEN" => "S/",
+        "CZK" => "Kč",  "HUF" => "Ft",  "PLN" => "zł",  "ILS" => "₪",
+        "NGN" => "₦",   "EGP" => "EGP", "TZS" => "TSh", "KES" => "KSh",
+        "PKR" => "₨",   "BDT" => "৳",   "HNL" => "L",   "GYD" => "G$",
+        "BZD" => "BZ$", "JMD" => "J$",  "TTD" => "TT$", "PAB" => "B/.",
+        "GTQ" => "Q",   "XOF" => "CFA", "XPF" => "F",   "MAD" => "MAD",
+        "GMD" => "D",   "MWK" => "MK",  "ZMW" => "ZMW", "UGX" => "UGX",
+        "MZN" => "MZN", "BWP" => "BWP", "LSL" => "LSL", "SZL" => "SZL"
+    ];
+
+    $flag_map = [
+        "USD" => "🇺🇸", "EUR" => "🇪🇺", "GBP" => "🇬🇧", "JPY" => "🇯🇵",
+        "KRW" => "🇰🇷", "RUB" => "🇷🇺", "INR" => "🇮🇳", "TRY" => "🇹🇷",
+        "THB" => "🇹🇭", "VND" => "🇻🇳", "AED" => "🇦🇪", "CAD" => "🇨🇦",
+        "AUD" => "🇦🇺", "NZD" => "NZ$", "CHF" => "🇨🇭", "DKK" => "🇩🇰",
+        "HKD" => "🇭🇰", "NOK" => "NOK", "SEK" => "SEK", "SGD" => "🇸🇬",
+        "ZAR" => "🇿🇦", "PHP" => "🇵🇭", "MXN" => "🇲🇽", "BRL" => "🇧🇷",
+        "ARS" => "🇦🇷", "CLP" => "🇨🇱", "COP" => "🇨🇴", "PEN" => "🇵🇪",
+        "CZK" => "🇨🇿", "HUF" => "🇭🇺", "PLN" => "🇵🇱", "ILS" => "🇮🇱",
+        "NGN" => "🇳🇬", "EGP" => "EGP", "TZS" => "TSh", "KES" => "KSh",
+        "PKR" => "₨",   "BDT" => "৳",   "HNL" => "L",   "GYD" => "G$",
+        "BZD" => "BZ$", "JMD" => "J$",  "TTD" => "TT$", "PAB" => "B/.",
+        "GTQ" => "🇬🇹", "XOF" => "🇫🇷", "XPF" => "🇫🇷", "MAD" => "🇲🇦",
+        "GMD" => "🇬🇲", "MWK" => "🇲🇼", "ZMW" => "🇿🇲", "UGX" => "🇺🇬",
+        "MZN" => "🇲🇿", "BWP" => "🇧🇼", "LSL" => "🇱🇸", "SZL" => "🇸🇿"
+    ];
+
+    $output  = '<div class="wrapper-header-currency">';
+    $output .= '<form method="get">';
+    $output .= '<select id="currency-select" name="wmc-currency" aria-label="Select currency" onchange="this.form.submit()">';
+
+    foreach ( $country_cu as $currency ) {
+        $symbol   = isset( $symbol_map[ $currency ] ) ? $symbol_map[ $currency ] : $currency;
+        $flag     = isset( $flag_map[ $currency ] ) ? $flag_map[ $currency ] : '';
+        $selected = ( $current_currency === $currency ) ? ' selected="selected"' : '';
+        $label    = trim( $flag . ' ' . $symbol . ' ' . $currency );
+
+        $output .= '<option value="' . esc_attr( $currency ) . '"' . $selected . '>';
+        $output .= esc_html( $label );
+        $output .= '</option>';
+    }
+
+    $output .= '</select>';
+    $output .= '</form>';
+    $output .= '</div>';
+
+    return $output;
 }
 add_shortcode( 'currency_selector', 'get_data_currency_shortcode' );
 
@@ -269,7 +214,7 @@ function vf_seo_block_shortcode( $atts = array() ) {
     $atts = shortcode_atts( array(
         'title'      => 'Vintage Football Shop - The Home of Classic & Retro Football Shirts',
         'subtitle'   => 'The Home of the Collector. Explore our collection of 1,000+ authentic retro football shirts across the Premier League, Serie A, La Liga, Bundesliga, National Teams & Iconic Legends.',
-        'max_height' => '180px',
+        'max_height' => '200px',
     ), $atts, 'vf_seo_block' );
 
     ob_start();

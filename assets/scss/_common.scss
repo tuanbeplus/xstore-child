@@ -998,10 +998,6 @@ h2 {
 }
 }
 
-
-
-
-
 @media screen and (min-width: 1440px) {
     .wavy {
         width: 100%;
@@ -1012,9 +1008,12 @@ h2 {
   
 }
 
-
-
-
+.wrapper-header-currency {
+    position: relative;
+    .select2-dropdown {
+        z-index: 10000 !important;
+    }
+}
 .wrapper-header-currency .select2-results__option {
     display: flex;
     align-items: center;
@@ -1202,3 +1201,52 @@ body .wcap-modal .popup-model-content  p{
     }
 }
 
+body.wp-child-theme-xstore-child {
+    &:not(.elementor-editor-active) {
+        border-top: var(--header-height, 128px) solid #111 !important;
+        @media (max-width: 1200px) {
+            border-top: var(--header-height, 106px) solid #111 !important;
+        }
+        @media (max-width: 767px) {
+            border-top: var(--header-height, 103px) solid #111 !important;
+        }
+        header.elementor-location-header {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            transform: translate3d(0, 0, 0);
+            transition: transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.25s ease;
+            will-change: transform;
+        }
+        &.sticky header.elementor-location-header,
+        header.elementor-location-header.is-sticky {
+            transform: translate3d(0, calc(-1 * var(--topbar-height, 0px)), 0);
+        }
+        &.admin-bar {
+            header.elementor-location-header {
+                top: 32px;
+                @media (max-width: 782px) {
+                    top: 46px;
+                }
+            }
+            /* Admin bar is not fixed (scrolls away) on screens <= 600px,
+               so drop the offset once scrolled; otherwise the top bar stays visible */
+            @media (max-width: 600px) {
+                &.sticky header.elementor-location-header {
+                    top: 0;
+                }
+            }
+        }
+    }
+    .elementor-lightbox {
+        .button.btn-view-wishlist,
+        .buttons.mini-cart-buttons {
+            a:first-child {
+                font-size: 18px;
+            }
+        }
+    }
+}

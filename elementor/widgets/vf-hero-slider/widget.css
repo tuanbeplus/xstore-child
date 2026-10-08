@@ -1,0 +1,564 @@
+/**
+ * VF Hero Slider - Widget Styles
+ * Primary colors: #16FC03 (Neon Green), #111111 (Black), #ffffff (White)
+ * Fonts: Staatliches (Headline) and Inter (Body / UI)
+ */
+
+/* ==========================================================================
+   1. Root Variables & Container
+   ========================================================================== */
+.elementor-widget-vf-hero-slider .vf-hero-slider {
+    --vf-font-title: 'Staatliches', Impact, 'Inter', sans-serif;
+    --vf-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --vf-hero-content-duration: 700ms;
+    --vf-hero-stagger: 120ms;
+    --vf-hero-img-duration: 900ms;
+    --vf-hero-distance: 28px;
+    --vf-overlay-bg: linear-gradient(90deg, rgb(0 0 0 / 60%) 0%, rgb(0 0 0 / 40%) 30%, rgba(0, 0, 0, 0) 100%);
+
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    contain: layout paint;
+    user-select: none;
+    -webkit-user-select: none;
+    background-color: #0e0e0e;
+}
+
+@media screen and (max-width: 1024px) {
+    .elementor-widget-vf-hero-slider .vf-hero-slider:not(.vf-height-fixed):not(.vf-height-viewport) {
+        aspect-ratio: 16 / 9;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-hero-slider .vf-hero-slider {
+        --vf-hero-distance: 18px;
+        --vf-overlay-bg: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.2) 50%,  rgba(0, 0, 0, 0) 100%);
+    }
+
+    .elementor-widget-vf-hero-slider .vf-hero-slider:not(.vf-height-fixed):not(.vf-height-viewport) {
+        aspect-ratio: 4 / 5;
+    }
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-slider * {
+    box-sizing: border-box;
+}
+
+/* Height Mode: Full Viewport */
+.elementor-widget-vf-hero-slider .vf-height-viewport {
+    height: 100vh;
+    min-height: 500px;
+}
+
+/* ==========================================================================
+   2. Slider Track & Slide Items
+   ========================================================================== */
+.elementor-widget-vf-hero-slider .vf-hero-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    box-sizing: border-box;
+    padding: 60px;
+    z-index: 1;
+    overflow: hidden;
+}
+
+@media screen and (max-width: 1024px) {
+    .elementor-widget-vf-hero-slider .vf-hero-slide {
+        padding: 50px 40px 60px 40px;
+    }
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-hero-slider .vf-hero-slide {
+        padding: 50px 20px 60px 20px;
+    }
+}
+
+/* Crossfade Mode (Default) */
+.elementor-widget-vf-hero-slider .vf-effect-fade .vf-hero-slide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.7s;
+}
+
+.elementor-widget-vf-hero-slider .vf-effect-fade .vf-hero-slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    z-index: 2;
+}
+
+/* Slide Horizontal Mode */
+.elementor-widget-vf-hero-slider .vf-effect-slide .vf-hero-slide {
+    transform: translate3d(100%, 0, 0);
+    transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.7s;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.elementor-widget-vf-hero-slider .vf-effect-slide .vf-hero-slide.is-active {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+    pointer-events: auto;
+    z-index: 2;
+}
+
+.elementor-widget-vf-hero-slider .vf-effect-slide .vf-hero-slide.is-prev {
+    transform: translate3d(-100%, 0, 0);
+    visibility: hidden;
+    z-index: 1;
+}
+
+/* Full Slide Link */
+.elementor-widget-vf-hero-slider .vf-hero-full-link {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    cursor: pointer;
+    text-indent: -9999px;
+}
+
+/* ==========================================================================
+   3. Media & Background
+   ========================================================================== */
+.elementor-widget-vf-hero-slider .vf-hero-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    transform: translateZ(0);
+}
+
+/* Image Animations */
+@keyframes vfHeroImgFadeIn {
+    0% {
+        opacity: 0.1;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-slide.is-active .vf-hero-media img {
+    animation: vfHeroImgFadeIn var(--vf-hero-img-duration, 900ms) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.elementor-widget-vf-hero-slider .no-image-anim .vf-hero-slide.is-active .vf-hero-media img {
+    animation: none !important;
+    opacity: 1 !important;
+}
+
+/* Ken Burns Subtle Zoom */
+@keyframes vfHeroKenBurns {
+    0% {
+        transform: scale(1) translateZ(0);
+    }
+    100% {
+        transform: scale(1.05) translateZ(0);
+    }
+}
+
+.elementor-widget-vf-hero-slider .has-image-zoom .vf-hero-slide.is-active .vf-hero-media img {
+    animation: vfHeroImgFadeIn var(--vf-hero-img-duration, 900ms) cubic-bezier(0.16, 1, 0.3, 1) both,
+               vfHeroKenBurns 8s ease-out forwards;
+}
+
+/* Overlay (Uses responsive CSS variable; overridden if set in Elementor settings) */
+.elementor-widget-vf-hero-slider .vf-hero-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    background: var(--vf-overlay-bg);
+}
+
+/* ==========================================================================
+   4. Slide Content & Typography
+   ========================================================================== */
+.elementor-widget-vf-hero-slider .vf-hero-content-container {
+    width: 100%;
+    height: 100%;
+    max-width: 1640px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-hero-slider .vf-hero-content-container {
+        align-items: flex-start;
+    }
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-content {
+    position: relative;
+    z-index: 4;
+    width: 100%;
+    max-width: 740px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Content Fade In Up Animation */
+.elementor-widget-vf-hero-slider .vf-hero-content > * {
+    opacity: 0;
+    transform: translate3d(0, var(--vf-hero-distance, 28px), 0);
+    transition: opacity var(--vf-hero-content-duration, 700ms) cubic-bezier(0.16, 1, 0.3, 1),
+                transform var(--vf-hero-content-duration, 700ms) cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-slide.is-active .vf-hero-content > * {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition-delay: calc(var(--i, 0) * var(--vf-hero-stagger, 120ms) + 120ms);
+}
+
+/* Content Animation Options */
+.elementor-widget-vf-hero-slider .vf-anim-none .vf-hero-content > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+.elementor-widget-vf-hero-slider .vf-anim-fade-in .vf-hero-content > * {
+    transform: none !important;
+}
+
+/* Badge */
+.elementor-widget-vf-hero-slider .vf-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    font-family: var(--vf-font-title);
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #111111;
+    background-color: #16FC03;
+    padding: 9px 16px 8px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-hero-slider .vf-hero-badge {
+        font-size: 18px;
+    }
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-badge-icon {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+
+/* Title */
+.elementor-widget-vf-hero-slider .vf-hero-title {
+    font-family: var(--vf-font-title);
+    font-size: clamp(3.25rem, 5.2vw, 6rem);
+    line-height: 1.05;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 0 14px 0;
+    word-break: break-word;
+}
+
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-hero-slider .vf-hero-title {
+        margin-bottom: 10px;
+    }
+}
+
+/* Description */
+.elementor-widget-vf-hero-slider .vf-hero-desc {
+    font-family: var(--vf-font-body);
+    font-size: clamp(1.125rem, 1.35vw, 1.35rem);
+    font-weight: 400;
+    line-height: 1.5;
+    color: #fff;
+    margin: 0 0 36px 0;
+    max-width: 580px;
+}
+
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-hero-slider .vf-hero-desc {
+        margin-bottom: 24px;
+    }
+}
+
+/* ==========================================================================
+   5. Action Buttons
+   ========================================================================== */
+.elementor-widget-vf-hero-slider .vf-hero-actions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    z-index: 5;
+}
+
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-hero-slider .vf-hero-actions {
+        width: 100%;
+        gap: 10px;
+    }
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--vf-font-title);
+    font-size: 22px;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-hero-slider .vf-hero-btn {
+        font-size: 20px;
+        padding: 10px 20px;
+    }
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-btn--primary {
+    background-color: #16FC03;
+    color: #000000;
+    border-color: #16FC03;
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-btn--primary:hover {
+    background-color: #111111;
+    color: #ffffff;
+    border-color: #111111;
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-btn--secondary {
+    background-color: transparent;
+    color: #fafafa;
+    border-color: #eee;
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-btn--secondary:hover {
+    background-color: #111111;
+    color: #fafafa;
+    border-color: #111;
+}
+
+/* ==========================================================================
+   6. Navigation Arrows & Dots
+   ========================================================================== */
+.elementor-widget-vf-hero-slider .vf-hero-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 44px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+    border: none;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.25s ease;
+    padding: 0;
+}
+
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-hero-slider .vf-hero-arrow {
+        top: 70%;
+    }
+
+    .elementor-widget-vf-hero-slider .hide-arrows-mobile .vf-hero-arrow {
+        display: none !important;
+    }
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-arrow--prev {
+    left: 0;
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-arrow--next {
+    right: 0;
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-arrow:hover,
+.elementor-widget-vf-hero-slider .vf-hero-arrow:focus {
+    background-color: #222;
+    color: #ffffff;
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-arrow svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+/* Dots */
+.elementor-widget-vf-hero-slider .vf-hero-dots {
+    position: absolute;
+    bottom: 32px;
+    left: 60px;
+    right: 60px;
+    max-width: 1640px;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-dot {
+    pointer-events: auto;
+}
+
+.elementor-widget-vf-hero-slider .vf-dots-bottom-left .vf-hero-dots {
+    justify-content: flex-start;
+}
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-hero-slider .vf-dots-bottom-left .vf-hero-dots {
+        justify-content: center;
+    }
+}
+
+.elementor-widget-vf-hero-slider .vf-dots-bottom-center .vf-hero-dots {
+    justify-content: center;
+}
+
+.elementor-widget-vf-hero-slider .vf-dots-bottom-right .vf-hero-dots {
+    justify-content: flex-end;
+}
+
+@media screen and (max-width: 1024px) {
+    .elementor-widget-vf-hero-slider .vf-hero-dots {
+        left: 40px;
+        right: 40px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-hero-slider .vf-hero-dots {
+        left: 30px;
+        right: 30px;
+        justify-content: center;
+    }
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-dot {
+    width: 24px;
+    height: 6px;
+    border-radius: 2px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-dot.is-active {
+    background-color: #16FC03;
+}
+
+/* Progress Bar */
+.elementor-widget-vf-hero-slider .vf-hero-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    z-index: 11;
+    overflow: hidden;
+}
+
+.elementor-widget-vf-hero-slider .vf-hero-progress-bar {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background-color: #16FC03;
+    transition: width 0.1s linear;
+}
+
+/* Counter */
+.elementor-widget-vf-hero-slider .vf-hero-counter {
+    position: absolute;
+    bottom: 28px;
+    right: 60px;
+    font-family: var(--vf-font-title);
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: #ffffff;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 4px 10px;
+    border-radius: 3px;
+}
+
+/* ==========================================================================
+   7. Reduced Motion & Elementor Editor Fallback
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .elementor-widget-vf-hero-slider .vf-hero-slide,
+    .elementor-widget-vf-hero-slider .vf-hero-content > *,
+    .elementor-widget-vf-hero-slider .vf-hero-media img,
+    .elementor-widget-vf-hero-slider .vf-hero-dot {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+}
+
+/* Elementor Live Preview Editor Mode */
+.elementor-editor-active .elementor-widget-vf-hero-slider .vf-hero-content > * {
+    opacity: 1 !important;
+    transform: none !important;
+}

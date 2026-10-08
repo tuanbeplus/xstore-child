@@ -16,6 +16,17 @@
         font-size: 16px;
         color: #16FC03;
     }
+    .mobile-first {
+        display: none;
+        @media (max-width: 767px) {
+            display: block;
+        }
+    }
+    .desktop-first {
+        @media (max-width: 767px) {
+            display: none;
+        }
+    }
 }
 
 .wrapper-des-bottom-category {
