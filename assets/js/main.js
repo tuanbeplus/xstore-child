@@ -405,15 +405,17 @@ jQuery(function ($) {
 
 (function ($) {
 	'use strict';
-	const siteHeader = $('header.elementor-location-header');
-	const siteBody = $('html body.wp-child-theme-xstore-child');
+
+	function getHeader() {
+		return $('header.elementor-location-header');
+	}
 
 	/* Set --header-height (full, top bar visible) and --topbar-height.
-	   Body margin uses the full height so it never changes while scrolling. */
+	   Body margin/border uses the full height so it never changes while scrolling. */
 	function setHeaderHeight() {
+		const siteHeader = getHeader();
 		if (!siteHeader.length) return;
-		/* Prefer a visible #header-top-bar; fall back to the header's first
-		   top-level section (Elementor may use a different mobile section) */
+
 		let topBar = siteHeader.find('#header-top-bar').filter(':visible').first();
 		if (!topBar.length) {
 			topBar = siteHeader
@@ -434,6 +436,7 @@ jQuery(function ($) {
 	/* Handle sticky header: purely class toggle on body/header */
 	function handleStickyHeader() {
 		const $body = $('body');
+		const siteHeader = getHeader();
 		const y = window.pageYOffset || document.documentElement.scrollTop || 0;
 		if (y > 15) {
 			$body.addClass('sticky');
@@ -463,6 +466,7 @@ jQuery(function ($) {
 		$(window).on('load', function () {
 			setHeaderHeight();
 			setTimeout(setHeaderHeight, 300);
+			setTimeout(setHeaderHeight, 1000);
 		});
 
 		$(window).on('resize orientationchange', function () {

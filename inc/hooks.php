@@ -180,3 +180,11 @@ add_action( 'admin_bar_menu', 'vf_remove_post_from_admin_bar', 999 );
 function vf_remove_post_from_admin_bar( $wp_admin_bar ) {
     $wp_admin_bar->remove_node( 'new-post' );
 }
+
+/**
+ * Set Safari browser UI & status bar color to white
+ */
+add_action( 'wp_head', 'vf_add_meta_theme_color', 1 );
+function vf_add_meta_theme_color() {
+    echo '<meta name="theme-color" content="#ffffff">' . "\n";
+}
