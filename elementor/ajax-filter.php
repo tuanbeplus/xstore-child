@@ -302,7 +302,7 @@ function vf_ajax_filter_product_categories() {
             'shown_count'     => 0,
             'current_page'    => 1,
             'total_pages'     => 0,
-            'count_text'      => __( 'Showing 0 categories', 'xstore-child' ),
+            'count_text'      => __( 'Showing 0 teams', 'xstore-child' ),
         ] );
     }
 
@@ -403,11 +403,11 @@ function vf_ajax_filter_product_categories() {
 
     // 8. Build Count Text
     if ( $total_items === 0 ) {
-        $count_text = __( 'Showing 0 categories', 'xstore-child' );
+        $count_text = __( 'Showing 0 teams', 'xstore-child' );
     } elseif ( $total_items <= $per_page ) {
         $count_text = sprintf(
             /* translators: %d: total categories */
-            __( 'Showing %d of %d categories', 'xstore-child' ),
+            __( 'Showing %d of %d teams', 'xstore-child' ),
             $total_items,
             $total_items
         );
@@ -416,7 +416,7 @@ function vf_ajax_filter_product_categories() {
         $end_num   = $offset + $shown_count;
         $count_text = sprintf(
             /* translators: 1: start count, 2: end count, 3: total categories */
-            __( 'Showing %1$d–%2$d of %3$d categories', 'xstore-child' ),
+            __( 'Showing %1$d–%2$d of %3$d teams', 'xstore-child' ),
             $start_num,
             $end_num,
             $total_items
