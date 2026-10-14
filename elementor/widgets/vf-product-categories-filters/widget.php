@@ -976,7 +976,7 @@ class Widget_VFProductCategoriesFilters extends Widget_Base {
 
         $fallback_img_url = '';
         if ( ! empty( $settings['fallback_image']['id'] ) ) {
-            $fallback_img_url = wp_get_attachment_image_url( $settings['fallback_image']['id'], 'medium_large' );
+            $fallback_img_url = wp_get_attachment_image_url( $settings['fallback_image']['id'], '400x400' );
         } elseif ( ! empty( $settings['fallback_image']['url'] ) ) {
             $fallback_img_url = $settings['fallback_image']['url'];
         }
@@ -1034,7 +1034,7 @@ class Widget_VFProductCategoriesFilters extends Widget_Base {
 
             // Thumbnail
             $thumb_id  = get_term_meta( $term->term_id, 'thumbnail_id', true );
-            $image_url = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'medium_large' ) : $fallback_img_url;
+            $image_url = $thumb_id ? wp_get_attachment_image_url( $thumb_id, '400x400' ) : $fallback_img_url;
 
             // Link
             $term_link = get_term_link( $term );
@@ -1127,10 +1127,10 @@ class Widget_VFProductCategoriesFilters extends Widget_Base {
                         <!-- Sort by name and product count -->
                         <div class="vf-filter-sort-wrapper">
                             <select class="vf-filter-select vf-sort-select" aria-label="<?php esc_attr_e( 'Sort by', 'xstore-child' ); ?>">
-                                <option value="name_asc"><?php esc_html_e( 'Name: A–Z', 'xstore-child' ); ?></option>
-                                <option value="name_desc"><?php esc_html_e( 'Name: Z–A', 'xstore-child' ); ?></option>
-                                <option value="count_desc"><?php esc_html_e( 'Products: High–Low', 'xstore-child' ); ?></option>
-                                <option value="count_asc"><?php esc_html_e( 'Products: Low–High', 'xstore-child' ); ?></option>
+                                <option value="name_asc"><?php esc_html_e( 'Name: A-Z', 'xstore-child' ); ?></option>
+                                <option value="name_desc"><?php esc_html_e( 'Name: Z-A', 'xstore-child' ); ?></option>
+                                <option value="count_desc"><?php esc_html_e( 'Products: High-Low', 'xstore-child' ); ?></option>
+                                <option value="count_asc"><?php esc_html_e( 'Products: Low-High', 'xstore-child' ); ?></option>
                             </select>
                         </div>
 

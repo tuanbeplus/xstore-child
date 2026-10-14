@@ -182,9 +182,44 @@ function vf_remove_post_from_admin_bar( $wp_admin_bar ) {
 }
 
 /**
- * Set Safari browser UI & status bar color to white
+ * Add 'vf-loading' class to <body> on the front end.
+ * While present, the header has pointer-events:none so users cannot
+ * trigger mega-menu dropdowns before all styles/scripts are ready.
+ * The class is removed by main.js on window.load (with a safety timeout).
  */
-add_action( 'wp_head', 'vf_add_meta_theme_color', 1 );
-function vf_add_meta_theme_color() {
-    echo '<meta name="theme-color" content="#ffffff">' . "\n";
+add_filter( 'body_class', 'vf_add_loading_body_class' );
+function vf_add_loading_body_class( $classes ) {
+    // Skip in Elementor preview so the editor works normally.
+    if ( defined( 'ELEMENTOR_VERSION' ) && class_exists( '\Elementor\Plugin' ) ) {
+        if ( \Elementor\Plugin::$instance->preview->is_preview_mode() ) {
+            return $classes;
+        }
+    }
+    $classes[] = 'vf-loading';
+    return $classes;
 }
+
+/**
+ * Register 400x400 image size for category filter cards
+ */
+add_action( 'after_setup_theme', 'vf_register_category_card_image_size' );
+function vf_register_category_card_image_size() {
+    add_image_size( '400x400', 400, 400, true );
+}
+
+/**
+ * Allow HTML (including <p> tags) in Category / Term descriptions.
+ * WordPress core strips <p> tags by default on admin save via wp_filter_kses in pre_term_description.
+ */
+remove_filter( 'pre_term_description', 'wp_filter_kses' );
+remove_filter( 'term_description', 'wp_filter_kses' );
+remove_filter( 'term_description', 'wp_kses_data' );
+
+add_action( 'init', 'vf_allow_html_in_term_descriptions' );
+function vf_allow_html_in_term_descriptions() {
+    remove_filter( 'pre_term_description', 'wp_filter_kses' );
+    remove_filter( 'term_description', 'wp_filter_kses' );
+    remove_filter( 'term_description', 'wp_kses_data' );
+}
+
+

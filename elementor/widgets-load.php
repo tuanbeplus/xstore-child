@@ -25,6 +25,7 @@ class ElementorWidgets {
         return [
             'vf-product-categories-filters',
             'vf-hero-slider',
+            'vf-breadcrumbs',
         ];
     }
 
@@ -39,6 +40,13 @@ class ElementorWidgets {
         wp_register_style(
             'vf-hero-slider-style',
             get_stylesheet_directory_uri() . '/elementor/widgets/vf-hero-slider/widget.css',
+            [],
+            THEME_VERSION
+        );
+
+        wp_register_style(
+            'vf-breadcrumbs-style',
+            get_stylesheet_directory_uri() . '/elementor/widgets/vf-breadcrumbs/widget.css',
             [],
             THEME_VERSION
         );
@@ -118,6 +126,16 @@ class ElementorWidgets {
                 $widgets_manager->register( $slider_instance );
             } elseif ( method_exists( $widgets_manager, 'register_widget_type' ) ) {
                 $widgets_manager->register_widget_type( $slider_instance );
+            }
+        }
+
+        // Register VF Breadcrumbs
+        if ( class_exists( 'VintageFootballElementorWidgets\Widgets\VFBreadcrumbs\Widget_VFBreadcrumbs' ) ) {
+            $bc_instance = new Widgets\VFBreadcrumbs\Widget_VFBreadcrumbs();
+            if ( method_exists( $widgets_manager, 'register' ) ) {
+                $widgets_manager->register( $bc_instance );
+            } elseif ( method_exists( $widgets_manager, 'register_widget_type' ) ) {
+                $widgets_manager->register_widget_type( $bc_instance );
             }
         }
     }

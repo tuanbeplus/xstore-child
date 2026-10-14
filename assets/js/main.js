@@ -463,7 +463,16 @@ jQuery(function ($) {
 		setViewportHeight();
 		handleStickyHeader();
 
+		/* ── Unlock header interaction ── */
+		function unlockHeader() {
+			document.body.classList.remove('vf-loading');
+		}
+		// Safety fallback: unlock after 8s even if window.load hasn't fired
+		var unlockTimer = setTimeout(unlockHeader, 8000);
+
 		$(window).on('load', function () {
+			clearTimeout(unlockTimer);
+			unlockHeader();
 			setHeaderHeight();
 			setTimeout(setHeaderHeight, 300);
 			setTimeout(setHeaderHeight, 1000);

@@ -1,0 +1,230 @@
+/**
+ * Vintage Football - Lightweight Breadcrumbs Widget Styles
+ *
+ * Left: Breadcrumbs Trail (HOME > CLUBS > BAYERN)
+ * Right: Return to Previous Page (< RETURN TO PREVIOUS PAGE)
+ * Font: Staatliches condensed font
+ */
+
+:root {
+    --vf-font-title: 'Staatliches', Impact, 'Inter', sans-serif;
+    --vf-bc-text-color: #111111;
+    --vf-bc-link-color: #777777;
+    --vf-bc-link-hover: #111111;
+    --vf-bc-delimiter-color: #999999;
+}
+
+/* =============================================================================
+   CONTAINER LAYOUT
+   ============================================================================= */
+.vf-breadcrumbs-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px 0;
+}
+
+.vf-breadcrumbs-left {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.vf-breadcrumbs-right {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+/* =============================================================================
+   RETURN TO PREVIOUS PAGE BUTTON (RIGHT)
+   ============================================================================= */
+.vf-bc-return-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--vf-font-title, 'Staatliches', Impact, 'Inter', sans-serif);
+    font-size: 20px;
+    color: var(--vf-bc-text-color, #111111);
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    transition: color 0.2s ease, opacity 0.2s ease;
+    user-select: none;
+}
+
+.vf-bc-return-btn:hover {
+    color: #000000;
+    text-decoration: none;
+}
+
+.vf-bc-return-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vf-bc-return-icon svg {
+    display: block;
+    width: 14px;
+    height: 14px;
+    transform: rotate(180deg);
+    transform-origin: center;
+    fill: currentColor;
+}
+
+.vf-bc-return-btn:hover .vf-bc-return-icon {
+    transform: translateX(-3px);
+}
+
+.vf-bc-return-text {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* =============================================================================
+   BREADCRUMBS LIST (RIGHT)
+   ============================================================================= */
+.vf-breadcrumbs {
+    display: block;
+    width: 100%;
+}
+
+.vf-bc-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 4px 0;
+    font-family: var(--vf-font-title, 'Staatliches', Impact, 'Inter', sans-serif);
+    font-size: 20px;
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-sizing: border-box;
+}
+
+.vf-bc-item {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    color: var(--vf-bc-link-color, #777777);
+    line-height: 1.2;
+}
+
+.vf-bc-link {
+    color: var(--vf-bc-link-color, #777777);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: inline-block;
+}
+
+.vf-bc-link:hover {
+    color: var(--vf-bc-link-hover, #111111);
+    text-decoration: none;
+}
+
+.vf-bc-delimiter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vf-bc-delimiter-color, #999999);
+    font-size: 14px;
+    margin: 0 9px;
+    line-height: 1;
+    user-select: none;
+    position: relative;
+    top: -1px;
+}
+
+.vf-bc-item.is-current {
+    color: var(--vf-bc-text-color, #111111);
+}
+
+.vf-bc-current-title {
+    color: var(--vf-bc-text-color, #111111);
+    cursor: default;
+    display: inline-block;
+}
+
+/* =============================================================================
+   MOBILE RESPONSIVENESS & WRAPPING
+   ============================================================================= */
+@media screen and (max-width: 767.98px) {
+    .vf-breadcrumbs-container {
+        padding: 12px 0;
+        gap: 10px 16px;
+    }
+
+    .vf-bc-return-btn {
+        font-size: 17px;
+        gap: 6px;
+    }
+
+    .vf-bc-return-icon svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .vf-bc-list {
+        font-size: 17px;
+        gap: 4px 0;
+        line-height: 1.3;
+    }
+
+    .vf-bc-delimiter {
+        font-size: 13px;
+        margin: 0 6px;
+    }
+}
+
+@media screen and (max-width: 575.98px) {
+    .vf-breadcrumbs-container {
+        padding: 10px 0;
+        gap: 8px 12px;
+    }
+
+    .vf-breadcrumbs-left,
+    .vf-breadcrumbs-right {
+        width: auto;
+    }
+
+    .vf-bc-return-btn {
+        font-size: 15px;
+        gap: 5px;
+    }
+
+    .vf-bc-return-icon svg {
+        width: 11px;
+        height: 11px;
+    }
+
+    .vf-bc-list {
+        font-size: 15px;
+        line-height: 1.35;
+    }
+
+    .vf-bc-delimiter {
+        font-size: 11px;
+        margin: 0 5px;
+    }
+}

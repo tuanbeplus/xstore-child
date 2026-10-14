@@ -341,7 +341,7 @@ function vf_ajax_filter_product_categories() {
 
         // Thumbnail
         $thumb_id  = get_term_meta( $term->term_id, 'thumbnail_id', true );
-        $image_url = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'medium_large' ) : '';
+        $image_url = $thumb_id ? wp_get_attachment_image_url( $thumb_id, '400x400' ) : '';
 
         // Link
         $term_link = get_term_link( $term );

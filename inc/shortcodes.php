@@ -105,75 +105,115 @@ function get_data_currency_shortcode() {
 add_shortcode( 'currency_selector', 'get_data_currency_shortcode' );
 
 /**
+ * Ensure category description content is properly wrapped in <p> tags.
+ * If content does not have <p> tags, converts line breaks to paragraphs via wpautop.
+ */
+function vf_format_category_description( $content ) {
+    if ( empty( $content ) ) {
+        return '';
+    }
+
+    // If already contains <p> tags, keep as is
+    if ( strpos( $content, '<p' ) !== false ) {
+        return $content;
+    }
+
+    // Normalize line endings
+    $content = str_replace( array( "\r\n", "\r" ), "\n", $content );
+
+    // If paragraphs are separated by single newlines, promote to double newlines for wpautop
+    if ( strpos( $content, "\n\n" ) === false && strpos( $content, "\n" ) !== false ) {
+        $content = preg_replace( "/\n+/", "\n\n", $content );
+    }
+
+    return wpautop( $content );
+}
+
+/**
  * Category Top Description shortcode [box_description_top_category]
  */
 function get_data_box_description_top_category() {
-    ob_start();
-    $list_category = get_field( 'list_categories_des', 'options' );
-    $term = get_queried_object();
-    $term_id = isset( $term->term_id ) ? $term->term_id : 0;
+    $term    = get_queried_object();
+    $term_id = isset( $term->term_id ) ? (int) $term->term_id : 0;
 
-    if ( ! empty( $list_category ) && $term_id ) {
-        foreach ( $list_category as $ids_cat ) {
-            if ( ! empty( $ids_cat['category'] ) && in_array( $term_id, $ids_cat['category'], true ) ) {
-                $full_html  = $ids_cat['top_description'];
-                $plain_text = wp_strip_all_tags( $full_html );
-                $word_count = str_word_count( $plain_text );
-                $preview    = wp_trim_words( $plain_text, 40, '…' );
-                ?>
-                <div class="wrapper-des-top-category">
-                  <!-- Desktop: full text -->
-                  <div class="desktop-first">
-                    <?php echo $full_html; ?>
-                  </div>
-                
-                  <!-- Mobile: truncated with toggle -->
-                  <div class="mobile-first">
-                    <div class="preview-text">
-                      <?php echo $preview; ?>
-                    </div>
-                    <?php if ( $word_count > 40 ) : ?>
-                      <a href="#" class="toggle-more" style="font-weight:bold;">Read More</a>
-                      <div class="full-text" style="display:none;">
-                        <?php echo $full_html; ?>
-                        <a href="#" class="toggle-less" style="font-weight:bold;">Read Less</a>
-                      </div>
-                    <?php endif; ?>
-                  </div>
-                </div>
-                
-                <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                  document.querySelectorAll('.wrapper-des-top-category .mobile-first').forEach(function(container) {
-                    var preview = container.querySelector('.preview-text');
-                    var moreBtn = container.querySelector('.toggle-more');
-                    var fullDiv = container.querySelector('.full-text');
-                    var lessBtn = container.querySelector('.toggle-less');
+    if ( ! $term_id ) {
+        return '';
+    }
 
-                    if ( moreBtn ) {
-                      moreBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        preview.style.display = 'none';
-                        moreBtn.style.display = 'none';
-                        fullDiv.style.display = 'block';
-                      });
-                    }
-                    if ( lessBtn ) {
-                      lessBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        fullDiv.style.display = 'none';
-                        preview.style.display = 'block';
-                        moreBtn.style.display = 'inline';
-                      });
-                    }
-                  });
-                });
-                </script>
-                <?php
-                break;
-            }
+    $full_html = '';
+
+    // Primary: Native WooCommerce category description
+    if ( ! empty( $term->description ) ) {
+        $full_html = $term->description;
+    } else {
+        $term_obj = get_term( $term_id, 'product_cat' );
+        if ( ! empty( $term_obj->description ) ) {
+            $full_html = $term_obj->description;
         }
     }
+
+    if ( empty( $full_html ) ) {
+        return '';
+    }
+
+    // Ensure <p> tags are always present
+    $full_html = vf_format_category_description( $full_html );
+
+    $plain_text = wp_strip_all_tags( $full_html );
+    $word_count = str_word_count( $plain_text );
+    $preview    = wp_trim_words( $plain_text, 40, '…' );
+
+    ob_start();
+    ?>
+    <div class="wrapper-des-top-category">
+      <!-- Desktop: full text -->
+      <div class="desktop-first">
+        <?php echo $full_html; ?>
+      </div>
+    
+      <!-- Mobile: truncated with toggle -->
+      <div class="mobile-first">
+        <div class="preview-text">
+          <?php echo $preview; ?>
+        </div>
+        <?php if ( $word_count > 40 ) : ?>
+          <a href="#" class="toggle-more" style="font-weight:bold;">Read More</a>
+          <div class="full-text" style="display:none;">
+            <?php echo $full_html; ?>
+            <a href="#" class="toggle-less" style="font-weight:bold;">Read Less</a>
+          </div>
+        <?php endif; ?>
+      </div>
+    </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.wrapper-des-top-category .mobile-first').forEach(function(container) {
+        var preview = container.querySelector('.preview-text');
+        var moreBtn = container.querySelector('.toggle-more');
+        var fullDiv = container.querySelector('.full-text');
+        var lessBtn = container.querySelector('.toggle-less');
+
+        if ( moreBtn ) {
+          moreBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            preview.style.display = 'none';
+            moreBtn.style.display = 'none';
+            fullDiv.style.display = 'block';
+          });
+        }
+        if ( lessBtn ) {
+          lessBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            fullDiv.style.display = 'none';
+            preview.style.display = 'block';
+            moreBtn.style.display = 'inline';
+          });
+        }
+      });
+    });
+    </script>
+    <?php
     return ob_get_clean();
 }
 add_shortcode( 'box_description_top_category', 'get_data_box_description_top_category' );
@@ -182,23 +222,29 @@ add_shortcode( 'box_description_top_category', 'get_data_box_description_top_cat
  * Category Bottom Description shortcode [box_description_bot_category]
  */
 function get_data_box_description_bot_category() {
-    ob_start();
-    $list_category = get_field( 'list_categories_des', 'options' );
-    $term = get_queried_object();
-    $term_id = isset( $term->term_id ) ? $term->term_id : 0;
+    $term    = get_queried_object();
+    $term_id = isset( $term->term_id ) ? (int) $term->term_id : 0;
 
-    if ( ! empty( $list_category ) && $term_id ) {
-        foreach ( $list_category as $ids_cat ) {
-            if ( ! empty( $ids_cat['category'] ) && in_array( $term_id, $ids_cat['category'], true ) ) {
-                ?>
-                <div class="wrapper-des-bottom-category">
-                    <?php echo $ids_cat['bottom_description']; ?>
-                </div>
-                <?php
-                break;
-            }
-        }
+    if ( ! $term_id ) {
+        return '';
     }
+
+    // Primary: XStore native _et_second_description term meta
+    $bot_html = get_term_meta( $term_id, '_et_second_description', true );
+
+    if ( empty( $bot_html ) ) {
+        return '';
+    }
+
+    // Ensure <p> tags are always present
+    $bot_html = vf_format_category_description( $bot_html );
+
+    ob_start();
+    ?>
+    <div class="wrapper-des-bottom-category">
+        <?php echo $bot_html; ?>
+    </div>
+    <?php
     return ob_get_clean();
 }
 add_shortcode( 'box_description_bot_category', 'get_data_box_description_bot_category' );
