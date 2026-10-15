@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define('THEME_VERSION', '2.1.1');
+define('THEME_VERSION', '2.1.1' . time());
 define('INC_DIR', get_stylesheet_directory() . '/inc/');
 
 /**
@@ -26,6 +26,11 @@ require_once INC_DIR . 'hooks.php';
  * 3. Custom shortcodes (currency switcher, category descriptions, etc.)
  */
 require_once INC_DIR . 'shortcodes.php';
+
+/**
+ * 3b. Breadcrumbs (Elementor widget, [vf_breadcrumbs], single product heading)
+ */
+require_once INC_DIR . 'breadcrumbs.php';
 
 /**
  * 4. WooCommerce customizations (order status, ratings, shipping estimates, size guide, etc.)

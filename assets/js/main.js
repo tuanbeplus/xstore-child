@@ -433,18 +433,39 @@ jQuery(function ($) {
 		root.setProperty('--topbar-height', topBarHeight + 'px');
 	}
 
-	/* Handle sticky header: purely class toggle on body/header */
+	/* Handle sticky header: class toggle + slide-down entrance */
+	let headerWasSticky = false;
+
 	function handleStickyHeader() {
 		const $body = $('body');
 		const siteHeader = getHeader();
+		if (!siteHeader.length) {
+			return;
+		}
+
 		const y = window.pageYOffset || document.documentElement.scrollTop || 0;
-		if (y > 15) {
+		const shouldSticky = y > 15;
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		if (shouldSticky && !headerWasSticky) {
 			$body.addClass('sticky');
 			siteHeader.addClass('is-sticky');
-		} else {
+
+			if (!reducedMotion) {
+				siteHeader.addClass('vf-header-sticky-enter');
+				siteHeader.one('animationend webkitAnimationEnd', function () {
+					siteHeader.removeClass('vf-header-sticky-enter');
+				});
+			}
+		} else if (!shouldSticky) {
 			$body.removeClass('sticky');
-			siteHeader.removeClass('is-sticky');
+			siteHeader.removeClass('is-sticky vf-header-sticky-enter');
+		} else {
+			$body.addClass('sticky');
+			siteHeader.addClass('is-sticky');
 		}
+
+		headerWasSticky = shouldSticky;
 	}
 
 	// Viewport Height

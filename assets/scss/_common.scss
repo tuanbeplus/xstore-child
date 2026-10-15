@@ -1217,12 +1217,42 @@ body.wp-child-theme-xstore-child {
             right: 0;
             z-index: 999;
             transform: translate3d(0, 0, 0);
-            transition: transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.25s ease;
+            transition:
+                transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+                top 0.25s ease,
+                box-shadow 0.45s ease;
             will-change: transform;
+            box-shadow: none;
         }
+
         &.sticky header.elementor-location-header,
         header.elementor-location-header.is-sticky {
             transform: translate3d(0, calc(-1 * var(--topbar-height, 0px)), 0);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        header.elementor-location-header.vf-header-sticky-enter {
+            animation: vf-header-sticky-slide-down 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            transition: top 0.25s ease, box-shadow 0.45s ease;
+        }
+
+        @keyframes vf-header-sticky-slide-down {
+            from {
+                transform: translate3d(0, -100%, 0);
+            }
+            to {
+                transform: translate3d(0, calc(-1 * var(--topbar-height, 0px)), 0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            header.elementor-location-header {
+                transition: transform 0.2s ease, top 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            header.elementor-location-header.vf-header-sticky-enter {
+                animation: none;
+            }
         }
         &.admin-bar {
             header.elementor-location-header {
