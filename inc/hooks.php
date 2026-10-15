@@ -21,26 +21,11 @@ function enqueue_child_theme_assets() {
         'all'
     );
 
-    // Enqueue Select2 for currency switcher if not already enqueued
-    wp_enqueue_style(
-        'select2-cdn',
-        'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css',
-        array(),
-        '4.0.13'
-    );
-    wp_enqueue_script(
-        'select2-cdn',
-        'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js',
-        array( 'jquery' ),
-        '4.0.13',
-        true
-    );
-
-    // Enqueue JS
+    // Select2 is loaded on demand by main.js only when the currency selector is on the page.
     wp_enqueue_script(
         'main-script',
         get_stylesheet_directory_uri() . '/assets/js/main.js',
-        array( 'jquery', 'select2-cdn' ),
+        array( 'jquery' ),
         THEME_VERSION,
         true
     );

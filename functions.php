@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define('THEME_VERSION', '2.1.1' . time());
+define('THEME_VERSION', '2.1.2');
 define('INC_DIR', get_stylesheet_directory() . '/inc/');
 
 /**

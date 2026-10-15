@@ -46,6 +46,30 @@ body.single-product.woocommerce {
         }
     }
 
+    .etheme-woocommerce-product-gallery {
+        .onsale.single-sale {
+            top: 20px;
+            right: 20px;
+        }
+        .woocommerce-product-gallery {
+            .woocommerce-product-gallery__image {
+                border-radius: 24px;
+            }
+            .thumbnails-list.thumbnails {
+                margin: 0;
+                li {
+                    span {
+                        transform: none !important;
+                        margin: 0 !important;
+                        img {
+                            border-radius: 10px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /* -------------------------------------------------------------------------
        2. Product Summary & Details
        ------------------------------------------------------------------------- */
@@ -374,18 +398,27 @@ body.single-product table.variations,
         color: #111111 !important;
         cursor: pointer;
         text-decoration: none !important;
-        transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+        transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
         white-space: nowrap;
         user-select: none;
         outline: none;
         box-shadow: none;
         box-sizing: border-box;
 
-        &:hover:not(.is-disabled) {
+        @media (hover: hover) and (pointer: fine) {
+            &:hover:not(.is-disabled) {
+                background-color: #111111 !important;
+                color: #ffffff !important;
+                border-color: #111111 !important;
+            }
+        }
+
+        &:active:not(.is-disabled) {
             background-color: #111111 !important;
             color: #ffffff !important;
             border-color: #111111 !important;
-            transform: translateY(-1px);
         }
 
         &.is-active {

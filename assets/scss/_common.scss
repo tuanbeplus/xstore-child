@@ -1009,6 +1009,16 @@ h2 {
 
 .wrapper-header-currency {
     position: relative;
+
+    form select {
+        height: 37px;
+        max-width: 115px;
+        font-size: 13px;
+        line-height: 37px;
+        padding: 0 8px;
+        border-radius: 4px;
+    }
+
     .select2-dropdown {
         z-index: 10000 !important;
     }

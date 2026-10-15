@@ -257,11 +257,11 @@ function custom_ppom_display_logic() {
         ?>
         <script type="text/javascript">
         jQuery(document).ready(function($) {
-            $('#customize').change(function() {
+            $('#customize').on('change', function() {
                 if ($(this).val() === 'Customize') {
-                    $('.ppom-rendering-fields').slideDown();
+                    $('.ppom-rendering-fields').stop(true, true).show();
                 } else {
-                    $('.ppom-rendering-fields').slideUp();
+                    $('.ppom-rendering-fields').stop(true, true).hide();
                     $('#custom_name').val('');
                 }
             });

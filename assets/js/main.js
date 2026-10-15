@@ -1,252 +1,444 @@
-jQuery(document).ready(function () {
-	jQuery.ajax({
-		url: order_dates_ajax.ajax_url,
-		type: 'POST',
-		data: {
-			action: 'get_order_dates'
-		},
-		success: function (response) {
-			if (response.success) {
-				jQuery('#ajax-order-dates').html(response.data.html);
-			}
-		}
-	});
-	if (jQuery(window).width() <= 768) {
-
-		var height_layout_mobile = $('.wrapper-template-mobile-club .woocommerce').height();
-		if (height_layout_mobile) {
-			jQuery('.wrapper-template-mobile-club').css('height', height_layout_mobile + 'px');
-		}
-	} else {
-		jQuery('.wrapper-template-mobile-club').css('height', 'auto');
-	}
-
-	// Initialize Currency Selector Select2
-	if (jQuery.fn.select2) {
-		const $currencyWrap = jQuery('.wrapper-header-currency');
-		const $currencySelect = $currencyWrap.find('form select');
-		if ($currencySelect.length) {
-			$currencySelect.select2({
-				width: '115px',
-				minimumResultsForSearch: Infinity,
-				dropdownParent: $currencyWrap,
-				templateResult: function (state) {
-					if (!state.id) return state.text;
-					return jQuery('<span>' + state.text + '</span>');
-				},
-				templateSelection: function (state) {
-					if (!state.id) return state.text;
-					return jQuery('<span>' + state.text + '</span>');
-				}
-			});
-		}
-	}
-});
-
-jQuery(window).on('resize', function () {
-	if (jQuery(window).width() <= 768) {
-		var height_layout_mobile = $('.wrapper-template-mobile-club .woocommerce').height();
-		if (height_layout_mobile) {
-			jQuery('.wrapper-template-mobile-club').css('height', height_layout_mobile + 'px');
-		}
-	} else {
-		jQuery('.wrapper-template-mobile-club').css('height', 'auto');
-	}
-});
-
 /**
- * Auto-select product variation attributes from URL parameters on single product pages.
- * Supports:
- * - ?attr_cutomize=10%20Messi (handles typo)
- * - ?attr_customize=10%20Messi
- * - ?attribute_customize=10%20Messi
- * - ?customize=10%20Messi
- * - ?size=M & ?attr_size=M, etc.
+ * Vintage Football — front-end behavior
+ *
+ * - Delivery dates (AJAX)
+ * - Mobile club template height
+ * - Header currency Select2
+ * - Variation preselect from URL params
+ * - Variation swatch buttons and Size Guide link
+ * - Sticky header, header height, viewport height
  */
-jQuery(function ($) {
-	const search = window.location.search;
-	if (!search) return;
+(function ($) {
+	'use strict';
 
-	const params = new URLSearchParams(search);
-	let hasRunScroll = false;
+	var MOBILE_MAX_WIDTH = 768;
+
+	/* -------------------------------------------------------------------------
+	 * Delivery dates
+	 * ---------------------------------------------------------------------- */
+
+	function initOrderDates() {
+		if (typeof order_dates_ajax === 'undefined' || !order_dates_ajax.ajax_url) {
+			return;
+		}
+
+		$.ajax({
+			url: order_dates_ajax.ajax_url,
+			type: 'POST',
+			data: {
+				action: 'get_order_dates'
+			},
+			success: function (response) {
+				if (response.success) {
+					$('#ajax-order-dates').html(response.data.html);
+				}
+			}
+		});
+	}
+
+	/* -------------------------------------------------------------------------
+	 * Mobile club template height
+	 * ---------------------------------------------------------------------- */
+
+	function setMobileClubLayoutHeight() {
+		var $wrapper = $('.wrapper-template-mobile-club');
+		var layoutHeight;
+
+		if ($(window).width() <= MOBILE_MAX_WIDTH) {
+			layoutHeight = $wrapper.find('.woocommerce').height();
+			if (layoutHeight) {
+				$wrapper.css('height', layoutHeight + 'px');
+			}
+			return;
+		}
+
+		$wrapper.css('height', 'auto');
+	}
+
+	/* -------------------------------------------------------------------------
+	 * Currency selector
+	 * ---------------------------------------------------------------------- */
+
+	var SELECT2_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/';
+
+	function currencyOptionLabel(state) {
+		if (!state.id) {
+			return state.text;
+		}
+		return $('<span></span>').text(state.text);
+	}
+
+	function initCurrencySelect() {
+		var $currencyWrap = $('.wrapper-header-currency');
+		var $currencySelect = $currencyWrap.find('form select');
+
+		if (!$currencySelect.length || !$.fn.select2 || $currencySelect.data('select2')) {
+			return;
+		}
+
+		$currencySelect.select2({
+			width: '120px',
+			minimumResultsForSearch: Infinity,
+			dropdownParent: $currencyWrap,
+			templateResult: currencyOptionLabel,
+			templateSelection: currencyOptionLabel
+		});
+	}
+
+	function loadCurrencySelectAssets() {
+		var cssHref = SELECT2_BASE + 'css/select2.min.css';
+		var scriptSrc = SELECT2_BASE + 'js/select2.min.js';
+
+		if (!document.querySelector('link[data-vf-select2]')) {
+			$('<link>', {
+				rel: 'stylesheet',
+				href: cssHref,
+				'data-vf-select2': '1'
+			}).appendTo(document.head);
+		}
+
+		if ($.fn.select2) {
+			initCurrencySelect();
+			return;
+		}
+
+		$.ajax({
+			url: scriptSrc,
+			dataType: 'script',
+			cache: true
+		}).done(initCurrencySelect);
+	}
+
+	function scheduleCurrencySelect() {
+		var $currencySelect = $('.wrapper-header-currency form select');
+		var started = false;
+
+		if (!$currencySelect.length) {
+			return;
+		}
+
+		function start() {
+			if (started) {
+				return;
+			}
+			started = true;
+			loadCurrencySelectAssets();
+		}
+
+		$currencySelect.one('focus pointerdown', start);
+
+		if ('requestIdleCallback' in window) {
+			window.requestIdleCallback(start, { timeout: 2500 });
+			return;
+		}
+
+		$(window).on('load', function () {
+			window.setTimeout(start, 1200);
+		});
+	}
+
+	/* -------------------------------------------------------------------------
+	 * Variation attributes from URL
+	 * ?size=M, ?customize=10%20Messi, ?attr_cutomize=... (typo), etc.
+	 * ---------------------------------------------------------------------- */
 
 	function normalizeStr(str) {
 		return (str || '')
 			.toString()
 			.normalize('NFD')
-			.replace(/[\u0300-\u036f]/g, '') // remove accents (e.g. é -> e)
-			.replace(/[\u2018\u2019\u201A\u201B']/g, "'") // normalize curly quotes to simple '
+			.replace(/[\u0300-\u036f]/g, '')
+			.replace(/[\u2018\u2019\u201A\u201B']/g, "'")
 			.replace(/\s+/g, ' ')
 			.trim()
 			.toLowerCase();
 	}
 
-	// Strip ALL spaces for ultra-fuzzy matching (e.g. "10Messi" == "10 Messi")
 	function compactStr(str) {
 		return normalizeStr(str).replace(/\s+/g, '');
 	}
 
 	function matchAndSelectOption($select, targetVal) {
-		if (!$select.length || !targetVal) return false;
+		var cleanTarget = normalizeStr(targetVal);
+		var compactTarget = compactStr(targetVal);
+		var matchedVal = null;
 
-		const cleanTarget = normalizeStr(targetVal);
-		const compactTarget = compactStr(targetVal);
-		let matchedVal = null;
+		if (!$select.length || !targetVal) {
+			return false;
+		}
 
 		$select.find('option').each(function () {
-			const optVal = $(this).val();
-			const optText = $(this).text();
+			var optVal = $(this).val();
+			var optText = $(this).text();
 
-			if (!optVal) return; // skip placeholder option
+			if (!optVal) {
+				return;
+			}
 
-			// 1. Exact match value or text
 			if (optVal === targetVal || optText === targetVal) {
 				matchedVal = optVal;
 				return false;
 			}
 
-			// 2. Normalized match (case-insensitive, accents, apostrophes)
 			if (normalizeStr(optVal) === cleanTarget || normalizeStr(optText) === cleanTarget) {
 				matchedVal = optVal;
 				return false;
 			}
 
-			// 3. Compact match - ignore all spaces (e.g. "10Messi" matches "10 Messi")
 			if (compactStr(optVal) === compactTarget || compactStr(optText) === compactTarget) {
 				matchedVal = optVal;
 				return false;
 			}
 		});
 
-		if (matchedVal !== null) {
-			if ($select.val() !== matchedVal) {
-				$select.val(matchedVal).trigger('change');
-			}
-			return true;
+		if (matchedVal === null) {
+			return false;
 		}
-		return false;
+
+		if ($select.val() !== matchedVal) {
+			$select.val(matchedVal).trigger('change');
+		}
+
+		return true;
 	}
 
-	function applyAttributesFromUrl() {
-		const $varForm = $('form.variations_form');
-		if (!$varForm.length) return;
+	function initVariationFromUrl() {
+		var search = window.location.search;
+		var params;
+		var hasRunScroll = false;
 
-		let anySelected = false;
+		if (!search) {
+			return;
+		}
 
-		params.forEach(function (val, key) {
-			if (!val) return;
+		params = new URLSearchParams(search);
 
-			let cleanKey = key.toLowerCase();
+		function applyAttributesFromUrl() {
+			var $varForm = $('form.variations_form');
+			var anySelected = false;
 
-			// Handle typo 'cutomize' -> 'customize'
-			if (cleanKey.indexOf('cutomize') !== -1) {
-				cleanKey = cleanKey.replace('cutomize', 'customize');
+			if (!$varForm.length) {
+				return;
 			}
 
-			// Extract base attribute name (remove 'attr_' or 'attribute_' prefix)
-			const attrName = cleanKey.replace(/^(attr_|attribute_)/, '');
+			params.forEach(function (val, key) {
+				var cleanKey;
+				var attrName;
+				var $select;
 
-			// Find select element by attribute name, data-attribute_name, id, or direct name
-			let $select = $varForm.find('select[name="attribute_' + attrName + '"], select[data-attribute_name="attribute_' + attrName + '"], select#' + attrName);
-			if (!$select.length) {
-				$select = $varForm.find('select[name="' + cleanKey + '"], select#' + cleanKey);
-			}
+				if (!val) {
+					return;
+				}
 
-			if ($select.length) {
-				if (matchAndSelectOption($select, val)) {
+				cleanKey = key.toLowerCase();
+
+				if (cleanKey.indexOf('cutomize') !== -1) {
+					cleanKey = cleanKey.replace('cutomize', 'customize');
+				}
+
+				attrName = cleanKey.replace(/^(attr_|attribute_)/, '');
+
+				$select = $varForm.find(
+					'select[name="attribute_' + attrName + '"], ' +
+					'select[data-attribute_name="attribute_' + attrName + '"], ' +
+					'select#' + attrName
+				);
+
+				if (!$select.length) {
+					$select = $varForm.find('select[name="' + cleanKey + '"], select#' + cleanKey);
+				}
+
+				if ($select.length && matchAndSelectOption($select, val)) {
 					anySelected = true;
 				}
+			});
+
+			if (anySelected && !hasRunScroll) {
+				hasRunScroll = true;
+				setTimeout(function () {
+					if ($varForm.length && $(window).scrollTop() < $varForm.offset().top - 300) {
+						$('html, body').animate({
+							scrollTop: $varForm.offset().top - 120
+						}, 400);
+					}
+				}, 200);
 			}
+		}
+
+		$(document).on('wc_variation_form', '.variations_form', function () {
+			applyAttributesFromUrl();
 		});
 
-		// Optional smooth scroll to variations form on initial auto-select
-		if (anySelected && !hasRunScroll) {
-			hasRunScroll = true;
-			setTimeout(function () {
-				if ($varForm.length && $(window).scrollTop() < $varForm.offset().top - 300) {
-					$('html, body').animate({
-						scrollTop: $varForm.offset().top - 120
-					}, 400);
-				}
-			}, 200);
-		}
+		applyAttributesFromUrl();
+		setTimeout(applyAttributesFromUrl, 150);
+		setTimeout(applyAttributesFromUrl, 500);
 	}
 
-	// Run when WooCommerce variation form initializes
-	$(document).on('wc_variation_form', '.variations_form', function () {
-		applyAttributesFromUrl();
-	});
+	/* -------------------------------------------------------------------------
+	 * Variation swatch buttons
+	 * ---------------------------------------------------------------------- */
 
-	// Run on ready and staggered timeouts to ensure matching after any async scripts
-	applyAttributesFromUrl();
-	setTimeout(applyAttributesFromUrl, 150);
-	setTimeout(applyAttributesFromUrl, 500);
-});
+	var SIZE_GUIDE_LINK_HTML =
+		'<a href="#tab-size_guide" class="vf-size-guide-link">' +
+		'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"></path><path d="m14.5 12.5 2-2"></path><path d="m11.5 9.5 2-2"></path><path d="m8.5 6.5 2-2"></path><path d="m17.5 15.5 2-2"></path></svg>' +
+		'<span>Size Guide</span>' +
+		'</a>';
 
-/**
- * Product Variations - List Button UI (Matches Category Filter Pills)
- * Converts WooCommerce select dropdowns in table.variations to clickable swatch buttons
- * while maintaining 100% two-way sync with WooCommerce variations and custom field logic.
- */
-jQuery(function ($) {
 	function isOptionAvailable($option) {
-		if (!$option.length) return false;
-		if ($option.is(':disabled') || $option.prop('disabled')) return false;
-		if ($option.hasClass('disabled')) return false;
-		if ($option.hasClass('attached') && !$option.hasClass('enabled')) return false;
+		if (!$option.length) {
+			return false;
+		}
+		if ($option.is(':disabled') || $option.prop('disabled')) {
+			return false;
+		}
+		if ($option.hasClass('disabled')) {
+			return false;
+		}
+		if ($option.hasClass('attached') && !$option.hasClass('enabled')) {
+			return false;
+		}
 		return true;
 	}
 
 	function initVariationSwatches() {
-		const $forms = $('form.variations_form');
-		if (!$forms.length) return;
+		var $forms = $('form.variations_form');
+
+		if (!$forms.length) {
+			return;
+		}
 
 		$forms.each(function () {
-			const $form = $(this);
-			const $selects = $form.find('table.variations select');
+			var $form = $(this);
 
-			$selects.each(function () {
-				const $select = $(this);
-				let $btnWrap = $select.siblings('.vf-attr-buttons');
+			$form.find('table.variations select').each(function () {
+				var $select = $(this);
+				var $btnWrap = $select.siblings('.vf-attr-buttons');
 
 				if (!$btnWrap.length) {
 					$btnWrap = $('<div class="vf-attr-buttons" role="radiogroup"></div>');
 					$select.after($btnWrap);
 				}
 
+				var pendingValue = null;
+				var suppressClickUntil = 0;
+				var commitToken = 0;
+				var pointerStart = null;
+
 				function syncButtons() {
-					const currentVal = $select.val();
+					var currentVal = pendingValue !== null ? pendingValue : ($select.val() || '');
+					var optionsByValue = {};
+
+					$select.find('option').each(function () {
+						if (this.value) {
+							optionsByValue[this.value] = this;
+						}
+					});
+
 					$btnWrap.find('.vf-attr-btn').each(function () {
-						const $btn = $(this);
-						const btnVal = $btn.attr('data-value');
+						var $btn = $(this);
+						var btnVal = this.getAttribute('data-value');
+						var option = optionsByValue[btnVal];
+						var isChosen = !!currentVal && btnVal === currentVal;
 
-						const $opt = $select.find('option').filter(function () {
-							return $(this).val() === btnVal;
-						});
-
-						if (!$opt.length || !isOptionAvailable($opt)) {
+						if (!option || !isOptionAvailable($(option))) {
 							$btn.addClass('is-disabled').attr('aria-disabled', 'true');
 						} else {
 							$btn.removeClass('is-disabled').removeAttr('aria-disabled');
 						}
 
-						if (currentVal && btnVal === currentVal) {
-							$btn.addClass('is-active').attr('aria-checked', 'true');
-						} else {
-							$btn.removeClass('is-active').attr('aria-checked', 'false');
-						}
+						$btn.toggleClass('is-active', isChosen).attr('aria-checked', isChosen ? 'true' : 'false');
 					});
 				}
 
-				function buildButtons() {
-					$btnWrap.empty();
-					$select.find('option').each(function () {
-						const $opt = $(this);
-						const val = $opt.val();
-						if (!val) return; // skip placeholder option
+				function scheduleSync() {
+					if ($select.data('vfSyncFrame')) {
+						return;
+					}
 
-						const text = $opt.text().trim();
-						const $btn = $('<button type="button" class="vf-attr-btn"></button>')
+					$select.data('vfSyncFrame', window.requestAnimationFrame(function () {
+						$select.removeData('vfSyncFrame');
+						syncButtons();
+					}));
+				}
+
+				function commitSelect(nextVal) {
+					var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+					var rootStyle = document.documentElement.style;
+					var previousScrollBehavior = rootStyle.scrollBehavior;
+
+					if ($select.val() !== nextVal) {
+						$select.val(nextVal).trigger('change');
+					}
+
+					if ((window.pageYOffset || document.documentElement.scrollTop || 0) !== scrollY) {
+						rootStyle.scrollBehavior = 'auto';
+						window.scrollTo(0, scrollY);
+						rootStyle.scrollBehavior = previousScrollBehavior;
+					}
+				}
+
+				function nextValueFor($btn) {
+					var current = pendingValue !== null ? pendingValue : ($select.val() || '');
+					var value = $btn.attr('data-value') || '';
+
+					return current === value ? '' : value;
+				}
+
+				function queueCommit(nextVal) {
+					var token = ++commitToken;
+
+					window.requestAnimationFrame(function () {
+						window.setTimeout(function () {
+							if (token !== commitToken) {
+								return;
+							}
+							pendingValue = null;
+							commitSelect(nextVal);
+						}, 0);
+					});
+				}
+
+				function clearPending() {
+					commitToken += 1;
+					pendingValue = null;
+					pointerStart = null;
+					syncButtons();
+				}
+
+				function activateButton($btn) {
+					if ($btn.hasClass('is-disabled')) {
+						return;
+					}
+
+					pendingValue = nextValueFor($btn);
+					syncButtons();
+					queueCommit(pendingValue);
+				}
+
+				function touchMoved(event) {
+					if (!pointerStart) {
+						return true;
+					}
+
+					return Math.abs(event.clientX - pointerStart.x) > 8 || Math.abs(event.clientY - pointerStart.y) > 8;
+				}
+
+				function buildButtons() {
+					var attrName;
+
+					$btnWrap.empty();
+
+					$select.find('option').each(function () {
+						var $opt = $(this);
+						var val = $opt.val();
+						var text;
+						var $btn;
+
+						if (!val) {
+							return;
+						}
+
+						text = $opt.text().trim();
+						$btn = $('<button type="button" class="vf-attr-btn"></button>')
 							.attr('data-value', val)
 							.attr('aria-label', text)
 							.text(text);
@@ -254,21 +446,15 @@ jQuery(function ($) {
 						$btnWrap.append($btn);
 					});
 
-					// Append Size Guide link right after the last option of size
-					const attrName = (
+					attrName = (
 						$select.attr('name') ||
 						$select.attr('id') ||
 						$select.attr('data-attribute_name') ||
 						''
 					).toLowerCase();
+
 					if (attrName.indexOf('size') !== -1) {
-						const $sizeGuideLink = $(
-							'<a href="#tab-size_guide" class="vf-size-guide-link">' +
-							'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"></path><path d="m14.5 12.5 2-2"></path><path d="m11.5 9.5 2-2"></path><path d="m8.5 6.5 2-2"></path><path d="m17.5 15.5 2-2"></path></svg>' +
-							'<span>Size Guide</span>' +
-							'</a>'
-						);
-						$btnWrap.append($sizeGuideLink);
+						$btnWrap.append($(SIZE_GUIDE_LINK_HTML));
 					}
 
 					syncButtons();
@@ -276,176 +462,199 @@ jQuery(function ($) {
 
 				if (!$select.data('vf_swatches_inited')) {
 					$select.data('vf_swatches_inited', true);
-
 					buildButtons();
 
-					// Button click interaction
-					$btnWrap.on('click', '.vf-attr-btn', function (e) {
-						e.preventDefault();
-						const $btn = $(this);
+					$btnWrap.on('pointerdown', '.vf-attr-btn', function (e) {
+						var $btn = $(this);
 
-						if ($btn.hasClass('is-disabled')) {
+						if (e.pointerType === 'mouse' || $btn.hasClass('is-disabled')) {
 							return;
 						}
 
-						const val = $btn.attr('data-value');
-
-						// Toggle selection: deselect if already active, otherwise select
-						if ($btn.hasClass('is-active')) {
-							$select.val('').trigger('change');
-						} else {
-							$select.val(val).trigger('change');
+						if (this.setPointerCapture) {
+							try {
+								this.setPointerCapture(e.pointerId);
+							} catch (err) {
+								// Pointer can already be inactive if the touch was cancelled.
+							}
 						}
-					});
 
-					// Update swatches on native select change
-					$select.on('change.vfSwatches', function () {
+						pointerStart = {
+							x: e.clientX,
+							y: e.clientY,
+							id: e.pointerId
+						};
+						suppressClickUntil = Date.now() + 700;
+						pendingValue = nextValueFor($btn);
 						syncButtons();
 					});
 
-					$select.data('vfSyncButtons', syncButtons);
+					// Commit on finger-up. The later click is ignored so the choice is not toggled twice.
+					$btnWrap.on('pointerup', '.vf-attr-btn', function (e) {
+						var nextVal;
+
+						if (!pointerStart || pointerStart.id !== e.pointerId || e.pointerType === 'mouse') {
+							return;
+						}
+
+						if (touchMoved(e)) {
+							clearPending();
+							return;
+						}
+
+						nextVal = pendingValue;
+						pointerStart = null;
+						suppressClickUntil = Date.now() + 700;
+						queueCommit(nextVal);
+					});
+
+					$btnWrap.on('pointercancel', '.vf-attr-btn', clearPending);
+
+					$btnWrap.on('click', '.vf-attr-btn', function (e) {
+						e.preventDefault();
+
+						if (Date.now() < suppressClickUntil) {
+							return;
+						}
+
+						activateButton($(this));
+					});
+
+					$select.on('change.vfSwatches', scheduleSync);
+
+					$select.data('vfSyncButtons', scheduleSync);
 					$select.data('vfBuildButtons', buildButtons);
-				} else {
-					// Check if option elements were re-populated
-					const optCount = $select.find('option').filter(function () {
-						return !!$(this).val();
-					}).length;
-					const btnCount = $btnWrap.find('.vf-attr-btn').length;
+					return;
+				}
 
-					if (optCount !== btnCount) {
-						buildButtons();
-					} else {
-						syncButtons();
-					}
+				var optionCount = $select.find('option').filter(function () {
+					return !!$(this).val();
+				}).length;
+				var buttonCount = $btnWrap.find('.vf-attr-btn').length;
+
+				if (optionCount !== buttonCount) {
+					buildButtons();
+				} else {
+					syncButtons();
 				}
 			});
 
-			// Bind form variation lifecycle events once per form
-			if (!$form.data('vf_form_swatches_inited')) {
-				$form.data('vf_form_swatches_inited', true);
-
-				$form.on(
-					'woocommerce_update_variation_values check_variations reset_data woocommerce_variation_has_changed',
-					function () {
-						$form.find('table.variations select').each(function () {
-							const sync = $(this).data('vfSyncButtons');
-							if (typeof sync === 'function') {
-								sync();
-							}
-						});
-					}
-				);
+			if ($form.data('vf_form_swatches_inited')) {
+				return;
 			}
+
+			$form.data('vf_form_swatches_inited', true);
+			$form.on(
+				'woocommerce_update_variation_values check_variations reset_data woocommerce_variation_has_changed',
+				function () {
+					$form.find('table.variations select').each(function () {
+						var sync = $(this).data('vfSyncButtons');
+						if (typeof sync === 'function') {
+							sync();
+						}
+					});
+				}
+			);
 		});
 	}
 
-	// Handle Size Guide link click: activate WooCommerce/XStore tab and smooth scroll with 100px offset
-	$(document).on('click', '.vf-size-guide-link', function (e) {
-		e.preventDefault();
-		e.stopPropagation();
+	function initSizeGuideLink() {
+		$(document).on('click', '.vf-size-guide-link', function (e) {
+			var $tabLink = $('.woocommerce-tabs a[href="#tab-size_guide"], #tab-title-size_guide a, .size_guide_tab a, [aria-controls="tab-size_guide"]');
+			var $tabTitle = $('#tab-title-size_guide, .size_guide_tab');
+			var $tabPanel = $('#tab-size_guide');
+			var $tabsWrapper = $('.woocommerce-tabs');
 
-		const $tabLink = $('.woocommerce-tabs a[href="#tab-size_guide"], #tab-title-size_guide a, .size_guide_tab a, [aria-controls="tab-size_guide"]');
-		const $tabTitle = $('#tab-title-size_guide, .size_guide_tab');
-		const $tabPanel = $('#tab-size_guide');
-		const $tabsWrapper = $('.woocommerce-tabs');
+			e.preventDefault();
+			e.stopPropagation();
 
-		// 1. Activate tab via WooCommerce / XStore tab click handler
-		if ($tabLink.length) {
-			$tabLink.trigger('click');
-		} else if ($tabTitle.length) {
-			$tabTitle.trigger('click');
-		}
-
-		// 2. Direct fallback activation to guarantee tab panel is visible
-		if ($tabsWrapper.length && $tabPanel.length) {
-			$tabsWrapper.find('.wc-tabs li, ul.tabs li').removeClass('active');
-			$tabTitle.addClass('active');
-			$tabsWrapper.find('.wc-tab, .woocommerce-Tabs-panel').hide();
-			$tabPanel.show();
-		}
-
-		// 3. Update URL hash without causing a native jump
-		if (window.history && window.history.pushState) {
-			window.history.pushState(null, '', '#tab-size_guide');
-		}
-
-		// 4. Calculate accurate position after DOM reflow and scroll instantly with exact 100px offset
-		setTimeout(function () {
-			let targetTop = 0;
-			const $target = ($tabTitle.length && $tabTitle.is(':visible'))
-				? $tabTitle
-				: ($tabPanel.length && $tabPanel.is(':visible') ? $tabPanel : $tabsWrapper);
-
-			if ($target.length) {
-				targetTop = $target.offset().top;
+			if ($tabLink.length) {
+				$tabLink.trigger('click');
+			} else if ($tabTitle.length) {
+				$tabTitle.trigger('click');
 			}
 
-			if (targetTop > 0) {
-				const scrollPosition = Math.max(0, targetTop - 100);
-				window.scrollTo({
-					top: scrollPosition,
-					behavior: 'smooth'
-				});
+			if ($tabsWrapper.length && $tabPanel.length) {
+				$tabsWrapper.find('.wc-tabs li, ul.tabs li').removeClass('active');
+				$tabTitle.addClass('active');
+				$tabsWrapper.find('.wc-tab, .woocommerce-Tabs-panel').hide();
+				$tabPanel.show();
 			}
-		}, 30);
-	});
 
-	// Initialize on DOM ready
-	initVariationSwatches();
+			if (window.history && window.history.pushState) {
+				window.history.pushState(null, '', '#tab-size_guide');
+			}
 
-	// Initialize on WooCommerce variation form setup
-	$(document).on('wc_variation_form', '.variations_form', function () {
-		initVariationSwatches();
-	});
+			setTimeout(function () {
+				var $target = ($tabTitle.length && $tabTitle.is(':visible'))
+					? $tabTitle
+					: ($tabPanel.length && $tabPanel.is(':visible') ? $tabPanel : $tabsWrapper);
+				var targetTop = $target.length ? $target.offset().top : 0;
 
-	// Staggered checks to accommodate any asynchronous scripts
-	setTimeout(initVariationSwatches, 100);
-	setTimeout(initVariationSwatches, 400);
-});
+				if (targetTop > 0) {
+					window.scrollTo({
+						top: Math.max(0, targetTop - 100),
+						behavior: 'smooth'
+					});
+				}
+			}, 30);
+		});
+	}
 
-(function ($) {
-	'use strict';
+	/* -------------------------------------------------------------------------
+	 * Header height, sticky state, viewport height
+	 * ---------------------------------------------------------------------- */
+
+	var headerWasSticky = false;
 
 	function getHeader() {
 		return $('header.elementor-location-header');
 	}
 
-	/* Set --header-height (full, top bar visible) and --topbar-height.
-	   Body margin/border uses the full height so it never changes while scrolling. */
 	function setHeaderHeight() {
-		const siteHeader = getHeader();
-		if (!siteHeader.length) return;
+		var siteHeader = getHeader();
+		var topBar;
+		var topBarHeight;
+		var height;
+		var root;
 
-		let topBar = siteHeader.find('#header-top-bar').filter(':visible').first();
+		if (!siteHeader.length) {
+			return;
+		}
+
+		topBar = siteHeader.find('#header-top-bar').filter(':visible').first();
+
 		if (!topBar.length) {
 			topBar = siteHeader
 				.find('.elementor-top-section, .e-parent')
 				.filter(':visible')
 				.first();
 		}
-		const topBarHeight = topBar.length
+
+		topBarHeight = topBar.length
 			? Math.round(topBar[0].getBoundingClientRect().height)
 			: 0;
-		const height = siteHeader[0].offsetHeight;
+		height = siteHeader[0].offsetHeight;
+		root = document.documentElement.style;
 
-		const root = document.documentElement.style;
 		root.setProperty('--header-height', height + 'px');
 		root.setProperty('--topbar-height', topBarHeight + 'px');
 	}
 
-	/* Handle sticky header: class toggle + slide-down entrance */
-	let headerWasSticky = false;
-
 	function handleStickyHeader() {
-		const $body = $('body');
-		const siteHeader = getHeader();
+		var $body = $('body');
+		var siteHeader = getHeader();
+		var y;
+		var shouldSticky;
+		var reducedMotion;
+
 		if (!siteHeader.length) {
 			return;
 		}
 
-		const y = window.pageYOffset || document.documentElement.scrollTop || 0;
-		const shouldSticky = y > 15;
-		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		y = window.pageYOffset || document.documentElement.scrollTop || 0;
+		shouldSticky = y > 15;
+		reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		if (shouldSticky && !headerWasSticky) {
 			$body.addClass('sticky');
@@ -468,28 +677,25 @@ jQuery(function ($) {
 		headerWasSticky = shouldSticky;
 	}
 
-	// Viewport Height
 	function setViewportHeight() {
-		const viewportHeight = window.innerHeight;
-
 		document.documentElement.style.setProperty(
 			'--viewport-height',
-			viewportHeight + 'px'
+			window.innerHeight + 'px'
 		);
 	}
 
-	/* Initialize */
-	$(function () {
+	function unlockHeader() {
+		document.body.classList.remove('vf-loading');
+	}
+
+	function initHeader() {
+		var unlockTimer;
+
 		setHeaderHeight();
 		setViewportHeight();
 		handleStickyHeader();
 
-		/* ── Unlock header interaction ── */
-		function unlockHeader() {
-			document.body.classList.remove('vf-loading');
-		}
-		// Safety fallback: unlock after 8s even if window.load hasn't fired
-		var unlockTimer = setTimeout(unlockHeader, 8000);
+		unlockTimer = setTimeout(unlockHeader, 8000);
 
 		$(window).on('load', function () {
 			clearTimeout(unlockTimer);
@@ -505,8 +711,22 @@ jQuery(function ($) {
 			handleStickyHeader();
 		});
 
-		/* Direct execution on scroll for instant reaction on mobile touch gestures */
 		window.addEventListener('scroll', handleStickyHeader, { passive: true });
-	});
+	}
 
+	/* -------------------------------------------------------------------------
+	 * Boot
+	 * ---------------------------------------------------------------------- */
+
+	$(window).on('resize', setMobileClubLayoutHeight);
+
+	$(function () {
+		initOrderDates();
+		setMobileClubLayoutHeight();
+		scheduleCurrencySelect();
+		initVariationFromUrl();
+		initVariationSwatches();
+		initSizeGuideLink();
+		initHeader();
+	});
 })(jQuery);
