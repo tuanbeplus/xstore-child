@@ -1012,36 +1012,16 @@ h2 {
 
     form select {
         height: 37px;
-        max-width: 115px;
+        width: 100%;
+        max-width: 120px;
         font-size: 13px;
         line-height: 37px;
-        padding: 0 8px;
+        padding: 0 10px;
         border-radius: 4px;
+        option {
+            font-size: 14px !important;
+        }
     }
-
-    .select2-dropdown {
-        z-index: 10000 !important;
-    }
-}
-.wrapper-header-currency .select2-results__option {
-    display: flex;
-    align-items: center;
-}
-.wrapper-header-currency .select2-selection {
-    padding: 0 20px 0 12px !important;
-}
-.wrapper-header-currency .select2-selection__rendered>span {
-    display: flex !important;
-    align-items: center !important;
-    gap: 7px !important;
-    line-height: 1;
-    font-size: 13px;
-    height: 37px;
-}
-@media(max-width:600px) {
-    .wrapper-header-currency .select2-selection__rendered>span {
-        height: 34.4px;
-    } 
 }
 
 

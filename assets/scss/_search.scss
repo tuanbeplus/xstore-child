@@ -1,0 +1,33 @@
+body {
+    .elementor-widget-theme-etheme_ajax_search_popup {
+        .etheme-modal-popup-content {
+            &[data-height=auto]:has(.etheme-search-form[type=popup].searching):has(.autocomplete-suggestion) {
+                height: 100vh !important;
+            }
+            box-shadow: rgba(149, 157, 165, 0.4) 0px 8px 24px;
+            .autocomplete-suggestions {
+                .content-product {
+                    img {
+                        margin: 0;
+                        border-radius: 12px;
+                    }
+                    .footer-product {
+                        display: none;
+                    }
+                    .product-details {
+                        .product-title {
+                            * {
+                                font-weight: normal !important;
+                            }
+                            font-size: 20px;
+                        }
+                        .price {
+                            font-size: 15px;
+                            font-weight: 600;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

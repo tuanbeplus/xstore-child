@@ -24,6 +24,7 @@ class ElementorWidgets {
     public function widgets_list() {
         return [
             'vf-product-categories-filters',
+            'vf-product-search-filters',
             'vf-hero-slider',
             'vf-breadcrumbs',
         ];
@@ -40,6 +41,13 @@ class ElementorWidgets {
         wp_register_style(
             'vf-hero-slider-style',
             get_stylesheet_directory_uri() . '/elementor/widgets/vf-hero-slider/widget.css',
+            [],
+            THEME_VERSION
+        );
+
+        wp_register_style(
+            'vf-product-search-filters-style',
+            get_stylesheet_directory_uri() . '/elementor/widgets/vf-product-search-filters/widget.css',
             [],
             THEME_VERSION
         );
@@ -67,6 +75,23 @@ class ElementorWidgets {
             [
                 'ajax_url' => admin_url( 'admin-ajax.php' ),
                 'nonce'    => wp_create_nonce( 'vf_filter_nonce' ),
+            ]
+        );
+
+        wp_register_script(
+            'vf-product-search-filters-script',
+            get_stylesheet_directory_uri() . '/elementor/widgets/vf-product-search-filters/widget.js',
+            [ 'jquery' ],
+            THEME_VERSION,
+            true
+        );
+
+        wp_localize_script(
+            'vf-product-search-filters-script',
+            'vf_ps',
+            [
+                'ajax_url' => admin_url( 'admin-ajax.php' ),
+                'nonce'    => wp_create_nonce( 'vf_ps_nonce' ),
             ]
         );
 
@@ -119,6 +144,15 @@ class ElementorWidgets {
             }
         }
 
+        if ( class_exists( 'VintageFootballElementorWidgets\Widgets\VFProductSearchFilters\Widget_VFProductSearchFilters' ) ) {
+            $search_instance = new Widgets\VFProductSearchFilters\Widget_VFProductSearchFilters();
+            if ( method_exists( $widgets_manager, 'register' ) ) {
+                $widgets_manager->register( $search_instance );
+            } elseif ( method_exists( $widgets_manager, 'register_widget_type' ) ) {
+                $widgets_manager->register_widget_type( $search_instance );
+            }
+        }
+
         // Register VF Hero Slider
         if ( class_exists( 'VintageFootballElementorWidgets\Widgets\VFHeroSlider\Widget_VFHeroSlider' ) ) {
             $slider_instance = new Widgets\VFHeroSlider\Widget_VFHeroSlider();
@@ -153,5 +187,6 @@ class ElementorWidgets {
 
 // Include AJAX filter handler
 require_once get_stylesheet_directory() . '/elementor/ajax-filter.php';
+require_once get_stylesheet_directory() . '/elementor/product-search.php';
 
 ElementorWidgets::instance();

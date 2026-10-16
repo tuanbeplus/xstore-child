@@ -54,6 +54,9 @@ body.single-product.woocommerce {
         .woocommerce-product-gallery {
             .woocommerce-product-gallery__image {
                 border-radius: 24px;
+                img {
+                    border-radius: 24px;
+                }
             }
             .thumbnails-list.thumbnails {
                 margin: 0;

@@ -112,7 +112,7 @@ The styling architecture has been refactored from legacy CSS into modular SCSS p
 - **Image Optimizations:** Disables redundant `srcset` and native lazy loading where custom lazy-loading implementations take precedence.
 
 ### 10. Multi-Currency, Tracking & SEO
-- **Select2 Currency Dropdown:** Enhanced currency switcher with country flags and native symbols via WooCommerce Multi-Currency.
+- **Currency Dropdown:** Native currency selector with country flags and symbols via WooCommerce Multi-Currency.
 - **Structured Data:** Generates JSON-LD `Product` and `AggregateRating` schema from ACF fields (`number_rating`, `count_rating`).
 - **Meta Pixel Purchase Tracking:** Fires accurate purchase conversion events on the thank you page with server-side duplicate protection.
 - **Category Descriptions:** Supports dual top and bottom category descriptions with mobile read-more toggle.
@@ -158,7 +158,7 @@ xstore-child/
 | Shortcode | Description |
 | :--- | :--- |
 | `[currency_switcher]` | Outputs WooCommerce Multi-Currency switcher dropdown markup. |
-| `[currency_selector]` | Enhanced currency selector with flag & symbol mapping initialized with Select2. |
+| `[currency_selector]` | Currency selector with flag and symbol labels, using a native HTML select. |
 | `[box_description_top_category]` | Top category description with mobile accordion toggle ("Read More / Read Less") from ACF Options. |
 | `[box_description_bot_category]` | Bottom SEO category description from ACF Options. |
 | `[vf_seo_block]` | Expandable scrollable SEO text block for homepage and archives with internal links and custom parameters (`title`, `subtitle`, `max_height`). (Alias: `[block_seo]`). |

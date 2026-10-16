@@ -81,8 +81,25 @@ function get_data_currency_shortcode() {
         "MZN" => "🇲🇿", "BWP" => "🇧🇼", "LSL" => "🇱🇸", "SZL" => "🇸🇿"
     ];
 
+    global $wp;
+    $path   = ( isset( $wp->request ) && '' !== $wp->request ) ? user_trailingslashit( $wp->request ) : '/';
+    $action = home_url( $path );
+
     $output  = '<div class="wrapper-header-currency">';
-    $output .= '<form method="get">';
+    $output .= '<form method="get" action="' . esc_url( $action ) . '">';
+    foreach ( $_GET as $key => $value ) {
+        if ( ! is_scalar( $key ) || 'wmc-currency' === (string) $key ) {
+            continue;
+        }
+        $values = is_array( $value ) ? $value : array( $value );
+        $name   = is_array( $value ) ? $key . '[]' : $key;
+        foreach ( $values as $item ) {
+            if ( is_array( $item ) ) {
+                continue;
+            }
+            $output .= '<input type="hidden" name="' . esc_attr( $name ) . '" value="' . esc_attr( wp_unslash( $item ) ) . '" />';
+        }
+    }
     $output .= '<select id="currency-select" name="wmc-currency" aria-label="Select currency" onchange="this.form.submit()">';
 
     foreach ( $country_cu as $currency ) {

@@ -94,24 +94,6 @@ function get_data_currentcy() {
                         </select>
                     </form>
                 </div>
-                <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-                <script>
-                    jQuery(document).ready(function($) {
-                        $('.wrapper-header-currency form select').select2({
-                            width: '115px',
-                            templateResult: formatCurrency,
-                            templateSelection: formatCurrency
-                        });
-
-                        function formatCurrency(state) {
-                            if (!state.id) {
-                                return state.text;
-                            }
-                            return $('<span>' + state.text + '</span>');
-                        }
-                    });
-                </script>
                 <?php
             }
         }

@@ -80,6 +80,99 @@ function vf_breadcrumbs_trail_cache_key( $settings ) {
 }
 
 /**
+ * Whether a product category is Legends (ID 1943, slug legends) or one of its children.
+ *
+ * @param WP_Term|mixed $term
+ * @return bool
+ */
+function vf_breadcrumbs_term_in_legends( $term ) {
+    if ( ! $term || is_wp_error( $term ) || empty( $term->taxonomy ) || 'product_cat' !== $term->taxonomy ) {
+        return false;
+    }
+
+    $root_id = 1943;
+
+    if ( (int) $term->term_id === $root_id || 'legends' === $term->slug ) {
+        return true;
+    }
+
+    $ancestor_ids = array_map( 'intval', get_ancestors( $term->term_id, 'product_cat', 'taxonomy' ) );
+    if ( empty( $ancestor_ids ) ) {
+        return false;
+    }
+
+    if ( in_array( $root_id, $ancestor_ids, true ) ) {
+        return true;
+    }
+
+    $ancestors = get_terms(
+        array(
+            'taxonomy'   => 'product_cat',
+            'include'    => $ancestor_ids,
+            'hide_empty' => false,
+        )
+    );
+
+    if ( is_wp_error( $ancestors ) || empty( $ancestors ) ) {
+        return false;
+    }
+
+    foreach ( $ancestors as $ancestor ) {
+        if ( 'legends' === $ancestor->slug ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Legends stays in the trail on its own archive and child archives, and is hidden elsewhere.
+ *
+ * @param WP_Term|mixed $term
+ * @return bool
+ */
+function vf_breadcrumbs_is_excluded_product_cat( $term ) {
+    if ( ! vf_breadcrumbs_term_in_legends( $term ) ) {
+        return false;
+    }
+
+    if ( function_exists( 'is_product_category' ) && is_product_category() ) {
+        $queried = get_queried_object();
+        if ( vf_breadcrumbs_term_in_legends( $queried ) ) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * Deepest assigned product category that is not Legends or a Legends child.
+ *
+ * @param WP_Term[] $terms
+ * @return WP_Term|null
+ */
+function vf_breadcrumbs_deepest_visible_product_cat( $terms ) {
+    $chosen    = null;
+    $max_depth = -1;
+
+    foreach ( $terms as $term ) {
+        if ( vf_breadcrumbs_is_excluded_product_cat( $term ) ) {
+            continue;
+        }
+
+        $depth = count( get_ancestors( $term->term_id, 'product_cat', 'taxonomy' ) );
+        if ( $depth > $max_depth ) {
+            $max_depth = $depth;
+            $chosen    = $term;
+        }
+    }
+
+    return $chosen;
+}
+
+/**
  * Primary product category for breadcrumbs (Yoast, Rank Math, or deepest term).
  *
  * @param int $product_id
@@ -119,7 +212,20 @@ function vf_breadcrumbs_get_primary_product_cat( $product_id ) {
         }
     }
 
-    return ( $term && ! is_wp_error( $term ) ) ? $term : null;
+    if ( ! $term || is_wp_error( $term ) ) {
+        return null;
+    }
+
+    if ( ! vf_breadcrumbs_is_excluded_product_cat( $term ) ) {
+        return $term;
+    }
+
+    $terms = get_the_terms( $product_id, 'product_cat' );
+    if ( empty( $terms ) || is_wp_error( $terms ) ) {
+        return null;
+    }
+
+    return vf_breadcrumbs_deepest_visible_product_cat( $terms );
 }
 
 /**
@@ -141,7 +247,7 @@ function vf_breadcrumbs_append_term_chain( array &$trail, $term, $taxonomy, $for
     if ( ! empty( $ancestors ) ) {
         foreach ( array_reverse( $ancestors ) as $ancestor_id ) {
             $ancestor = get_term( (int) $ancestor_id, $taxonomy );
-            if ( $ancestor && ! is_wp_error( $ancestor ) ) {
+            if ( $ancestor && ! is_wp_error( $ancestor ) && ! vf_breadcrumbs_is_excluded_product_cat( $ancestor ) ) {
                 $trail[] = array(
                     'title'      => $format_title( $ancestor->name ),
                     'url'        => get_term_link( $ancestor ),
@@ -151,7 +257,7 @@ function vf_breadcrumbs_append_term_chain( array &$trail, $term, $taxonomy, $for
         }
     }
 
-    if ( $include_term ) {
+    if ( $include_term && ! vf_breadcrumbs_is_excluded_product_cat( $term ) ) {
         $trail[] = array(
             'title'      => $format_title( $term->name ),
             'url'        => $term_is_current ? '' : get_term_link( $term ),

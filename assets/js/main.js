@@ -3,7 +3,6 @@
  *
  * - Delivery dates (AJAX)
  * - Mobile club template height
- * - Header currency Select2
  * - Variation preselect from URL params
  * - Variation swatch buttons and Size Guide link
  * - Sticky header, header height, viewport height
@@ -53,88 +52,6 @@
 		}
 
 		$wrapper.css('height', 'auto');
-	}
-
-	/* -------------------------------------------------------------------------
-	 * Currency selector
-	 * ---------------------------------------------------------------------- */
-
-	var SELECT2_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/';
-
-	function currencyOptionLabel(state) {
-		if (!state.id) {
-			return state.text;
-		}
-		return $('<span></span>').text(state.text);
-	}
-
-	function initCurrencySelect() {
-		var $currencyWrap = $('.wrapper-header-currency');
-		var $currencySelect = $currencyWrap.find('form select');
-
-		if (!$currencySelect.length || !$.fn.select2 || $currencySelect.data('select2')) {
-			return;
-		}
-
-		$currencySelect.select2({
-			width: '120px',
-			minimumResultsForSearch: Infinity,
-			dropdownParent: $currencyWrap,
-			templateResult: currencyOptionLabel,
-			templateSelection: currencyOptionLabel
-		});
-	}
-
-	function loadCurrencySelectAssets() {
-		var cssHref = SELECT2_BASE + 'css/select2.min.css';
-		var scriptSrc = SELECT2_BASE + 'js/select2.min.js';
-
-		if (!document.querySelector('link[data-vf-select2]')) {
-			$('<link>', {
-				rel: 'stylesheet',
-				href: cssHref,
-				'data-vf-select2': '1'
-			}).appendTo(document.head);
-		}
-
-		if ($.fn.select2) {
-			initCurrencySelect();
-			return;
-		}
-
-		$.ajax({
-			url: scriptSrc,
-			dataType: 'script',
-			cache: true
-		}).done(initCurrencySelect);
-	}
-
-	function scheduleCurrencySelect() {
-		var $currencySelect = $('.wrapper-header-currency form select');
-		var started = false;
-
-		if (!$currencySelect.length) {
-			return;
-		}
-
-		function start() {
-			if (started) {
-				return;
-			}
-			started = true;
-			loadCurrencySelectAssets();
-		}
-
-		$currencySelect.one('focus pointerdown', start);
-
-		if ('requestIdleCallback' in window) {
-			window.requestIdleCallback(start, { timeout: 2500 });
-			return;
-		}
-
-		$(window).on('load', function () {
-			window.setTimeout(start, 1200);
-		});
 	}
 
 	/* -------------------------------------------------------------------------
@@ -723,7 +640,6 @@
 	$(function () {
 		initOrderDates();
 		setMobileClubLayoutHeight();
-		scheduleCurrencySelect();
 		initVariationFromUrl();
 		initVariationSwatches();
 		initSizeGuideLink();

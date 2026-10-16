@@ -111,7 +111,7 @@
     text-transform: uppercase;
     text-decoration: none;
     line-height: 1.1;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.2px;
     cursor: pointer;
     background: transparent;
     border: none;
@@ -213,7 +213,7 @@
     font-family: var(--vf-font-title, 'Staatliches', Impact, 'Inter', sans-serif);
     font-size: 22px;
     line-height: 1.2;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.2px;
     text-transform: uppercase;
     box-sizing: border-box;
 }
