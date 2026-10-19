@@ -101,6 +101,27 @@ body.woocommerce-edit-account {
         display: none;
     }
 }
+body.woocommerce-account {
+    .woocommerce {
+        form.woocommerce-form {
+            .googlesitekit-sign-in-with-google__frontend-output-button {
+                margin-bottom: 24px;
+            }
+            .show-password {
+                height: 100%;
+            }
+            input.input-text {
+                font-size: 16px;
+                height: 50px;
+                border-color: #aaa;
+                border-radius: 4px;
+                &:focus {
+                    border-color: #111;
+                }
+            }
+        }
+    }
+}
 
 /* ==========================================================================
    User Registration Page

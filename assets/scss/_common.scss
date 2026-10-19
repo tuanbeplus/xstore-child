@@ -1270,6 +1270,24 @@ body.wp-child-theme-xstore-child {
     }
     .etheme-elementor-off-canvas__container.elementor-lightbox {
         background-color: rgb(0 0 0 / 60%);
+
+        form.woocommerce-form {
+            .googlesitekit-sign-in-with-google__frontend-output-button {
+                margin: 20px 0;
+            }
+            .show-password {
+                height: 100%;
+            }
+            input.input-text {
+                font-size: 16px;
+                height: 50px;
+                border-color: #aaa;
+                border-radius: 4px;
+                &:focus {
+                    border-color: #111;
+                }
+            }
+        }
     }
     .elementor-widget-theme-etheme_mobile_menu {
         .etheme-elementor-off-canvas__container.elementor-lightbox {

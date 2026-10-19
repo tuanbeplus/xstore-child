@@ -224,8 +224,8 @@ function vf_prevent_input_zoom() {
     })();
     </script>
     <style id="vf-no-input-zoom">
-        @media screen and (max-width: 782px) {
-            input, select, textarea { font-size: 16px !important; }
+        @media screen and (max-width: 767px) {
+            input, textarea { font-size: 16px !important; }
         }
     </style>
     <?php
