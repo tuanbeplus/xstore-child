@@ -320,12 +320,15 @@
             refresh();
         });
 
-        $root.on('click', '.vf-ps-clear', function () {
+        $root.on('click', '.vf-ps-clear, .vf-ps-empty-reset', function () {
             $root.find('.vf-ps-sidebar input[type="checkbox"]').prop('checked', false);
+            $root.find('.vf-ps-list-search').val('');
+            $root.find('.vf-ps-check').removeClass('is-search-miss');
             $search.val('');
             $root.find('.vf-ps-search-clear').removeClass('is-visible');
             $root.find('.vf-ps-sort-select').val(defaultOrder);
             setPrice(0, priceMax);
+            updateHero();
             $root.removeClass('is-open');
             refresh();
         });

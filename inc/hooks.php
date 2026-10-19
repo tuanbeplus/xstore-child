@@ -206,4 +206,29 @@ function vf_allow_html_in_term_descriptions() {
     remove_filter( 'term_description', 'wp_kses_data' );
 }
 
+/**
+ * Stop mobile browsers from zooming the page when an input is tapped.
+ */
+add_action( 'wp_head', 'vf_prevent_input_zoom', 0 );
+function vf_prevent_input_zoom() {
+    ?>
+    <script>
+    (function () {
+        var viewport = document.querySelector('meta[name="viewport"]');
+        if (!viewport) {
+            viewport = document.createElement('meta');
+            viewport.setAttribute('name', 'viewport');
+            document.head.appendChild(viewport);
+        }
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0');
+    })();
+    </script>
+    <style id="vf-no-input-zoom">
+        @media screen and (max-width: 782px) {
+            input, select, textarea { font-size: 16px !important; }
+        }
+    </style>
+    <?php
+}
+
 

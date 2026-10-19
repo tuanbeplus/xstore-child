@@ -28,6 +28,11 @@ body {
                     }
                 }
             }
+            form.etheme-search-form {
+                button[type="submit"]:hover, button[type="submit"]:focus {
+                    background-color: transparent;
+                }
+            }
         }
     }
 }

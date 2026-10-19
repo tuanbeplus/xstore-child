@@ -663,7 +663,7 @@ function vf_ps_render_loop( $filters, $paged, $layout = array() ) {
             'per_page' => 12,
             'columns'  => 3,
             'paginate' => true,
-            'empty'    => __( 'No products found.', 'xstore-child' ),
+            'empty'    => __( 'No products found matching your search.', 'xstore-child' ),
         )
     );
 
@@ -711,31 +711,18 @@ function vf_ps_render_loop( $filters, $paged, $layout = array() ) {
  * @param string $message
  */
 function vf_ps_render_empty( $message ) {
+    if ( '' === $message || 'No products found.' === $message ) {
+        $message = __( 'No products found matching your search.', 'xstore-child' );
+    }
     echo '<div class="vf-ps-empty">';
-    echo '<svg class="vf-ps-empty-icon" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" role="img" aria-labelledby="vf-ps-empty-title vf-ps-empty-desc">';
-    echo '<title id="vf-ps-empty-title">No Product Found</title><desc id="vf-ps-empty-desc">Two vintage football product cards with an X inside a magnifying glass.</desc>';
-    echo '<g stroke="#535650" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">';
-    echo '<rect x="207" y="81" width="143" height="196" rx="17" fill="#F3F3F0"/>';
-    echo '<path d="M229 239h65m-65 16h40" stroke-width="6"/>';
-    echo '<path d="m260 111-19 9-13 22 17 10 10-13v65h48v-65l10 13 17-10-13-22-19-9-19 15z" stroke-width="5"/>';
-    echo '<path d="m268 114 11 12 11-12m-23 37h24" stroke-width="4"/>';
-    echo '<rect x="135" y="112" width="148" height="198" rx="17" fill="#FFF"/>';
-    echo '<path d="m190 142-20 9-13 22 17 10 10-13v65h50v-65l10 13 17-10-13-22-20-9-19 15z" stroke-width="5"/>';
-    echo '<path d="m198 145 11 12 11-12m-19 40v25m16-25h10l-9 25" stroke-width="4"/>';
-    echo '<path d="M157 263h74m-74 20h42" stroke-width="6"/>';
-    echo '<path d="M106 311h21m22 0h175m28-34h30"/>';
-    echo '<circle cx="286" cy="263" r="43" fill="#FFF"/>';
-    echo '<path d="m317 295 27 28" stroke-width="18"/>';
-    echo '<path d="m273 250 26 26m0-26-26 26" stroke-width="7"/>';
-    echo '</g>';
-    echo '<g stroke="#74786F" stroke-width="5" stroke-linecap="round">';
-    echo '<path d="M104 90v18m-9-9h18M393 222v16m-8-8h16M86 246v14m-7-7h14"/>';
-    echo '<circle cx="392" cy="127" r="10"/><circle cx="104" cy="158" r="8"/>';
-    echo '<path d="m366 68 9 6-3 11h-12l-3-11zM69 302l8-5 8 5-3 9H72z" stroke-width="3" stroke-linejoin="round"/>';
-    echo '</g>';
-    echo '<g fill="#454942" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="600" text-anchor="middle"><text x="256" y="395">No Product</text><text x="256" y="447">Found</text></g>';
+    echo '<svg class="vf-ps-empty-icon" viewBox="0 0 24 24" aria-hidden="true">';
+    echo '<circle cx="11" cy="11" r="8"></circle>';
+    echo '<line x1="21" y1="21" x2="16.65" y2="16.65"></line>';
+    echo '<line x1="8" y1="11" x2="14" y2="11"></line>';
     echo '</svg>';
+    echo '<h4 class="vf-ps-empty-title">' . esc_html__( 'No Products Found', 'xstore-child' ) . '</h4>';
     echo '<p class="vf-ps-empty-text">' . esc_html( $message ) . '</p>';
+    echo '<button type="button" class="vf-ps-empty-reset">' . esc_html__( 'Reset Filters', 'xstore-child' ) . '</button>';
     echo '</div>';
 }
 
@@ -810,7 +797,7 @@ function vf_ps_ajax_results() {
         'per_page' => isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 12,
         'columns'  => isset( $_POST['columns'] ) ? absint( $_POST['columns'] ) : 3,
         'paginate' => ! isset( $_POST['paginate'] ) || 'yes' === sanitize_text_field( wp_unslash( $_POST['paginate'] ) ),
-        'empty'    => isset( $_POST['empty'] ) ? sanitize_text_field( wp_unslash( $_POST['empty'] ) ) : __( 'No products found.', 'xstore-child' ),
+            'empty'    => isset( $_POST['empty'] ) ? sanitize_text_field( wp_unslash( $_POST['empty'] ) ) : __( 'No products found matching your search.', 'xstore-child' ),
     );
 
     ob_start();

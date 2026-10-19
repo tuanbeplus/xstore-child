@@ -637,6 +637,27 @@
 
 	$(window).on('resize', setMobileClubLayoutHeight);
 
+	function lockBodyScroll() {
+		$('html, body').css('overflow', 'hidden');
+	}
+
+	function unlockBodyScroll() {
+		$('html, body').css('overflow', '');
+	}
+
+	$(document).on('click', '.elementor-widget-theme-etheme_mobile_menu a.etheme-elementor-off-canvas__toggle_button', function () {
+		setViewportHeight();
+		if ($('body').css('overflow') === 'hidden') {
+			unlockBodyScroll();
+		} else {
+			lockBodyScroll();
+		}
+	});
+
+	$(document).on('click', '.elementor-widget-theme-etheme_mobile_menu .etheme-elementor-off-canvas__close-button', function () {
+		unlockBodyScroll();
+	});
+
 	$(function () {
 		initOrderDates();
 		setMobileClubLayoutHeight();

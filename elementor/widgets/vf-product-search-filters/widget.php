@@ -256,7 +256,7 @@ class Widget_VFProductSearchFilters extends Widget_Base {
             array(
                 'label'   => __( 'Empty results text', 'xstore-child' ),
                 'type'    => Controls_Manager::TEXT,
-                'default' => __( 'No products found.', 'xstore-child' ),
+                'default' => __( 'No products found matching your search.', 'xstore-child' ),
             )
         );
 
