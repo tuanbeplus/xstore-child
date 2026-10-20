@@ -277,6 +277,40 @@ function custom_ppom_display_logic() {
 add_action( 'wp_footer', 'custom_ppom_display_logic' );
 
 /**
+ * Product thumbnails in the checkout order summary.
+ */
+add_filter( 'etheme_checkout_order_review_product_images', '__return_true' );
+
+/**
+ * Product thumbnails on the thank-you order table.
+ *
+ * @param string               $item_name
+ * @param WC_Order_Item        $item
+ * @param bool                 $is_visible
+ * @return string
+ */
+function vf_thankyou_order_item_image( $item_name, $item, $is_visible ) {
+    unset( $is_visible );
+
+    if ( ! function_exists( 'is_order_received_page' ) || ! is_order_received_page() ) {
+        return $item_name;
+    }
+    if ( ! $item instanceof WC_Order_Item_Product || false !== strpos( $item_name, '<img' ) ) {
+        return $item_name;
+    }
+
+    $product = $item->get_product();
+    if ( ! $product ) {
+        return $item_name;
+    }
+
+    $image = $product->get_image( 'woocommerce_thumbnail', array( 'class' => 'vf-order-item-image' ) );
+
+    return '<span class="vf-order-item">' . $image . '<span class="vf-order-item-name">' . $item_name . '</span></span>';
+}
+add_filter( 'woocommerce_order_item_name', 'vf_thankyou_order_item_image', 10, 3 );
+
+/**
  * Add "Size Guide" tab to WooCommerce single product page.
  * Shows children sizes for "kids" category (slug or ID 1839), adult sizes for all others.
  */
@@ -425,5 +459,23 @@ function vf_size_guide_tab_content() {
             });
         });
     </script>
+    <?php
+}
+
+/**
+ * Show the customer thank-you URL, including the real order key, on the admin order screen.
+ */
+add_action( 'woocommerce_admin_order_data_after_order_details', 'vf_admin_order_received_url' );
+function vf_admin_order_received_url( $order ) {
+    if ( ! $order instanceof WC_Order || ! current_user_can( 'edit_shop_orders' ) ) {
+        return;
+    }
+
+    $url = $order->get_checkout_order_received_url();
+    ?>
+    <p class="form-field form-field-wide">
+        <label><?php esc_html_e( 'Customer thank you page', 'xstore-child' ); ?></label>
+        <a href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $url ); ?></a>
+    </p>
     <?php
 }

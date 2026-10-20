@@ -32,6 +32,52 @@ function enqueue_child_theme_assets() {
     wp_localize_script( 'main-script', 'order_dates_ajax', array(
         'ajax_url' => admin_url( 'admin-ajax.php' ),
     ) );
+
+    if ( function_exists( 'is_checkout' ) && is_checkout() ) {
+        $image_css = '
+            .woocommerce-checkout-review-order-table .cart_item > .product-name {
+                display: table-cell;
+                width: 100%;
+            }
+            .woocommerce-order-details .vf-order-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .woocommerce-checkout-review-order-table .cart_item .product-name img {
+                width: 72px;
+                height: 72px;
+                max-width: 72px;
+                object-fit: cover;
+                border-radius: 6px;
+                background: #f3f3f3;
+                float: left;
+                margin: 0 15px 0 0;
+                margin-inline-end: 15px !important;
+            }
+            .woocommerce-order-details .vf-order-item img {
+                width: 72px;
+                height: 72px;
+                max-width: 72px;
+                object-fit: cover;
+                border-radius: 6px;
+                background: #f3f3f3;
+                float: none;
+                margin: 0;
+                flex: 0 0 72px;
+            }
+        ';
+        wp_add_inline_style( 'main-style', $image_css );
+    }
+
+    if ( function_exists( 'is_checkout' ) && is_checkout() && current_user_can( 'manage_options' ) ) {
+        wp_enqueue_style(
+            'vf-checkout',
+            get_stylesheet_directory_uri() . '/assets/css/checkout.css',
+            array( 'main-style' ),
+            THEME_VERSION
+        );
+    }
 }
 
 /**

@@ -13,8 +13,8 @@
 
 .elementor-widget-vf-product-search-filters button:hover,
 .elementor-widget-vf-product-search-filters button:focus {
-    color: inherit;
-    background-color: transparent;
+    color: inherit !important;
+    background-color: transparent !important;
 }
 
 .elementor-widget-vf-product-search-filters .vf-ps *,
@@ -388,6 +388,10 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
     cursor: pointer;
+}
+.elementor-widget-vf-product-search-filters .vf-ps-section-toggle:hover {
+    background-color: transparent;
+    color: inherit;
 }
 
 .elementor-widget-vf-product-search-filters .vf-ps-section-toggle::after {
@@ -891,6 +895,9 @@
     font-size: 15px;
     line-height: 1;
     cursor: pointer;
+}
+.elementor-widget-vf-product-search-filters .vf-ps-page:hover {
+    border-color: #111111;
 }
 
 .elementor-widget-vf-product-search-filters .vf-ps-page.is-current {
