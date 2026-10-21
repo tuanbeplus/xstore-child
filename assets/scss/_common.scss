@@ -1298,8 +1298,12 @@ body.wp-child-theme-xstore-child {
     &.sticky {
         .elementor-widget-theme-etheme_mobile_menu {
             .etheme-elementor-off-canvas__container.elementor-lightbox {
-                top: 38px !important
+                top: 38px !important;
             }
+        }
+        .etheme-elementor-off-canvas__container.elementor-lightbox {
+            top: var(--topbar-height, 36px) !important;
+            height: var(--viewport-height, 100vh) !important;
         }
     }
 }

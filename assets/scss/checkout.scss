@@ -293,6 +293,15 @@ body.woocommerce-checkout {
         .form-row {
             margin: 0 0 16px !important;
 
+            &.create-account {
+                span {
+                    display: inline;
+                    margin-left: 4px;
+                    position: relative;
+                    top: -2px;
+                }
+            }
+
             @media screen and (max-width: 991px) {
                 &-first,
                 &-last {
