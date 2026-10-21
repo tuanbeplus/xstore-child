@@ -1205,7 +1205,7 @@ body.wp-child-theme-xstore-child {
             top: 0;
             left: 0;
             right: 0;
-            z-index: 9999999;
+            z-index: 999999;
             transform: translate3d(0, 0, 0);
             transition:
                 transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
@@ -1292,13 +1292,13 @@ body.wp-child-theme-xstore-child {
     .elementor-widget-theme-etheme_mobile_menu {
         .etheme-elementor-off-canvas__container.elementor-lightbox {
             top: 0 !important;
-            height: calc(var(--viewport-height, 100vh) - var(--wp-admin--admin-bar--height, 0px) ) !important;
+            height: var(--viewport-height, 100vh) !important;
         }
     }
     &.sticky {
         .elementor-widget-theme-etheme_mobile_menu {
             .etheme-elementor-off-canvas__container.elementor-lightbox {
-                top: 33px !important
+                top: 38px !important
             }
         }
     }

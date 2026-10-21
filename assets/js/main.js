@@ -595,9 +595,12 @@
 	}
 
 	function setViewportHeight() {
+		var adminBar = document.getElementById('wpadminbar');
+		var adminBarHeight = adminBar ? adminBar.offsetHeight : 0;
+
 		document.documentElement.style.setProperty(
 			'--viewport-height',
-			window.innerHeight + 'px'
+			(window.innerHeight - adminBarHeight) + 'px'
 		);
 	}
 

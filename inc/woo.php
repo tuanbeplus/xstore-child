@@ -311,6 +311,23 @@ function vf_thankyou_order_item_image( $item_name, $item, $is_visible ) {
 add_filter( 'woocommerce_order_item_name', 'vf_thankyou_order_item_image', 10, 3 );
 
 /**
+ * Show billing and shipping on the thank-you page.
+ * WooCommerce hides them unless the logged-in user owns the order.
+ *
+ * @param bool     $show
+ * @param WC_Order $order
+ * @return bool
+ */
+function vf_show_thankyou_customer_details( $show, $order ) {
+    unset( $order );
+    if ( function_exists( 'is_order_received_page' ) && is_order_received_page() ) {
+        return true;
+    }
+    return $show;
+}
+add_filter( 'woocommerce_order_details_show_customer_details', 'vf_show_thankyou_customer_details', 10, 2 );
+
+/**
  * Add "Size Guide" tab to WooCommerce single product page.
  * Shows children sizes for "kids" category (slug or ID 1839), adult sizes for all others.
  */
