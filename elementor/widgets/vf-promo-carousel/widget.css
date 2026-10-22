@@ -1,0 +1,115 @@
+/**
+ * VF Promo Carousel
+ * The bar color is an inset box-shadow so the strip does not rely on background-color.
+ */
+
+.elementor-widget-vf-promo-carousel .vf-promo {
+    --vf-promo-bg: #16FC03;
+    --vf-promo-color: #111111;
+    --vf-promo-duration: 30s;
+    --vf-promo-gap: 22px;
+    --vf-promo-icon: 14px;
+    --vf-promo-pad: 10px;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: transparent;
+    color: var(--vf-promo-color);
+    box-shadow: inset 0 0 0 100vmax var(--vf-promo-bg);
+    padding: var(--vf-promo-pad) 0;
+}
+
+.elementor-widget-vf-promo-carousel .vf-promo__sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.elementor-widget-vf-promo-carousel .vf-promo__track {
+    display: flex;
+    width: max-content;
+    animation: vf-promo-marquee var(--vf-promo-duration) linear infinite;
+}
+
+.elementor-widget-vf-promo-carousel .vf-promo--pause:hover .vf-promo__track {
+    animation-play-state: paused;
+}
+
+.elementor-widget-vf-promo-carousel .vf-promo__group {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.elementor-widget-vf-promo-carousel .vf-promo__item {
+    display: flex;
+    align-items: center;
+    gap: var(--vf-promo-gap);
+    margin: 0;
+    padding-right: var(--vf-promo-gap);
+    white-space: nowrap;
+}
+
+.elementor-widget-vf-promo-carousel .vf-promo__text {
+    margin-top: 3px;
+    color: inherit;
+    font-family: "Staatliches", Impact, "Inter", sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.elementor-widget-vf-promo-carousel .vf-promo__sep {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    line-height: 0;
+}
+
+.elementor-widget-vf-promo-carousel .vf-promo__icon {
+    width: var(--vf-promo-icon);
+    height: var(--vf-promo-icon);
+    color: currentColor;
+    fill: currentColor;
+}
+
+.elementor-widget-vf-promo-carousel .vf-promo__icon svg {
+    width: var(--vf-promo-icon);
+    height: var(--vf-promo-icon);
+    fill: currentColor;
+}
+
+@media screen and (max-width: 767px) {
+    .elementor-widget-vf-promo-carousel .vf-promo {
+        --vf-promo-gap: 16px;
+        --vf-promo-icon: 12px;
+        --vf-promo-pad: 8px;
+    }
+
+    .elementor-widget-vf-promo-carousel .vf-promo__text {
+        font-size: 15px;
+    }
+}
+
+@keyframes vf-promo-marquee {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .elementor-widget-vf-promo-carousel .vf-promo__track {
+        animation: none;
+    }
+}

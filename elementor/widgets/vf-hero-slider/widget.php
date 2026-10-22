@@ -17,24 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-/**
- * Jetpack Site Accelerator (Image CDN) rewrites every <img> found in the_content
- * (Elementor output included) to i0.wp.com/...?resize=W,H, clamping the width to the
- * theme's global $content_width (XStore = 1170). The only supported opt-out is this
- * filter, so skip our slider images (marked with .vf-hero-img).
- */
-add_filter(
-    'jetpack_photon_skip_image',
-    function ( $skip, $src, $tag ) {
-        if ( is_string( $tag ) && false !== strpos( $tag, 'vf-hero-img' ) ) {
-            return true;
-        }
-        return $skip;
-    },
-    10,
-    3
-);
-
 class Widget_VFHeroSlider extends Widget_Base {
 
     public function get_name() {

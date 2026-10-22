@@ -27,6 +27,7 @@ class ElementorWidgets {
             'vf-product-search-filters',
             'vf-hero-slider',
             'vf-breadcrumbs',
+            'vf-promo-carousel',
         ];
     }
 
@@ -55,6 +56,13 @@ class ElementorWidgets {
         wp_register_style(
             'vf-breadcrumbs-style',
             get_stylesheet_directory_uri() . '/elementor/widgets/vf-breadcrumbs/widget.css',
+            [],
+            THEME_VERSION
+        );
+
+        wp_register_style(
+            'vf-promo-carousel-style',
+            get_stylesheet_directory_uri() . '/elementor/widgets/vf-promo-carousel/widget.css',
             [],
             THEME_VERSION
         );
@@ -160,6 +168,15 @@ class ElementorWidgets {
                 $widgets_manager->register( $slider_instance );
             } elseif ( method_exists( $widgets_manager, 'register_widget_type' ) ) {
                 $widgets_manager->register_widget_type( $slider_instance );
+            }
+        }
+
+        if ( class_exists( 'VintageFootballElementorWidgets\Widgets\VFPromoCarousel\Widget_VFPromoCarousel' ) ) {
+            $promo_instance = new Widgets\VFPromoCarousel\Widget_VFPromoCarousel();
+            if ( method_exists( $widgets_manager, 'register' ) ) {
+                $widgets_manager->register( $promo_instance );
+            } elseif ( method_exists( $widgets_manager, 'register_widget_type' ) ) {
+                $widgets_manager->register_widget_type( $promo_instance );
             }
         }
 
