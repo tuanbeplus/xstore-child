@@ -84,9 +84,13 @@ body.single-product.woocommerce {
 
         .price {
             font-weight: 500;
-
+            color: #111111;
             del {
                 font-size: 90%;
+                color: #aaaaaa !important;
+            }
+            ins {
+                color: #111111 !important;
             }
         }
 
