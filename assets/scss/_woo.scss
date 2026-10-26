@@ -126,34 +126,57 @@
     }
 }
 
+body .elementor-widget-theme-etheme_cart .etheme-elementor-off-canvas-content-prefooter-inner {
+    > table {
+        display: none !important;
+    }
+}
+
 .elementor-widget-theme-etheme_cart .vf-buy-3-progress {
     margin: 0 10px 16px;
     max-width: 350px;
 }
 
-.elementor-widget-theme-etheme_cart .cart-popup-footer .big-coast {
-    display: inline-flex;
-    align-items: baseline;
-    justify-content: flex-end;
-    gap: 8px;
-
-    .vf-mini-cart-original-price {
-        color: #8a8a8a;
-        font-size: inherit;
-        font-weight: 400;
-        line-height: 1;
-        text-decoration-thickness: 1px;
+.elementor-widget-theme-etheme_cart {
+    .cart-popup-footer {
+        flex-direction: column !important;
+        .codenitive-insurance__card {
+            padding: 12px 16px;
+            gap: 10px;
+            .codenitive-insurance__copy {
+                strong {
+                    font-weight: 600;
+                    font-size: 15px;
+                }
+                span {
+                    font-size: 13px;
+                }
+            }
+        }
     }
-
-    .vf-mini-cart-discounted-price {
-        color: inherit;
-        font-size: inherit;
-        font-weight: inherit;
-        line-height: inherit;
-        text-decoration: none;
+    .big-coast {
+        display: inline-flex;
+        align-items: baseline;
+        justify-content: flex-end;
+        gap: 8px;
+    
+        .vf-mini-cart-original-price {
+            color: #8a8a8a;
+            font-size: inherit;
+            font-weight: 400;
+            line-height: 1;
+            text-decoration-thickness: 1px;
+        }
+    
+        .vf-mini-cart-discounted-price {
+            color: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+            text-decoration: none;
+        }
     }
 }
-
 @keyframes vf-buy-3-progress-stripes {
     to {
         background-position: 28px 0;
