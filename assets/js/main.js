@@ -635,6 +635,124 @@
 	}
 
 	/* -------------------------------------------------------------------------
+	 * Keep cart and checkout content synchronized after an AJAX add-to-cart.
+	 * WooCommerce refreshes mini-cart fragments by default, but cart totals and
+	 * checkout order review require their own native refresh events. The storage
+	 * listener applies the same update to the other open browser tabs.
+	 * ---------------------------------------------------------------------- */
+	function refreshCurrentCartView() {
+		if ($('body').hasClass('woocommerce-cart')) {
+			$(document.body).trigger('wc_update_cart');
+		}
+
+		if ($('body').hasClass('woocommerce-checkout')) {
+			$(document.body).trigger('update_checkout');
+		}
+	}
+
+	function refreshCartPageAfterAddToCart() {
+		$(document.body).on('added_to_cart', refreshCurrentCartView);
+
+		window.addEventListener('storage', function (event) {
+			if (event.key && event.key.indexOf('wc_cart_hash_') === 0) {
+				refreshCurrentCartView();
+			}
+		});
+	}
+
+	/* -------------------------------------------------------------------------
+	 * Render and control the Codenitive insurance toggle inside XStore's mini
+	 * cart. The plugin does not natively render its card in that context, so
+	 * use its secured refresh and toggle endpoints instead of duplicating fees.
+	 * ---------------------------------------------------------------------- */
+	function initMiniCartInsurance() {
+		var refreshRequest = null;
+		var toggleRequest = null;
+		var latestInsuranceHtml = '';
+
+		function getSlots() {
+			var $slots = $('.vf-mini-cart-insurance-slot');
+
+			/*
+			 * XStore's Elementor off-canvas cart does not use the legacy
+			 * mini-cart footer hook. Create the slot in its rendered footer so
+			 * the full Codenitive control is placed directly above Subtotal.
+			 */
+			$('.etheme-elementor-off-canvas_content-footer .cart-popup-footer .cart-widget-subtotal').each(function () {
+				var $subtotal = $(this);
+				if (!$subtotal.prev('.vf-mini-cart-insurance-slot').length) {
+					$('<div class="vf-mini-cart-insurance-slot" aria-live="polite"></div>').insertBefore($subtotal);
+				}
+			});
+
+			return $('.vf-mini-cart-insurance-slot');
+		}
+
+		function refreshMiniCartInsurance() {
+			var $slots = getSlots();
+			if (!window.vfMiniCartInsurance || !$slots.length) {
+				return;
+			}
+
+			if (latestInsuranceHtml) {
+				$slots.html(latestInsuranceHtml);
+			}
+
+			if (refreshRequest) {
+				refreshRequest.abort();
+			}
+
+			refreshRequest = $.post(window.vfMiniCartInsurance.refreshUrl, {
+				nonce: window.vfMiniCartInsurance.nonce,
+				context: 'cart'
+			}).done(function (response) {
+				if (response && response.success && response.data && typeof response.data.html === 'string' && $.trim(response.data.html)) {
+					latestInsuranceHtml = response.data.html;
+					getSlots().html(latestInsuranceHtml);
+				}
+			}).always(function () {
+				refreshRequest = null;
+			});
+		}
+
+		$(document.body).on('wc_fragments_loaded wc_fragments_refreshed added_to_cart removed_from_cart', refreshMiniCartInsurance);
+		$(document).on('click', '.etheme-elementor-off-canvas__toggle_button', refreshMiniCartInsurance);
+
+		$(document).on('change', '.vf-mini-cart-insurance-slot input[name="codenitive_shipping_insurance"]', function () {
+			var $input = $(this);
+			var enabled = $input.is(':checked') ? 'yes' : 'no';
+			var $slot = $input.closest('.vf-mini-cart-insurance-slot');
+
+			if (!window.vfMiniCartInsurance || toggleRequest) {
+				return;
+			}
+
+			$slot.find('.codenitive-insurance').addClass('is-loading');
+			toggleRequest = $.post(window.vfMiniCartInsurance.toggleUrl, {
+				nonce: window.vfMiniCartInsurance.nonce,
+				enabled: enabled,
+				choice: ''
+			}).done(function (response) {
+				if (response && response.success) {
+					$(document.body).trigger('wc_fragment_refresh');
+					return;
+				}
+
+				$slot.prepend($('<div class="woocommerce-error vf-mini-cart-insurance-error" role="alert"></div>').text(window.vfMiniCartInsurance.errorText));
+				refreshMiniCartInsurance();
+			}).fail(function () {
+				$slot.prepend($('<div class="woocommerce-error vf-mini-cart-insurance-error" role="alert"></div>').text(window.vfMiniCartInsurance.errorText));
+				refreshMiniCartInsurance();
+			}).always(function () {
+				toggleRequest = null;
+				$slot.find('.codenitive-insurance').removeClass('is-loading');
+			});
+		});
+
+		refreshMiniCartInsurance();
+	}
+
+	/* -------------------------------------------------------------------------
 	 * Boot
 	 * ---------------------------------------------------------------------- */
 
@@ -662,6 +780,8 @@
 	});
 
 	$(function () {
+		refreshCartPageAfterAddToCart();
+		initMiniCartInsurance();
 		initOrderDates();
 		setMobileClubLayoutHeight();
 		initVariationFromUrl();

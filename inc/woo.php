@@ -480,6 +480,177 @@ function vf_size_guide_tab_content() {
 }
 
 /**
+ * Get the total item quantity that qualifies for the Buy 3 Get 1 promotion.
+ *
+ * This intentionally counts cart quantities rather than distinct product lines.
+ * The coupon itself remains managed independently by WooCommerce.
+ *
+ * @return int
+ */
+function vf_buy_3_get_1_cart_quantity() {
+    if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+        return 0;
+    }
+
+    return max( 0, (int) WC()->cart->get_cart_contents_count() );
+}
+
+/**
+ * Return the Buy 3 Get 1 promotion-progress component.
+ *
+ * @return string
+ */
+function vf_get_buy_3_get_1_progress_bar() {
+    $quantity       = vf_buy_3_get_1_cart_quantity();
+    $required_items = 3;
+    $completed      = min( $quantity, $required_items );
+    $progress       = ( $completed / $required_items ) * 100;
+    $is_unlocked    = $quantity >= $required_items;
+
+    if ( $is_unlocked ) {
+        $message = __( 'You unlocked 1 FREE kit!', 'xstore-child' );
+    } else {
+        $remaining = $required_items - $quantity;
+        $message   = sprintf(
+            _n(
+                'Add %d more kit to get 1 FREE',
+                'Add %d more kits to get 1 FREE',
+                $remaining,
+                'xstore-child'
+            ),
+            $remaining
+        );
+    }
+
+    ob_start();
+    ?>
+    <div class="vf-buy-3-progress<?php echo $is_unlocked ? ' is-unlocked' : ''; ?>" role="status" aria-live="polite">
+        <p class="vf-buy-3-progress__message"><?php echo esc_html( $message ); ?></p>
+        <p class="vf-buy-3-progress__coupon">
+            <span><?php esc_html_e( 'Coupon:', 'xstore-child' ); ?></span>
+            <strong>buytwogetthree</strong>
+        </p>
+        <div class="vf-buy-3-progress__track" role="progressbar" aria-valuemin="0" aria-valuemax="<?php echo esc_attr( $required_items ); ?>" aria-valuenow="<?php echo esc_attr( $completed ); ?>" aria-label="<?php esc_attr_e( 'Buy 3 Get 1 Free progress', 'xstore-child' ); ?>">
+            <span class="vf-buy-3-progress__indicator" style="width: <?php echo esc_attr( $progress ); ?>%;" aria-hidden="true"></span>
+        </div>
+    </div>
+    <?php
+
+    return ob_get_clean();
+}
+
+/**
+ * Output the Buy 3 Get 1 promotion progress in the relevant cart summary.
+ */
+function vf_output_buy_3_get_1_progress_bar() {
+    echo vf_get_buy_3_get_1_progress_bar(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+
+add_action( 'woocommerce_before_mini_cart', 'vf_output_buy_3_get_1_progress_bar', 5 );
+add_action( 'woocommerce_before_cart_totals', 'vf_output_buy_3_get_1_progress_bar', 5 );
+add_action( 'woocommerce_checkout_before_order_review', 'vf_output_buy_3_get_1_progress_bar', 5 );
+
+/**
+ * Output the XStore mini-cart subtotal after WooCommerce coupon discounts.
+ *
+ * XStore's default callback displays get_cart_subtotal(), which is calculated
+ * before coupons. Cart contents total is WooCommerce's discounted product
+ * amount and excludes shipping, so it matches the mini-cart subtotal label.
+ *
+ * @return void
+ */
+function vf_discounted_mini_cart_subtotal() {
+    if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+        return;
+    }
+
+    $cart              = WC()->cart;
+    $insurance_fees    = (float) $cart->get_fee_total();
+    $regular_subtotal  = (float) $cart->get_subtotal() + $insurance_fees;
+    $discounted_total  = (float) $cart->get_cart_contents_total() + $insurance_fees;
+    $has_coupon_saving = $regular_subtotal > $discounted_total;
+    $subtotal_html     = '<span class="big-coast">';
+
+    if ( $has_coupon_saving ) {
+        $subtotal_html .= '<del class="vf-mini-cart-original-price">' . wp_kses_post( wc_price( $regular_subtotal ) ) . '</del>';
+    }
+
+    $subtotal_html .= '<ins class="vf-mini-cart-discounted-price">' . wp_kses_post( wc_price( $discounted_total ) ) . '</ins>';
+    $subtotal_html .= '</span>';
+
+    echo '<span class="small-h">' . esc_html__( 'Subtotal:', 'xstore' ) . '</span> ' . $subtotal_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+
+/**
+ * Replace XStore's pre-coupon mini-cart subtotal callback for every render,
+ * including the theme's custom mini-cart AJAX response.
+ *
+ * @return void
+ */
+function vf_use_discounted_mini_cart_subtotal() {
+    remove_action( 'woocommerce_widget_shopping_cart_total', 'woocommerce_widget_shopping_cart_subtotal', 10 );
+    remove_action( 'woocommerce_widget_shopping_cart_total', 'etheme_woocommerce_widget_shopping_cart_subtotal', 10 );
+    add_action( 'woocommerce_widget_shopping_cart_total', 'vf_discounted_mini_cart_subtotal', 10 );
+}
+add_action( 'woocommerce_before_mini_cart', 'vf_use_discounted_mini_cart_subtotal', 1 );
+
+/**
+ * Refresh the mini-cart promotion progress with WooCommerce cart fragments.
+ *
+ * @param array $fragments
+ * @return array
+ */
+function vf_buy_3_get_1_progress_bar_fragment( $fragments ) {
+    $fragments['.vf-buy-3-progress'] = vf_get_buy_3_get_1_progress_bar();
+    return $fragments;
+}
+add_filter( 'woocommerce_add_to_cart_fragments', 'vf_buy_3_get_1_progress_bar_fragment' );
+
+/**
+ * Render XStore's mini-cart footer with the insurance control directly above
+ * its subtotal. XStore exposes no hook inside this footer section.
+ */
+function vf_mini_cart_footer_with_insurance() {
+    if ( ! WC()->cart || WC()->cart->is_empty() ) {
+        return;
+    }
+
+    remove_action( 'woocommerce_widget_shopping_cart_buttons', 'woocommerce_widget_shopping_cart_button_view_cart', 10 );
+
+    if ( etheme_get_option( 'cart_content_view_cart_button_et-desktop', false ) ) {
+        add_action( 'woocommerce_widget_shopping_cart_buttons', 'woocommerce_widget_shopping_cart_button_view_cart', 10 );
+    }
+    ?>
+    <div class="product_list-popup-footer-wrapper">
+        <div class="product_list-popup-footer-inner">
+            <div class="cart-popup-footer">
+                <a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="btn-view-cart wc-forward">
+                    <?php esc_html_e( 'Shopping cart ', 'xstore' ); ?> (<?php echo esc_html( WC()->cart->get_cart_contents_count() ); ?>)
+                </a>
+                <?php if ( class_exists( 'Codenitive_Shipping_Insurance' ) ) : ?>
+                    <div class="vf-mini-cart-insurance-slot" aria-live="polite"></div>
+                <?php endif; ?>
+                <div class="cart-widget-subtotal woocommerce-mini-cart__total total">
+                    <?php do_action( 'woocommerce_widget_shopping_cart_total' ); ?>
+                </div>
+            </div>
+
+            <?php do_action( 'woocommerce_widget_shopping_cart_before_buttons' ); ?>
+            <p class="buttons mini-cart-buttons"><?php do_action( 'woocommerce_widget_shopping_cart_buttons' ); ?></p>
+            <?php do_action( 'woocommerce_widget_shopping_cart_after_buttons' ); ?>
+        </div>
+    </div>
+    <?php
+}
+
+/** Replace the parent footer so the insurance slot is located above subtotal. */
+function vf_replace_mini_cart_footer() {
+    remove_action( 'et_woocomerce_mini_cart_footer', 'et_woocomerce_mini_cart_footer', 10 );
+    add_action( 'et_woocomerce_mini_cart_footer', 'vf_mini_cart_footer_with_insurance', 10 );
+}
+add_action( 'wp', 'vf_replace_mini_cart_footer', 1 );
+
+/**
  * Show the customer thank-you URL, including the real order key, on the admin order screen.
  */
 add_action( 'woocommerce_admin_order_data_after_order_details', 'vf_admin_order_received_url' );

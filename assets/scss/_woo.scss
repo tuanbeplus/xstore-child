@@ -55,9 +55,140 @@
 }
 
 /* ==========================================================================
+   Buy 3 Get 1 Free promotion progress
+   ========================================================================== */
+.vf-buy-3-progress {
+    --vf-buy-3-gray: #d8d8d8;
+    --vf-buy-3-green: #16b83e;
+    margin: 0 0 20px;
+    padding: 16px 20px;
+    border: 1px solid #d7d7d7;
+    background: #fff;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 4px;
+
+    .vf-buy-3-progress__message {
+        margin: 0 0 6px;
+        color: #171717;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.35;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .vf-buy-3-progress__coupon {
+        margin: 0 0 10px;
+        color: #777;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.35;
+
+        strong {
+            color: #e1261c;
+            font-weight: 500;
+        }
+    }
+
+    .vf-buy-3-progress__track {
+        position: relative;
+        width: 100%;
+        height: 7px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: var(--vf-buy-3-gray);
+    }
+
+    .vf-buy-3-progress__indicator {
+        position: absolute;
+        inset: 0 auto 0 0;
+        min-width: 0;
+        border-radius: inherit;
+        background-color: var(--vf-buy-3-green);
+        background-image: repeating-linear-gradient(
+            -45deg,
+            rgba(255, 255, 255, 0.24) 0,
+            rgba(255, 255, 255, 0.24) 10px,
+            transparent 10px,
+            transparent 20px
+        );
+        background-size: 28px 28px;
+        animation: vf-buy-3-progress-stripes 1000ms linear infinite;
+        transition: width 180ms ease;
+    }
+
+    &.is-unlocked {
+
+        .vf-buy-3-progress__message {
+            color: #087b26;
+        }
+    }
+}
+
+.elementor-widget-theme-etheme_cart .vf-buy-3-progress {
+    margin: 0 10px 16px;
+    max-width: 350px;
+}
+
+.elementor-widget-theme-etheme_cart .cart-popup-footer .big-coast {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 8px;
+
+    .vf-mini-cart-original-price {
+        color: #8a8a8a;
+        font-size: inherit;
+        font-weight: 400;
+        line-height: 1;
+        text-decoration-thickness: 1px;
+    }
+
+    .vf-mini-cart-discounted-price {
+        color: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        text-decoration: none;
+    }
+}
+
+@keyframes vf-buy-3-progress-stripes {
+    to {
+        background-position: 28px 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vf-buy-3-progress .vf-buy-3-progress__indicator {
+        animation: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .vf-buy-3-progress {
+        padding: 12px;
+    }
+}
+
+/* ==========================================================================
    Cart Page
    ========================================================================== */
 body.woocommerce-cart {
+    .shop_table {
+        .cart_item {
+            .variation {
+                gap: 5px;
+                margin-bottom: 14px;
+                font-size: 14px;
+                font-family: var(--font-body) !important;
+                dt {
+                    opacity: 0.8;
+                }
+            }
+        }
+    }
     .actions {
         margin-top: 12px;
     }
@@ -162,5 +293,56 @@ body.user-registration-page {
     .ur-frontend-form.login .ur-reset-password-btn:hover {
         background: var(--et_btn-dark-color);
         color: var(--et_btn-dark-bg-color);
+    }
+}
+
+
+body .woocommerce,
+.vf-mini-cart-insurance-slot {
+    .codenitive-insurance {
+        font-family: var(--font-body) !important;
+        > h3 {
+            display: none;
+        }
+        .codenitive-insurance__card {
+            min-height: 80px;
+            padding: 16px 20px;
+            border-radius: 4px;
+            .codenitive-insurance__copy {
+                text-align: left;
+                strong {
+                    font-size: 16px;
+                }
+                span {
+                    font-size: 14px;
+                    font-weight: 400;
+                }
+            }
+            .codenitive-insurance__action {
+                .codenitive-insurance__price {
+                    margin-top: 2px;
+                    font-size: 14px;
+                }
+                input[name="codenitive_shipping_insurance"] {
+                    display: none;
+                }
+                .codenitive-insurance__switch {
+                    left: 3px;
+                    top: 2px;
+                    flex: 0 0 36px;
+                    width: 36px;
+                    height: 21px;
+                    &:after {
+                        left: 3px;
+                        top: 3px;
+                        width: 15px;
+                        height: 15px;
+                    }
+                }
+                > input:checked + .codenitive-insurance__switch::after {
+                    transform: translateX(15px);
+                }
+            }
+        }
     }
 }

@@ -33,6 +33,22 @@ function enqueue_child_theme_assets() {
         'ajax_url' => admin_url( 'admin-ajax.php' ),
     ) );
 
+    if ( defined( 'CODENITIVE_SHIPPING_INSURANCE_URL' ) && class_exists( 'Codenitive_Shipping_Insurance' ) ) {
+        wp_enqueue_style(
+            'vf-mini-cart-shipping-insurance',
+            CODENITIVE_SHIPPING_INSURANCE_URL . 'assets/css/checkout.css',
+            array(),
+            Codenitive_Shipping_Insurance::VERSION
+        );
+
+        wp_localize_script( 'main-script', 'vfMiniCartInsurance', array(
+            'refreshUrl' => WC_AJAX::get_endpoint( 'codenitive_refresh_insurance' ),
+            'toggleUrl'  => WC_AJAX::get_endpoint( 'codenitive_toggle_insurance' ),
+            'nonce'      => wp_create_nonce( 'codenitive_toggle_insurance' ),
+            'errorText'  => __( 'The insurance update could not be completed. Please try again.', 'xstore-child' ),
+        ) );
+    }
+
     if ( function_exists( 'is_checkout' ) && is_checkout() ) {
         wp_enqueue_style(
             'vf-checkout',
