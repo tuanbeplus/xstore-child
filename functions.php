@@ -48,3 +48,27 @@ require_once INC_DIR . 'regenerate-variations.php';
 if ( file_exists( get_stylesheet_directory() . '/elementor/widgets-load.php' ) ) {
     require_once get_stylesheet_directory() . '/elementor/widgets-load.php';
 }
+
+add_action( 'wp_enqueue_scripts', 'vf_home_dequeue_css', 9999 );
+add_action( 'wp_print_styles', 'vf_home_dequeue_css', 9999 );
+add_action( 'wp_print_footer_scripts', 'vf_home_dequeue_css', 1 );
+
+function vf_home_dequeue_css() {
+    if ( ! is_front_page() ) {
+        return;
+    }
+
+    $handles = array(
+        'metorik-css',                      // metorik.css
+        'sib-front-css',                    // mailin-front.css (Brevo)
+        'wc-ppcp-mini-cart-buttons',        // ppcp-blocks-css-mini-cart-buttons.css
+        'fluentform-elementor-widget',      // fluent-forms-elementor-widget.css
+        'wmc-flags',                        // flags-64.min.css
+        'woocommerce-multi-currency',       // woocommerce-multi-currency.min.css
+        'wc-blocks-style',                  // wc-blocks.css
+    );
+
+    foreach ( $handles as $handle ) {
+        wp_dequeue_style( $handle );
+    }
+}

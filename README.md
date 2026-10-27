@@ -222,13 +222,4 @@ sass assets/scss/main.scss assets/css/main.css --no-source-map --style=compresse
 - Add general utilities to `inc/helpers.php`.
 - Add asset enqueues, scripts, and theme actions to `inc/hooks.php`.
 - Add new shortcodes to `inc/shortcodes.php`.
-- Add WooCommerce filters, order logic, and template hooks to `inc/woo.php`.
-- Keep `functions.php` as a clean master entry point that requires modules.
-
----
-
-## Credits & Author
-
-- **Author:** Beplus / Tuan Nguyen (<tuan.beplus@gmail.com>)
-- **Repository:** [https://github.com/tuanbeplus/xstore-child](https://github.com/tuanbeplus/xstore-child)
-- **Parent Theme:** XStore by [8theme](https://8theme.com/)
+- Add WooCommerce filters,
