@@ -640,7 +640,39 @@
 	 * checkout order review require their own native refresh events. The storage
 	 * listener applies the same update to the other open browser tabs.
 	 * ---------------------------------------------------------------------- */
+	var insuranceSyncKey = 'vf_shipping_insurance';
+	var applyInsuranceChoice = function () {};
+
+	function publishInsuranceChoice(enabled) {
+		try {
+			localStorage.setItem(insuranceSyncKey, JSON.stringify({
+				enabled: enabled,
+				at: Date.now()
+			}));
+		} catch (error) {}
+	}
+
+	function readRecentInsuranceChoice() {
+		try {
+			var saved = JSON.parse(localStorage.getItem(insuranceSyncKey) || '');
+			if (!saved || (saved.enabled !== 'yes' && saved.enabled !== 'no')) {
+				return '';
+			}
+			if (Date.now() - saved.at > 8000) {
+				return '';
+			}
+			return saved.enabled;
+		} catch (error) {
+			return '';
+		}
+	}
+
 	function refreshCurrentCartView() {
+		var recentChoice = readRecentInsuranceChoice();
+		if (recentChoice) {
+			applyInsuranceChoice(recentChoice);
+		}
+
 		if ($('body').hasClass('woocommerce-cart')) {
 			$(document.body).trigger('wc_update_cart');
 		}
@@ -652,8 +684,24 @@
 
 	function refreshCartPageAfterAddToCart() {
 		$(document.body).on('added_to_cart', refreshCurrentCartView);
+		$(document).on('change', '.codenitive-insurance-cart-slot input[type="checkbox"][name="codenitive_shipping_insurance"], .codenitive-insurance-checkout-slot input[type="checkbox"][name="codenitive_shipping_insurance"]', function () {
+			publishInsuranceChoice(this.checked ? 'yes' : 'no');
+		});
 
 		window.addEventListener('storage', function (event) {
+			var saved;
+			if (event.key === insuranceSyncKey) {
+				try {
+					saved = JSON.parse(event.newValue || '');
+				} catch (error) {
+					saved = null;
+				}
+				if (saved && (saved.enabled === 'yes' || saved.enabled === 'no')) {
+					applyInsuranceChoice(saved.enabled);
+				}
+				return;
+			}
+
 			if (event.key && event.key.indexOf('wc_cart_hash_') === 0) {
 				refreshCurrentCartView();
 			}
@@ -669,16 +717,16 @@
 		var refreshRequest = null;
 		var toggleRequest = null;
 		var latestInsuranceHtml = '';
+		var refreshGeneration = 0;
 
 		function getSlots() {
-			var $slots = $('.vf-mini-cart-insurance-slot');
-
 			/*
 			 * XStore's Elementor off-canvas cart does not use the legacy
-			 * mini-cart footer hook. Create the slot in its rendered footer so
-			 * the full Codenitive control is placed directly above Subtotal.
+			 * mini-cart footer hook, and its fragment refresh replaces that
+			 * footer from the server. Recreate the slot above Subtotal whenever
+			 * the rendered footer no longer contains it.
 			 */
-			$('.etheme-elementor-off-canvas_content-footer .cart-popup-footer .cart-widget-subtotal').each(function () {
+			$('.etheme-elementor-off-canvas_content-footer .cart-popup-footer .cart-widget-subtotal, .et_b_header-cart .cart-popup-footer .cart-widget-subtotal').each(function () {
 				var $subtotal = $(this);
 				if (!$subtotal.prev('.vf-mini-cart-insurance-slot').length) {
 					$('<div class="vf-mini-cart-insurance-slot" aria-live="polite"></div>').insertBefore($subtotal);
@@ -688,8 +736,40 @@
 			return $('.vf-mini-cart-insurance-slot');
 		}
 
+		function rememberInsuranceState(enabled) {
+			if (!latestInsuranceHtml) {
+				return;
+			}
+
+			var $markup = $('<div>').html(latestInsuranceHtml);
+			$markup.find('input[type="checkbox"][name="codenitive_shipping_insurance"]').each(function () {
+				if (enabled === 'yes') {
+					this.setAttribute('checked', 'checked');
+				} else {
+					this.removeAttribute('checked');
+				}
+			});
+			latestInsuranceHtml = $markup.html();
+		}
+
+		applyInsuranceChoice = function (enabled) {
+			rememberInsuranceState(enabled);
+			refreshGeneration++;
+			if (refreshRequest) {
+				refreshRequest.abort();
+			}
+			$('input[type="checkbox"][name="codenitive_shipping_insurance"]').each(function () {
+				this.checked = enabled === 'yes';
+			});
+			if (latestInsuranceHtml) {
+				getSlots().html(latestInsuranceHtml);
+			}
+		};
+
 		function refreshMiniCartInsurance() {
 			var $slots = getSlots();
+			var generation;
+			var request;
 			if (!window.vfMiniCartInsurance || !$slots.length) {
 				return;
 			}
@@ -702,31 +782,45 @@
 				refreshRequest.abort();
 			}
 
-			refreshRequest = $.post(window.vfMiniCartInsurance.refreshUrl, {
+			generation = ++refreshGeneration;
+			request = $.post(window.vfMiniCartInsurance.refreshUrl, {
 				nonce: window.vfMiniCartInsurance.nonce,
 				context: 'cart'
 			}).done(function (response) {
+				if (generation !== refreshGeneration) {
+					return;
+				}
 				if (response && response.success && response.data && typeof response.data.html === 'string' && $.trim(response.data.html)) {
 					latestInsuranceHtml = response.data.html;
 					getSlots().html(latestInsuranceHtml);
 				}
 			}).always(function () {
-				refreshRequest = null;
+				if (refreshRequest === request) {
+					refreshRequest = null;
+				}
 			});
+			refreshRequest = request;
 		}
 
-		$(document.body).on('wc_fragments_loaded wc_fragments_refreshed added_to_cart removed_from_cart', refreshMiniCartInsurance);
+		/*
+		 * et_calculate_cart_progress fires after XStore replaces the Elementor
+		 * mini-cart fragments. Reapply the control there, because that
+		 * replacement removes the slot inserted before the request returns.
+		 */
+		$(document.body).on('wc_fragments_loaded wc_fragments_refreshed added_to_cart removed_from_cart et_calculate_cart_progress et_mini_cart_fragments', refreshMiniCartInsurance);
 		$(document).on('click', '.etheme-elementor-off-canvas__toggle_button', refreshMiniCartInsurance);
 
-		$(document).on('change', '.vf-mini-cart-insurance-slot input[name="codenitive_shipping_insurance"]', function () {
+		$(document).on('change', '.vf-mini-cart-insurance-slot input[type="checkbox"][name="codenitive_shipping_insurance"]', function () {
 			var $input = $(this);
 			var enabled = $input.is(':checked') ? 'yes' : 'no';
 			var $slot = $input.closest('.vf-mini-cart-insurance-slot');
 
 			if (!window.vfMiniCartInsurance || toggleRequest) {
+				$input.prop('checked', !$input.is(':checked'));
 				return;
 			}
 
+			rememberInsuranceState(enabled);
 			$slot.find('.codenitive-insurance').addClass('is-loading');
 			toggleRequest = $.post(window.vfMiniCartInsurance.toggleUrl, {
 				nonce: window.vfMiniCartInsurance.nonce,
@@ -734,13 +828,16 @@
 				choice: ''
 			}).done(function (response) {
 				if (response && response.success) {
+					publishInsuranceChoice(enabled);
 					$(document.body).trigger('wc_fragment_refresh');
 					return;
 				}
 
+				rememberInsuranceState(enabled === 'yes' ? 'no' : 'yes');
 				$slot.prepend($('<div class="woocommerce-error vf-mini-cart-insurance-error" role="alert"></div>').text(window.vfMiniCartInsurance.errorText));
 				refreshMiniCartInsurance();
 			}).fail(function () {
+				rememberInsuranceState(enabled === 'yes' ? 'no' : 'yes');
 				$slot.prepend($('<div class="woocommerce-error vf-mini-cart-insurance-error" role="alert"></div>').text(window.vfMiniCartInsurance.errorText));
 				refreshMiniCartInsurance();
 			}).always(function () {
