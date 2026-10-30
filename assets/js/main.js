@@ -888,59 +888,38 @@
 	});
 
 	/*
-	 * XStore lazy-load keeps Elementor product-grid photos on a placeholder
-	 * until its observer runs. On mobile that often waits for the first touch.
-	 * Put the real file on the first four images and drop the lazy markers so
-	 * a later observer cannot put the placeholder back.
+	 * Keep the first four product images eager on mobile. Home and archives use
+	 * the Elementor product grid. Single products use the gallery, then related
+	 * products. WP Rocket and XStore have already rewritten those tags, so the
+	 * real file has to be restored from data-src as well as marked no-lazy.
 	 */
-	function revealImage(img) {
-		var source = img.getAttribute('data-lazy-src') || img.getAttribute('data-src');
-
-		img.classList.add('no-lazy', 'et-lazy-loaded');
-		img.classList.remove('lazyload', 'lazyload-lqip', 'lazyload-simple', 'et-lazyload-fadeIn');
-		img.removeAttribute('loading');
-		if (source && img.getAttribute('src') !== source) {
-			img.setAttribute('src', source);
-		}
-		img.removeAttribute('data-src');
-		img.removeAttribute('data-lazy-src');
-		img.removeAttribute('data-srcset');
-	}
-
 	function revealFirstProductImages() {
-		var products;
 		var images;
 		var index;
-		var shown;
 		var img;
+		var source;
 
 		if (window.innerWidth > 767) {
 			return;
 		}
 
-		products = document.querySelectorAll('.elementor-widget-etheme_product_grid .etheme-product-grid-item, .etheme-product-grid-item');
-		shown = 0;
-		for (index = 0; index < products.length && shown < 4; index++) {
-			img = products[index].querySelector('.etheme-product-grid-image a img');
-			if (!img) {
-				continue;
+		images = document.querySelectorAll([
+			'.etheme-product-grid-image > a > img',
+			'.woocommerce-product-gallery__image img',
+			'.content-product .image-swap > img'
+		].join(', '));
+
+		for (index = 0; index < images.length && index < 4; index++) {
+			img = images[index];
+			img.classList.add('no-lazy');
+			img.removeAttribute('loading');
+			source = img.getAttribute('data-lazy-src') || img.getAttribute('data-src');
+			if (source && img.getAttribute('src') !== source) {
+				img.setAttribute('src', source);
 			}
-			revealImage(img);
-			shown++;
-		}
-
-		if (shown >= 4) {
-			return;
-		}
-
-		images = document.querySelectorAll('.woocommerce-product-gallery__image img, .content-product .image-swap > img');
-		for (index = 0; index < images.length && shown < 4; index++) {
-			revealImage(images[index]);
-			shown++;
+			img.classList.remove('lazyload', 'lazyload-lqip', 'et-lazyload-fadeIn');
 		}
 	}
 
 	revealFirstProductImages();
-	$(revealFirstProductImages);
-	$(window).on('load', revealFirstProductImages);
 })(jQuery);
