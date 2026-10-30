@@ -886,4 +886,61 @@
 		initSizeGuideLink();
 		initHeader();
 	});
+
+	/*
+	 * XStore lazy-load keeps Elementor product-grid photos on a placeholder
+	 * until its observer runs. On mobile that often waits for the first touch.
+	 * Put the real file on the first four images and drop the lazy markers so
+	 * a later observer cannot put the placeholder back.
+	 */
+	function revealImage(img) {
+		var source = img.getAttribute('data-lazy-src') || img.getAttribute('data-src');
+
+		img.classList.add('no-lazy', 'et-lazy-loaded');
+		img.classList.remove('lazyload', 'lazyload-lqip', 'lazyload-simple', 'et-lazyload-fadeIn');
+		img.removeAttribute('loading');
+		if (source && img.getAttribute('src') !== source) {
+			img.setAttribute('src', source);
+		}
+		img.removeAttribute('data-src');
+		img.removeAttribute('data-lazy-src');
+		img.removeAttribute('data-srcset');
+	}
+
+	function revealFirstProductImages() {
+		var products;
+		var images;
+		var index;
+		var shown;
+		var img;
+
+		if (window.innerWidth > 767) {
+			return;
+		}
+
+		products = document.querySelectorAll('.elementor-widget-etheme_product_grid .etheme-product-grid-item, .etheme-product-grid-item');
+		shown = 0;
+		for (index = 0; index < products.length && shown < 4; index++) {
+			img = products[index].querySelector('.etheme-product-grid-image a img');
+			if (!img) {
+				continue;
+			}
+			revealImage(img);
+			shown++;
+		}
+
+		if (shown >= 4) {
+			return;
+		}
+
+		images = document.querySelectorAll('.woocommerce-product-gallery__image img, .content-product .image-swap > img');
+		for (index = 0; index < images.length && shown < 4; index++) {
+			revealImage(images[index]);
+			shown++;
+		}
+	}
+
+	revealFirstProductImages();
+	$(revealFirstProductImages);
+	$(window).on('load', revealFirstProductImages);
 })(jQuery);
