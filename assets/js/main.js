@@ -604,6 +604,36 @@
 		);
 	}
 
+	function unlockHeader() {
+		document.body.classList.remove('vf-loading');
+	}
+
+	function initHeader() {
+		var unlockTimer;
+
+		setHeaderHeight();
+		setViewportHeight();
+		handleStickyHeader();
+
+		unlockTimer = setTimeout(unlockHeader, 5000);
+
+		$(window).on('load', function () {
+			clearTimeout(unlockTimer);
+			unlockHeader();
+			setHeaderHeight();
+			setTimeout(setHeaderHeight, 300);
+			setTimeout(setHeaderHeight, 1000);
+		});
+
+		$(window).on('resize orientationchange', function () {
+			setHeaderHeight();
+			setViewportHeight();
+			handleStickyHeader();
+		});
+
+		window.addEventListener('scroll', handleStickyHeader, { passive: true });
+	}
+
 	/* -------------------------------------------------------------------------
 	 * Keep cart and checkout content synchronized after an AJAX add-to-cart.
 	 * WooCommerce refreshes mini-cart fragments by default, but cart totals and
@@ -854,5 +884,6 @@
 		initVariationFromUrl();
 		initVariationSwatches();
 		initSizeGuideLink();
+		initHeader();
 	});
 })(jQuery);

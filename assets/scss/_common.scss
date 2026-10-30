@@ -1309,3 +1309,16 @@ body.wp-child-theme-xstore-child {
     }
 }
 
+/* ==========================================================================
+   Header Loading Lock
+   Prevent hover/click on header while page is loading to avoid
+   mega-menu flash of unstyled content. Removed by JS on window.load.
+   ========================================================================== */
+body.vf-loading {
+    header.elementor-location-header {
+        pointer-events: none !important;
+        @media (max-width: 767px) {
+            pointer-events: auto !important;
+        }
+    }
+}
