@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define('THEME_VERSION', '2.1.9');
+define('THEME_VERSION', '2.1.92');
 define('INC_DIR', get_stylesheet_directory() . '/inc/');
 
 /**
@@ -28,9 +28,19 @@ require_once INC_DIR . 'hooks.php';
 require_once INC_DIR . 'shortcodes.php';
 
 /**
+ * 3a. Temporary WooCommerce category-description audit/export/import tool.
+ */
+require_once INC_DIR . 'category-content-manager.php';
+
+/**
  * 3b. Breadcrumbs (Elementor widget, [vf_breadcrumbs], single product heading)
  */
 require_once INC_DIR . 'breadcrumbs.php';
+
+/**
+ * 3c. FAQ Schema generator (FAQPage JSON-LD for Rank Math and standalone)
+ */
+require_once INC_DIR . 'faq-schema.php';
 
 /**
  * 4. WooCommerce customizations (order status, ratings, shipping estimates, size guide, etc.)

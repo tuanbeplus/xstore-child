@@ -659,7 +659,10 @@ function vf_render_breadcrumbs( $settings = array(), $echo = true ) {
 
     ob_start();
 
-    $use_json_ld = ( 'yes' === $settings['enable_schema'] && ! empty( $trail ) );
+    // Rank Math already publishes a BreadcrumbList for indexable pages. Keep the
+    // VF markup visual-only in that case to avoid duplicate breadcrumb entities.
+    $rank_math_active = defined( 'RANK_MATH_VERSION' );
+    $use_json_ld      = ( 'yes' === $settings['enable_schema'] && ! $rank_math_active && ! empty( $trail ) );
 
     if ( $use_json_ld ) {
         $schema_elements = array();

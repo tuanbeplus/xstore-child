@@ -281,7 +281,8 @@ function vf_ajax_filter_product_categories() {
     $page        = ! empty( $_POST['page'] ) ? max( 1, absint( $_POST['page'] ) ) : 1;
     $base_url    = ! empty( $_POST['base_url'] ) ? esc_url_raw( wp_unslash( $_POST['base_url'] ) ) : '';
     $hide_empty  = ! empty( $_POST['hide_empty'] ) && 'yes' === $_POST['hide_empty'];
-    $per_page    = 15; // 15 categories per page as requested
+    $per_page    = ! empty( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 15;
+    $per_page    = min( 100, max( 1, $per_page ) );
 
     if ( 0 === $parent_id ) {
         wp_send_json_error( [ 'message' => 'Invalid parent category.' ] );

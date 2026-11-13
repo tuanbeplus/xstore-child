@@ -161,6 +161,24 @@ body.single-product.woocommerce {
         &.horizontal .wc-tabs .et-woocommerce-tab {
             font-weight: 600;
         }
+
+        .tabs {
+            @media (max-width: 767px) {
+                flex-wrap: wrap;
+            }
+            a {
+                padding: 15px 20px;
+                font-size: 18px;
+                @media (max-width: 767px) {
+                    padding: 10px 15px;
+                    font-size: 16px;
+                }
+            }
+        }
+
+        .woocommerce-Tabs-panel {
+            padding-top: 32px;
+        }
     }
 
     #tab-size_guide,
@@ -246,6 +264,137 @@ body.single-product.woocommerce {
         }
     }
 
+    .vf-product-tab-content {
+        max-width: 920px;
+        margin: 10px auto 0;
+        color: #181818;
+        font-size: 16px;
+        line-height: 1.5;
+
+        h2 {
+            margin: 0 0 20px;
+            color: #111111;
+            font-family: Staatliches, sans-serif;
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 1.2px;
+            line-height: 1.15;
+            text-transform: uppercase;
+        }
+
+        p {
+            margin: 0 0 16px;
+        }
+
+        a {
+            color: inherit;
+            font-weight: 600;
+            text-decoration: underline;
+
+            &:hover {
+                color: #555555;
+            }
+        }
+    }
+
+    .vf-easy-return {
+        max-width: 760px;
+    }
+
+    .vf-care {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 60px;
+        max-width: 760px;
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        &__washing-list li,
+        &__info-list li {
+            display: flex;
+            align-items: center;
+            min-height: 30px;
+            margin-bottom: 8px;
+        }
+
+        &__info-list li {
+            position: relative;
+            padding-left: 18px;
+
+            &::before {
+                position: absolute;
+                top: 0;
+                left: 0;
+                content: '•';
+                font-size: 22px;
+                line-height: 24px;
+            }
+        }
+
+        &__icon {
+            display: inline-block;
+            flex: 0 0 25px;
+            width: 25px;
+            height: 25px;
+            margin-right: 12px;
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 1.5;
+
+            text {
+                fill: currentColor;
+                stroke: none;
+                font-family: Arial, sans-serif;
+                font-size: 5px;
+                font-weight: 700;
+            }
+        }
+
+        @media (max-width: 767px) {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+    }
+
+    .vf-product-faq {
+        max-width: 760px;
+
+        &__item {
+            padding: 0 0 24px;
+            margin: 0 0 24px;
+            border-bottom: 1px solid #dedede;
+
+            &:last-child {
+                padding-bottom: 0;
+                margin-bottom: 0;
+                border-bottom: 0;
+            }
+        }
+
+        h2 {
+            margin-bottom: 8px;
+            font-family: inherit;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .vf-customer-reviews {
+        max-width: none;
+    }
+
     /* -------------------------------------------------------------------------
        4. Related Products (Jetpack & WooCommerce)
        ------------------------------------------------------------------------- */
@@ -270,9 +419,9 @@ body.single-product.woocommerce {
     }
 
     .related-products-wrapper {
-        margin-top: 50px;
+        margin-top: 80px;
         @media (max-width: 767px) {
-            margin-top: 30px;
+            margin-top: 60px;
         }
         .related-products {
             .product {

@@ -1,0 +1,136 @@
+# Website Brief — Vintage Football Shop
+
+## 1. Overview
+
+[The Most Popular Football Shirts for the 2026 World Cup | WMTrikots26](https://images.openai.com/static-rsc-4/1zbmYXP5g0r__SLDnQ_eOKveiUVw6OxV9uYN6vMpIyAwAwKFLUvMIEvtD_nAzmlpObP4uJ6FMRO9MxVcjb9F0QQ7aIuDDunRlkSOmhrq0wvrq2CLHXayW3ZryDJof5qF9x8vdMxTOQWako3Xkz2RRIAqqCkbRoufpA7H-E3KZYw?purpose=inline)
+
+Website: [vintagefootball.shop](https://vintagefootball.shop/?utm_source=chatgpt.com)
+
+Business type: E-commerce — retro and vintage football shirts.
+
+Platform: WordPress + WooCommerce, using the XStore Child theme and Elementor.
+
+Target markets: Primarily Australasia, while also serving international customers.
+
+Main objectives: Sell retro football shirts, increase organic traffic, improve conversion rates, and build brand trust.
+
+## 2. Products and Target Audience
+
+### Main product offerings
+
+- Retro football shirts organised by club, national team, and season.
+- Shirts associated with memorable seasons and iconic periods in football history.
+- Shirts with size selection and customisation options for names and numbers.
+- Products for adults and children.
+
+Example product: [2014–2015 Barcelona Jersey Retro Kit](https://vintagefootball.shop/2014-2015-barcelona-jersey-retro-kit/?utm_source=chatgpt.com).
+
+### Target audience
+
+- Football fans who want to own shirts representing their favourite teams.
+- Collectors of classic and retro football shirts.
+- Fans of major clubs such as Barcelona and other prominent football teams.
+- Customers buying shirts as gifts or for casual wear.
+- Shoppers searching for shirts by club, season, player, or specific design.
+
+## 3. Brand Positioning
+
+The website focuses on football nostalgia: memorable seasons, iconic shirt designs, and the history of football clubs.
+
+Messaging should remain consistent across product pages, category pages, and blog content:
+
+- Retro football shirts — retro football shirts.
+- Vintage football shirts — vintage football shirts.
+- Classic football kits — classic football kits.
+- Football shirt history — the history of football shirts.
+- Iconic teams, players and seasons — iconic teams, players, and memorable seasons.
+
+Important: Clearly distinguish newly manufactured retro shirts from original vintage shirts that have been previously worn or are old stock. Claims such as “authentic”, “official”, or “original vintage” should only be used when supported by verifiable evidence.
+
+## 4. Website Structure and Shopping Experience
+
+The website follows a conventional e-commerce structure:
+
+- Homepage: Introduces the brand, collections, and featured product categories.
+- Product categories: Organised by football club, team, or product group.
+- Product pages: Include product images, pricing, size selection, shirt customisation, and product information.
+- Cart & Checkout: WooCommerce shopping cart and checkout process.
+- Supporting pages: FAQ, Size Guide, Reviews, Track Your Order, Privacy Policy, and other customer support pages.
+
+Some specialised features have been implemented in the child theme:
+
+- Custom variation buttons for product sizes and attributes.
+- A Size Guide supporting metric and imperial units.
+- Name and number customisation through PPOM.
+- Estimated delivery times.
+- Order tracking and automatic status updates to Shipped when a tracking number is available.
+- Currency selection.
+- Custom product category filters built with Elementor.
+
+## 5. SEO — Objectives and Strategy
+
+SEO is a key focus of the project. The objective is not simply to increase website traffic, but to attract users with a strong purchase intent for specific football shirts.
+
+| Area                   | Strategy                                                                                        |
+| ---------------------- | ----------------------------------------------------------------------------------------------- |
+| Keyword research       | Research keywords by club, season, shirt design, and search intent                              |
+| Category pages         | Optimise titles, meta descriptions, H1s, SEO content, and links to products                     |
+| Product pages          | Optimise product names, unique descriptions, images, alt text, and purchasing information       |
+| Homepage               | Establish broader topical relevance for retro and vintage football shirts                       |
+| Internal linking       | Connect categories, products, and relevant articles                                             |
+| Blog / content         | Cover football shirt history, classic matches, football legends, and memorable seasons          |
+| Structured data        | Audit Product, Offer, AggregateRating, and review data                                          |
+| Trust signals          | Clarify product details, sizing, shipping, returns, and customer reviews                        |
+| Technical SEO          | Audit indexability, canonical tags, sitemaps, redirects, duplicate content, and Core Web Vitals |
+| Backlinks / digital PR | Build links from relevant football communities, websites, and content                           |
+
+The website already has some SEO foundations, including category descriptions at the top or bottom of pages, breadcrumbs, and structured data functionality in the child theme. However, the actual HTML output and the data received by Google should be checked before confirming that these features are working correctly.
+
+## 6. Trust Signals and Areas for Improvement
+
+Based on the reviewed Barcelona 2014–2015 product page, the website currently displays:
+
+- Product pricing and discounted pricing.
+- Size and shirt customisation options.
+- Star ratings and the message “Over 1370 happy customers”.
+- A polyester blend material description and care instructions.
+- Supporting pages such as Size Guide, FAQ, and Track Your Order.
+
+Areas to verify or improve:
+
+1. Reviews: Clarify whether the displayed ratings apply to the individual product or the entire store. Rating data must match the reviews visible to users.
+2. Product details: Add product-specific information where verified data is available, rather than relying solely on generic descriptions.
+3. Sizing: Make the Size Guide accessible near the size selector and clarify measurements and fit where this information is available.
+4. Shipping & returns: Make shipping policies, delivery estimates, and return information easy to find when customers are deciding whether to purchase.
+5. Product authenticity: Avoid claims about official merchandise or original vintage products unless they can be verified.
+6. Price consistency: Investigate discrepancies between product-page prices and indexed search data. These may result from price changes or outdated cached information.
+
+## 7. Technology Stack and Development Guidelines
+
+| Component        | Technology / Implementation                                                                 |
+| ---------------- | ------------------------------------------------------------------------------------------- |
+| CMS / E-commerce | WordPress, WooCommerce                                                                      |
+| Theme            | XStore Parent Theme + XStore Child                                                          |
+| Page builder     | Elementor and custom widgets                                                                |
+| Backend          | PHP, WooCommerce hooks, AJAX                                                                |
+| Frontend         | SCSS, JavaScript                                                                            |
+| Custom fields    | ACF                                                                                         |
+| Product add-ons  | PPOM                                                                                        |
+| SEO              | Rank Math is used in the SEO workflow                                                       |
+| Tracking         | Meta Pixel purchase tracking; current analytics configuration requires further verification |
+
+When making code changes, prioritise the child theme rather than modifying the parent theme. PHP functionality is organised into modules within `inc/`, SCSS files are located in `assets/scss/`, and compiled styles are output to `assets/css/main.css`. WooCommerce functionality should be implemented in the appropriate module rather than placing all logic in `functions.php`.
+
+## 8. Project Priorities and Guiding Principles
+
+1. Prioritise SEO that can generate revenue: Focus on category and product pages first, then expand the blog strategy.
+2. Optimise the shopping experience: Ensure that sizing, customisation, shipping, returns, and product information are clear.
+3. Create genuinely useful content: Cover football shirt history, clubs, players, and memorable seasons rather than producing large volumes of generic articles.
+4. Protect brand credibility: Avoid duplicate content, reviews with unclear sources, and unverified product claims.
+5. Avoid unnecessary performance optimisation: Continue monitoring PageSpeed Insights and Core Web Vitals, but focus on actual issues affecting users and SEO.
+
+## Summary
+
+Vintage Football Shop is a WooCommerce store specialising in retro and vintage football shirts, with custom product functionality and a bespoke child theme.
+
+The recommended growth strategy is to combine commercial SEO across category and product pages with football history content, while improving product information, trust signals, and the shopping experience to convert organic traffic into revenue.

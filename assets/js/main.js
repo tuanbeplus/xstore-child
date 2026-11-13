@@ -519,6 +519,36 @@
 	}
 
 	/* -------------------------------------------------------------------------
+	 * Product description tab compatibility
+	 * ---------------------------------------------------------------------- */
+
+	function initDescriptionTabCompatibility() {
+		$(document)
+			.off('click.vfDescriptionTab', '#tab-title-description a')
+			.on('click.vfDescriptionTab', '#tab-title-description a', function () {
+				/*
+				 * A legacy page snippet toggles the Description panel and explicitly
+				 * removes its active class. Run after that handler so XStore's
+				 * underline state and the visible panel remain in sync.
+				 */
+				setTimeout(function () {
+					var $tabsWrapper = $('.woocommerce-tabs').first();
+					var $descriptionTab = $tabsWrapper.find('#tab-title-description');
+					var $descriptionPanel = $tabsWrapper.find('#tab-description');
+
+					if (!$tabsWrapper.length || !$descriptionTab.length || !$descriptionPanel.length) {
+						return;
+					}
+
+					$tabsWrapper.find('.wc-tabs .et-woocommerce-tab, .wc-tabs li').removeClass('active');
+					$descriptionTab.addClass('active').removeClass('pactive');
+					$tabsWrapper.find('.wc-tab, .woocommerce-Tabs-panel').not($descriptionPanel).hide();
+					$descriptionPanel.removeClass('hiden-active').show();
+				}, 0);
+			});
+	}
+
+	/* -------------------------------------------------------------------------
 	 * Header height, sticky state, viewport height
 	 * ---------------------------------------------------------------------- */
 
@@ -884,6 +914,7 @@
 		initVariationFromUrl();
 		initVariationSwatches();
 		initSizeGuideLink();
+		initDescriptionTabCompatibility();
 		initHeader();
 	});
 

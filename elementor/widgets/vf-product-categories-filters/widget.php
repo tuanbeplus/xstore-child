@@ -194,6 +194,19 @@ class Widget_VFProductCategoriesFilters extends Widget_Base {
         );
 
         $this->add_control(
+            'categories_per_page',
+            [
+                'label'       => __( 'Categories Per Page', 'xstore-child' ),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 1,
+                'max'         => 100,
+                'step'        => 1,
+                'default'     => 15,
+                'description' => __( 'Number of category cards shown before pagination.', 'xstore-child' ),
+            ]
+        );
+
+        $this->add_control(
             'orderby',
             [
                 'label'   => __( 'Order By', 'xstore-child' ),
@@ -1060,7 +1073,8 @@ class Widget_VFProductCategoriesFilters extends Widget_Base {
         $show_league_filter   = ( 'yes' === $settings['show_league_filter'] && $has_league_data && ! empty( $unique_leagues ) );
         $show_search          = ( 'yes' === $settings['show_search'] );
 
-        $per_page         = 15;
+        $per_page         = isset( $settings['categories_per_page'] ) ? absint( $settings['categories_per_page'] ) : 15;
+        $per_page         = min( 100, max( 1, $per_page ) );
         $total_categories = count( $categories_data );
         $total_pages      = max( 1, (int) ceil( $total_categories / $per_page ) );
 

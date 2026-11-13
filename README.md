@@ -42,6 +42,8 @@ A modern, high-performance WooCommerce child theme built specifically for **Vint
 
 This child theme extends XStore without altering parent theme files, ensuring full upgrade compatibility. The codebase is organized into modular PHP components in `inc/`, modular SCSS partials in `assets/scss/`, and custom Elementor widgets.
 
+Front-end page layout is a combination of **XStore theme templates** (single product) and **Elementor Pro page builder** (homepage, category hero sections, custom page layouts, blog, WooCommerce archive structure, header/footer). Custom Elementor widgets in `elementor/widgets/` extend the builder with VF-specific components.
+
 ---
 
 ## Architecture & Key Features

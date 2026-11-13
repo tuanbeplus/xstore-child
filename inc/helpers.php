@@ -29,6 +29,26 @@ function random_product_redirect() {
 add_action( 'template_redirect', 'random_product_redirect' );
 
 /**
+ * Redirect WordPress attachment permalink pages to their original media file.
+ *
+ * Prevents attachment slugs such as /wayne-rooney-vintage-hero/ from serving
+ * thin attachment pages while keeping the direct uploads URL accessible.
+ */
+function vf_redirect_attachment_permalink_to_file() {
+    if ( ! is_attachment() ) {
+        return;
+    }
+
+    $attachment_url = wp_get_attachment_url( get_queried_object_id() );
+
+    if ( $attachment_url ) {
+        wp_redirect( $attachment_url, 301 );
+        exit;
+    }
+}
+add_action( 'template_redirect', 'vf_redirect_attachment_permalink_to_file', 1 );
+
+/**
  * Currency data debugging / helper output function (via ?test=1).
  */
 function get_data_currentcy() {

@@ -133,55 +133,6 @@ add_action( 'woocommerce_after_add_to_cart_form', function() {
 } );
 
 /**
- * Add custom AggregateRating schema to head on single product pages
- */
-function add_custom_aggregate_rating_schema() {
-    if ( ! is_product() ) {
-        return;
-    }
-
-    global $product;
-
-    if ( ! is_a( $product, 'WC_Product' ) ) {
-        $product = wc_get_product( get_the_ID() );
-    }
-
-    if ( ! is_a( $product, 'WC_Product' ) ) {
-        return;
-    }
-
-    $product_name        = $product->get_name();
-    $product_url         = get_permalink( $product->get_id() );
-    $product_image       = wp_get_attachment_url( $product->get_image_id() );
-    $product_description = wp_strip_all_tags( $product->get_short_description() );
-
-    $rating_value = get_post_meta( get_the_ID(), 'number_rating', true );
-    $review_count = get_post_meta( get_the_ID(), 'count_rating', true );
-
-    if ( ! empty( $rating_value ) && is_numeric( $rating_value ) && ! empty( $review_count ) && is_numeric( $review_count ) ) {
-        ?>
-        <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "Product",
-          "name": "<?php echo esc_js( $product_name ); ?>",
-          "url": "<?php echo esc_url( $product_url ); ?>",
-          "image": "<?php echo esc_url( $product_image ); ?>",
-          "description": "<?php echo esc_js( $product_description ); ?>",
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "<?php echo esc_js( $rating_value ); ?>",
-            "reviewCount": "<?php echo esc_js( $review_count ); ?>",
-            "bestRating": 5
-          }
-        }
-        </script>
-        <?php
-    }
-}
-add_action( 'wp_head', 'add_custom_aggregate_rating_schema' );
-
-/**
  * Format total price display value for Google Pay payment request
  */
 add_filter( 'woocommerce_payments_google_pay_payment_request_args', function( $args ) {
@@ -340,6 +291,158 @@ function vf_size_guide_tab( $tabs ) {
     return $tabs;
 }
 add_filter( 'woocommerce_product_tabs', 'vf_size_guide_tab' );
+
+/**
+ * Add product trust and policy tabs.
+ *
+ * Content is intentionally kept here with the existing Size Guide tab so the
+ * single-product experience can be maintained from one child-theme module.
+ *
+ * @param array $tabs WooCommerce product tabs.
+ * @return array
+ */
+function vf_product_trust_tabs( $tabs ) {
+    $tabs['vf_easy_return'] = array(
+        'title'    => __( 'Easy Return', 'xstore-child' ),
+        'priority' => 25,
+        'callback' => 'vf_easy_return_tab_content',
+    );
+
+    $tabs['vf_care'] = array(
+        'title'    => __( 'Care Your Kit', 'xstore-child' ),
+        'priority' => 30,
+        'callback' => 'vf_care_tab_content',
+    );
+
+    $tabs['vf_faq'] = array(
+        'title'    => __( 'FAQ', 'xstore-child' ),
+        'priority' => 35,
+        'callback' => 'vf_product_faq_tab_content',
+    );
+
+    $tabs['vf_customer_reviews'] = array(
+        'title'    => __( 'Customer Reviews', 'xstore-child' ),
+        'priority' => 40,
+        'callback' => 'vf_customer_reviews_tab_content',
+    );
+
+    return $tabs;
+}
+add_filter( 'woocommerce_product_tabs', 'vf_product_trust_tabs' );
+
+/**
+ * Easy Return tab content.
+ */
+function vf_easy_return_tab_content() {
+    ?>
+    <div class="vf-product-tab-content vf-easy-return">
+        <h2><?php esc_html_e( 'Easy Return', 'xstore-child' ); ?></h2>
+        <p><?php esc_html_e( 'If there is an issue with your order, please contact us as soon as possible so our team can review your request.', 'xstore-child' ); ?></p>
+        <p><?php esc_html_e( 'Our return policy allows you to request a return within 30 days of receiving your order. Returns may be accepted for items that are incorrect, defective or faulty.', 'xstore-child' ); ?></p>
+        <p><?php esc_html_e( 'To be eligible for a return, an item must be unworn or unused, with tags where applicable, and returned in its original packaging. Please have your order number ready when you contact us.', 'xstore-child' ); ?></p>
+        <p><?php esc_html_e( 'Please note that we cannot accept returns for change of mind or incorrect sizing. Items marked as non-returnable, or with a “No Returns or Exchange” notice, are not eligible for return or exchange.', 'xstore-child' ); ?></p>
+        <p><a href="<?php echo esc_url( home_url( '/refunds/' ) ); ?>"><?php esc_html_e( 'Read our Return & Refund Policy for full details.', 'xstore-child' ); ?></a></p>
+    </div>
+    <?php
+}
+
+/**
+ * Care tab content.
+ */
+function vf_care_tab_content() {
+    $washing_instructions = array(
+        array( 'bleach', __( 'Do not bleach', 'xstore-child' ) ),
+        array( 'tumble', __( 'Do not tumble dry', 'xstore-child' ) ),
+        array( 'dry-clean', __( 'Do not dry clean', 'xstore-child' ) ),
+        array( 'iron', __( 'Touch up with a cool iron', 'xstore-child' ) ),
+        array( 'wash', __( 'Machine wash warm', 'xstore-child' ) ),
+    );
+    ?>
+    <div class="vf-product-tab-content vf-care">
+        <div class="vf-care__column">
+            <h2><?php esc_html_e( 'Washing Instructions', 'xstore-child' ); ?></h2>
+            <ul class="vf-care__washing-list">
+                <?php foreach ( $washing_instructions as $instruction ) : ?>
+                    <li>
+                        <?php echo vf_get_care_icon_svg( $instruction[0] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static SVG markup. ?>
+                        <span><?php echo esc_html( $instruction[1] ); ?></span>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="vf-care__column">
+            <h2><?php esc_html_e( 'Extra Care Information', 'xstore-child' ); ?></h2>
+            <ul class="vf-care__info-list">
+                <li><?php esc_html_e( 'Do not use fabric softener', 'xstore-child' ); ?></li>
+                <li><?php esc_html_e( 'Use mild detergent only', 'xstore-child' ); ?></li>
+                <li><?php esc_html_e( 'Remove promptly after washing', 'xstore-child' ); ?></li>
+                <li><?php esc_html_e( 'Do not iron printed details, names, numbers or badges', 'xstore-child' ); ?></li>
+            </ul>
+        </div>
+    </div>
+    <?php
+}
+
+/**
+ * Return an inline SVG care-symbol icon.
+ *
+ * @param string $icon Icon identifier.
+ * @return string
+ */
+function vf_get_care_icon_svg( $icon ) {
+    $icons = array(
+        'bleach' => '<svg class="vf-care__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 18h16L12 3Z"/><path d="m3 3 18 18"/></svg>',
+        'tumble' => '<svg class="vf-care__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="1"/><circle cx="12" cy="12" r="5"/><path d="m3 3 18 18"/></svg>',
+        'dry-clean' => '<svg class="vf-care__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><path d="m3 3 18 18"/></svg>',
+        'iron' => '<svg class="vf-care__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 16h16l-2-7H9L4 16Z"/><path d="M6 16v2h13"/><path d="M10 9V6h4"/></svg>',
+        'wash' => '<svg class="vf-care__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4Z"/><path d="M4 8h16"/><path d="M8 6h.01M11 6h.01"/><path d="M7 14c1.2-1.2 2.8-1.2 4 0s2.8 1.2 4 0"/><text x="12" y="18" text-anchor="middle">40</text></svg>',
+    );
+
+    return isset( $icons[ $icon ] ) ? $icons[ $icon ] : '';
+}
+
+/**
+ * Product FAQ tab content.
+ */
+function vf_product_faq_tab_content() {
+    ?>
+    <div class="vf-product-tab-content vf-product-faq">
+        <section class="vf-product-faq__item">
+            <h2><?php esc_html_e( 'Do You Ship Worldwide?', 'xstore-child' ); ?></h2>
+            <p><?php esc_html_e( 'Yes. We offer worldwide shipping. Delivery times and available tracking may vary depending on the destination and local carrier.', 'xstore-child' ); ?> <a href="<?php echo esc_url( home_url( '/shipping/' ) ); ?>"><?php esc_html_e( 'Visit our Shipping page', 'xstore-child' ); ?></a> <?php esc_html_e( 'for current processing and delivery information.', 'xstore-child' ); ?></p>
+        </section>
+        <section class="vf-product-faq__item">
+            <h2><?php esc_html_e( 'Will I Pay Import VAT, Duties or Customs Fees?', 'xstore-child' ); ?></h2>
+            <p><?php esc_html_e( 'International orders may be subject to import VAT, customs duties or other local charges set by the destination country. These charges are outside our control and, unless stated otherwise at checkout, are the customer’s responsibility.', 'xstore-child' ); ?></p>
+            <p><?php esc_html_e( 'For the most accurate information, please check with your local customs authority before placing an order.', 'xstore-child' ); ?></p>
+        </section>
+        <section class="vf-product-faq__item">
+            <h2><?php esc_html_e( 'How Can I Track My Order?', 'xstore-child' ); ?></h2>
+            <p><?php esc_html_e( 'Once your order has shipped, you will receive a shipment confirmation email containing tracking details. Tracking information may take up to 24 hours to become active.', 'xstore-child' ); ?> <a href="<?php echo esc_url( home_url( '/track-your-order/' ) ); ?>"><?php esc_html_e( 'Track your order here.', 'xstore-child' ); ?></a></p>
+        </section>
+        <section class="vf-product-faq__item">
+            <h2><?php esc_html_e( 'How Can I Contact Vintage Football Shop?', 'xstore-child' ); ?></h2>
+            <p><?php esc_html_e( 'For help with an order, product question, return request or a shirt request, contact us at', 'xstore-child' ); ?> <a href="mailto:info@vintagefootball.shop">info@vintagefootball.shop</a>. <?php esc_html_e( 'Please include your order number where relevant so our team can assist you faster.', 'xstore-child' ); ?></p>
+        </section>
+        <section class="vf-product-faq__item">
+            <h2><?php esc_html_e( 'Can’t Find What You’re Looking For?', 'xstore-child' ); ?></h2>
+            <p><?php esc_html_e( 'If you are looking for a particular shirt, team, season or size,', 'xstore-child' ); ?> <a href="<?php echo esc_url( home_url( '/sell-or-request/' ) ); ?>"><?php esc_html_e( 'send us a request', 'xstore-child' ); ?></a> <?php esc_html_e( 'with the details.', 'xstore-child' ); ?></p>
+        </section>
+    </div>
+    <?php
+}
+
+/**
+ * Customer Reviews tab content.
+ */
+function vf_customer_reviews_tab_content() {
+    ?>
+    <div class="vf-product-tab-content vf-customer-reviews">
+        <script src="https://embed.wiserreview.com/embed/698412cca140008f6f23c7db/widget.js" defer></script>
+        <div data-type="wall" data-id="698412cca140008f6f23c7db" class="wiser_wall"></div>
+    </div>
+    <?php
+}
 
 function vf_size_guide_tab_content() {
     global $product;
