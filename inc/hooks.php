@@ -175,22 +175,6 @@ function vf_unregister_unused_post_types() {
 }
 
 /**
- * Remove "Posts" from admin sidebar menu
- */
-add_action( 'admin_menu', 'vf_remove_default_post_menu', 999 );
-function vf_remove_default_post_menu() {
-    remove_menu_page( 'edit.php' );
-}
-
-/**
- * Remove "+ New > Post" from admin bar
- */
-add_action( 'admin_bar_menu', 'vf_remove_post_from_admin_bar', 999 );
-function vf_remove_post_from_admin_bar( $wp_admin_bar ) {
-    $wp_admin_bar->remove_node( 'new-post' );
-}
-
-/**
  * Add 'vf-loading' class to <body> on the front end.
  * While present, the header has pointer-events:none so users cannot
  * trigger mega-menu dropdowns before all styles/scripts are ready.

@@ -387,3 +387,130 @@ function vf_seo_block_shortcode( $atts = array() ) {
 }
 add_shortcode( 'vf_seo_block', 'vf_seo_block_shortcode' );
 add_shortcode( 'block_seo', 'vf_seo_block_shortcode' );
+
+/**
+ * Category FAQ Accordion shortcode [vf_category_faq] / [vf_category_faqs]
+ *
+ * Renders FAQs from ACF repeater field 'category_faqs' on product category pages.
+ * Compatible with Rank Math FAQPage schema.
+ *
+ * Usage:
+ * [vf_category_faq]
+ * [vf_category_faq title="Frequently Asked Questions"]
+ * [vf_category_faq category_id="1500"]
+ */
+function vf_category_faq_shortcode( $atts = array() ) {
+    $atts = shortcode_atts( array(
+        'title'       => __( 'Frequently Asked Questions', 'xstore-child' ),
+        'category_id' => 0,
+        'open_first'  => 'no',
+    ), $atts, 'vf_category_faq' );
+
+    $term_id = absint( $atts['category_id'] );
+    if ( ! $term_id ) {
+        if ( function_exists( 'is_product_category' ) && is_product_category() ) {
+            $term = get_queried_object();
+            if ( $term && isset( $term->term_id ) ) {
+                $term_id = (int) $term->term_id;
+            }
+        } elseif ( is_tax( 'product_cat' ) ) {
+            $term = get_queried_object();
+            if ( $term && isset( $term->term_id ) ) {
+                $term_id = (int) $term->term_id;
+            }
+        }
+    }
+
+    $faqs = array();
+    if ( $term_id ) {
+        // 1. Try ACF repeater field 'category_faqs'
+        if ( function_exists( 'get_field' ) ) {
+            $acf_faqs = get_field( 'category_faqs', 'product_cat_' . $term_id );
+            if ( ! empty( $acf_faqs ) && is_array( $acf_faqs ) ) {
+                foreach ( $acf_faqs as $row ) {
+                    $q = ! empty( $row['question'] ) ? trim( $row['question'] ) : '';
+                    $a = ! empty( $row['answer'] ) ? trim( $row['answer'] ) : '';
+                    if ( $q && $a ) {
+                        $faqs[] = array(
+                            'question' => $q,
+                            'answer'   => $a,
+                        );
+                    }
+                }
+            }
+        }
+
+        // 2. Fallback to direct term meta if ACF is inactive or get_field returns empty
+        if ( empty( $faqs ) ) {
+            $count = get_term_meta( $term_id, 'category_faqs', true );
+            if ( is_numeric( $count ) && (int) $count > 0 ) {
+                for ( $i = 0; $i < (int) $count; $i++ ) {
+                    $q = get_term_meta( $term_id, "category_faqs_{$i}_question", true );
+                    $a = get_term_meta( $term_id, "category_faqs_{$i}_answer", true );
+                    if ( ! empty( $q ) && ! empty( $a ) ) {
+                        $faqs[] = array(
+                            'question' => trim( $q ),
+                            'answer'   => trim( $a ),
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    if ( empty( $faqs ) ) {
+        if ( class_exists( '\Elementor\Plugin' ) && \Elementor\Plugin::$instance->editor && \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+            return '<div style="padding:24px;border:1px dashed #ccd0d4;background:#f9f9f9;text-align:center;color:#666;font-size:14px;border-radius:4px;">[VF Category FAQ Accordion &mdash; FAQs will appear here when configured for the active category]</div>';
+        }
+        return '';
+    }
+
+    ob_start();
+    ?>
+    <div id="faq-content" class="vf-cat-faq-wrapper">
+        <?php if ( ! empty( $atts['title'] ) ) : ?>
+            <h2 class="vf-cat-faq-title"><?php echo esc_html( $atts['title'] ); ?></h2>
+        <?php endif; ?>
+        <div class="vf-cat-faq-accordion" role="region" aria-label="<?php echo esc_attr( $atts['title'] ); ?>">
+            <?php foreach ( $faqs as $i => $item ) : ?>
+                <?php
+                $is_open  = ( 0 === $i && 'yes' === $atts['open_first'] );
+                $panel_id = 'vf-cat-faq-panel-' . $term_id . '-' . $i;
+                $btn_id   = 'vf-cat-faq-btn-' . $term_id . '-' . $i;
+                ?>
+                <div class="vf-cat-faq-item <?php echo $is_open ? 'is-active' : ''; ?>">
+                    <h3 class="vf-cat-faq-item-title">
+                        <button
+                            type="button"
+                            class="vf-cat-faq-trigger"
+                            id="<?php echo esc_attr( $btn_id ); ?>"
+                            aria-expanded="<?php echo $is_open ? 'true' : 'false'; ?>"
+                            aria-controls="<?php echo esc_attr( $panel_id ); ?>"
+                        >
+                            <span class="vf-cat-faq-q-text"><?php echo esc_html( $item['question'] ); ?></span>
+                            <span class="vf-cat-faq-icon" aria-hidden="true">
+                                <svg class="vf-icon-plus" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                <svg class="vf-icon-minus" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </span>
+                        </button>
+                    </h3>
+                    <div
+                        id="<?php echo esc_attr( $panel_id ); ?>"
+                        class="vf-cat-faq-panel"
+                        role="region"
+                        aria-labelledby="<?php echo esc_attr( $btn_id ); ?>"
+                        <?php echo $is_open ? '' : 'style="display:none;"'; ?>
+                    >
+                        <div class="vf-cat-faq-answer">
+                            <?php echo wpautop( wp_kses_post( $item['answer'] ) ); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode( 'vf_category_faq', 'vf_category_faq_shortcode' );
+add_shortcode( 'vf_category_faqs', 'vf_category_faq_shortcode' );

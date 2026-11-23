@@ -218,10 +218,35 @@ function vf_get_current_context_faqs() {
         return vf_get_default_faqs();
     }
 
-    // 2. Product Category archives: targeted #faq-content in bottom/top description
-    if ( function_exists( 'is_product_category' ) && is_product_category() ) {
+    // 2. Product Category archives: check ACF repeater 'category_faqs' or targeted #faq-content in descriptions
+    if ( ( function_exists( 'is_product_category' ) && is_product_category() ) || is_tax( 'product_cat' ) ) {
         $term = get_queried_object();
         if ( $term && isset( $term->term_id ) ) {
+            // First check ACF repeater 'category_faqs'
+            if ( function_exists( 'get_field' ) ) {
+                $acf_faqs = get_field( 'category_faqs', 'product_cat_' . $term->term_id );
+                if ( ! empty( $acf_faqs ) && is_array( $acf_faqs ) ) {
+                    $schema_items = array();
+                    foreach ( $acf_faqs as $row ) {
+                        $q = ! empty( $row['question'] ) ? trim( $row['question'] ) : '';
+                        $a = ! empty( $row['answer'] ) ? trim( $row['answer'] ) : '';
+                        if ( $q && $a ) {
+                            $schema_items[] = array(
+                                '@type'          => 'Question',
+                                'name'           => html_entity_decode( $q, ENT_QUOTES, 'UTF-8' ),
+                                'acceptedAnswer' => array(
+                                    '@type' => 'Answer',
+                                    'text'  => html_entity_decode( $a, ENT_QUOTES, 'UTF-8' ),
+                                ),
+                            );
+                        }
+                    }
+                    if ( ! empty( $schema_items ) ) {
+                        return $schema_items;
+                    }
+                }
+            }
+
             $second_desc = get_term_meta( $term->term_id, '_et_second_description', true );
             if ( ! empty( $second_desc ) && false !== stripos( $second_desc, 'faq-content' ) ) {
                 $container_html = vf_extract_faq_container_html( $second_desc );

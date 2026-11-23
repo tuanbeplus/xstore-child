@@ -549,6 +549,31 @@
 	}
 
 	/* -------------------------------------------------------------------------
+	 * Category FAQ Accordion Toggle
+	 * ---------------------------------------------------------------------- */
+
+	function initCategoryFaqAccordion() {
+		$(document).on('click', '.vf-cat-faq-trigger', function (e) {
+			e.preventDefault();
+			var $btn = $(this);
+			var isExpanded = $btn.attr('aria-expanded') === 'true';
+			var targetId = $btn.attr('aria-controls');
+			var $item = $btn.closest('.vf-cat-faq-item');
+			var $panel = targetId ? $('#' + targetId) : $item.find('.vf-cat-faq-panel');
+
+			if (isExpanded) {
+				$btn.attr('aria-expanded', 'false');
+				$item.removeClass('is-active');
+				$panel.stop(true, true).slideUp(200);
+			} else {
+				$btn.attr('aria-expanded', 'true');
+				$item.addClass('is-active');
+				$panel.stop(true, true).slideDown(200);
+			}
+		});
+	}
+
+	/* -------------------------------------------------------------------------
 	 * Header height, sticky state, viewport height
 	 * ---------------------------------------------------------------------- */
 
@@ -915,6 +940,7 @@
 		initVariationSwatches();
 		initSizeGuideLink();
 		initDescriptionTabCompatibility();
+		initCategoryFaqAccordion();
 		initHeader();
 	});
 

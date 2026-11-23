@@ -55,6 +55,202 @@
 }
 
 /* ==========================================================================
+   Category FAQ Accordion (.vf-cat-faq-wrapper)
+   ========================================================================== */
+.vf-cat-faq-wrapper {
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+
+    .vf-cat-faq-title {
+        font-family: Staatliches, sans-serif;
+        font-size: 40px;
+        text-transform: uppercase;
+        color: #111111;
+        margin: 0 0 32px;
+        line-height: 1.2;
+        text-align: center;
+        letter-spacing: 0.5px;
+    }
+
+    .vf-cat-faq-accordion {
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid #e5e5e5;
+    }
+
+    .vf-cat-faq-item {
+        border-bottom: 1px solid #e5e5e5;
+        transition: background-color 0.2s ease;
+
+        &.is-active {
+            .vf-cat-faq-trigger {
+                color: #111111;
+                .vf-icon-plus {
+                    display: none;
+                }
+                .vf-icon-minus {
+                    display: inline-block;
+                }
+            }
+        }
+    }
+
+    .vf-cat-faq-item-title {
+        margin: 0;
+        padding: 0;
+        line-height: 1.4;
+    }
+
+    .vf-cat-faq-trigger {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        background: transparent !important;
+        border: none;
+        padding: 20px 0;
+        text-align: left;
+        color: #222222;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        outline: none;
+        box-shadow: none !important;
+        transition: color 0.2s ease;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+
+        &:hover {
+            color: #000000;
+        }
+
+        &:focus {
+            color: inherit !important;
+        }
+
+        &:focus-visible {
+            outline: 2px solid #111111;
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+
+        .vf-cat-faq-q-text {
+            flex: 1;
+            padding-right: 15px;
+            line-height: 1.35;
+        }
+
+        .vf-cat-faq-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            color: #111111;
+            transition: all 0.2s ease;
+
+            svg {
+                display: block;
+            }
+            .vf-icon-minus {
+                display: none;
+            }
+        }
+    }
+
+    .vf-cat-faq-panel {
+        padding: 0 0 18px 0;
+    }
+
+    .vf-cat-faq-answer {
+        color: #444444;
+        font-size: 15px;
+        line-height: 1.6;
+
+        p {
+            margin: 0 0 10px;
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        a {
+            color: #111111;
+            font-weight: 600;
+            text-decoration: underline;
+
+            &:hover {
+                color: #555555;
+            }
+        }
+    }
+
+    /* Tablet (max-width: 1024px) */
+    @media (max-width: 1024px) {
+        padding: 0 20px;
+
+        .vf-cat-faq-title {
+            font-size: 34px;
+            margin-bottom: 26px;
+        }
+
+        .vf-cat-faq-trigger {
+            font-size: 17px;
+            padding: 18px 0;
+        }
+    }
+
+    /* Mobile (max-width: 767px) */
+    @media (max-width: 767px) {
+        padding: 0 15px;
+
+        .vf-cat-faq-title {
+            font-size: 28px;
+            margin: 0 0 20px;
+            line-height: 1.15;
+        }
+
+        .vf-cat-faq-trigger {
+            font-size: 16px;
+            padding: 16px 0;
+
+            .vf-cat-faq-q-text {
+                padding-right: 12px;
+            }
+
+            .vf-cat-faq-icon {
+                width: 24px;
+                height: 24px;
+
+                svg {
+                    width: 14px;
+                    height: 14px;
+                }
+            }
+        }
+
+        .vf-cat-faq-panel {
+            padding: 0 0 16px 0;
+        }
+
+        .vf-cat-faq-answer {
+            font-size: 14px;
+            line-height: 1.55;
+
+            p {
+                margin: 0 0 8px;
+            }
+        }
+    }
+}
+
+/* ==========================================================================
    Buy 3 Get 1 Free promotion progress
    ========================================================================== */
 .vf-buy-3-progress {
