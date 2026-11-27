@@ -112,7 +112,7 @@ function bt_remove_wp_enqueue_styles() {
 /**
  * Disable responsive image sizes (srcset)
  */
-add_filter( 'wp_calculate_image_srcset', '__return_false' );
+//add_filter( 'wp_calculate_image_srcset', '__return_false' );
 
 /**
  * Disable native lazy loading
@@ -240,4 +240,44 @@ function vf_prevent_input_zoom() {
     <?php
 }
 
+/**
+ * Dequeue unused CSS per page type, by registered style handle.
+ * To add a page: add a rule to $rules (condition + handles).
+ * Handle = the <link> id attribute without the "-css" suffix.
+ */
+add_action( 'wp_enqueue_scripts', 'vf_dequeue_unused_css', 9999 );
+function vf_dequeue_unused_css() {
+	if ( is_admin() ) {
+		return;
+	}
 
+	$rules = array(
+		array(
+			'condition' => is_front_page(),
+			'handles'   => array(
+				//'elementor-icons',        // elementor-icons.min.css
+				'e-animation-fadeInDown', // fadeInDown.min.css
+				'pys_notice',             // PixelYourSite notice.min.css
+				'classic-theme-styles',   // WP core inline block
+			),
+		),
+		// array(
+		// 	'condition' => is_shop(),
+		// 	'handles'   => array( 'handle-one', 'handle-two' ),
+		// ),
+		// array(
+		// 	'condition' => is_page( 'about-us' ),
+		// 	'handles'   => array( 'handle-one' ),
+		// ),
+	);
+
+	foreach ( $rules as $rule ) {
+		if ( ! $rule['condition'] ) {
+			continue;
+		}
+		foreach ( $rule['handles'] as $handle ) {
+			wp_dequeue_style( $handle );
+			wp_deregister_style( $handle );
+		}
+	}
+}

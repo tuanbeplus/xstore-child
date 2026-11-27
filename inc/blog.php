@@ -529,7 +529,7 @@ function vf_blog_render_pagination() {
  * @return int
  */
 function vf_blog_posts_per_page() {
-    $per_page = 5;
+    $per_page = 8;
 
     return max( 1, (int) apply_filters( 'vf_blog_posts_per_page', $per_page ) );
 }
@@ -606,7 +606,7 @@ function vf_blog_placeholder_image( $attr = array() ) {
  *
  * @param int    $post_id Post ID.
  * @param string $size    Image size.
- * @param array  $attr    Extra <img> attributes: class, loading, alt, fetchpriority.
+ * @param array  $attr    Extra <img> attributes: class, loading, alt, fetchpriority, sizes.
  * @return string
  */
 function vf_blog_post_thumbnail( $post_id, $size = 'medium_large', $attr = array() ) {
@@ -616,6 +616,7 @@ function vf_blog_post_thumbnail( $post_id, $size = 'medium_large', $attr = array
             'class'         => '',
             'loading'       => 'lazy',
             'fetchpriority' => '',
+            'sizes'         => '',
         )
     );
 
@@ -640,6 +641,16 @@ function vf_blog_post_thumbnail( $post_id, $size = 'medium_large', $attr = array
                 esc_attr( $alt )
             );
             $html .= $attr['class'] ? ' class="' . esc_attr( $attr['class'] ) . '"' : '';
+
+            // Responsive candidates are built manually because the global
+            // srcset filter is disabled (see inc/hooks.php).
+            $srcset = vf_image_srcset( $image_id, 2048 );
+
+            if ( $srcset ) {
+                $html .= ' srcset="' . esc_attr( $srcset ) . '"';
+                $html .= ' sizes="' . esc_attr( $attr['sizes'] ? $attr['sizes'] : '100vw' ) . '"';
+            }
+
             $html .= ' loading="' . esc_attr( $attr['loading'] ) . '" decoding="async" data-no-lazy="1"';
 
             if ( $attr['fetchpriority'] ) {
@@ -772,6 +783,9 @@ function vf_blog_render_overlay_card( $post, $is_lead = false ) {
     $attr      = array(
         'class'   => 'vf-overlay-card__img',
         'loading' => $is_lead ? 'eager' : 'lazy',
+        'sizes'   => $is_lead
+            ? '(max-width: 767px) calc(100vw - 32px), (max-width: 1024px) calc(100vw - 48px), 580px'
+            : '(max-width: 480px) calc(100vw - 32px), (max-width: 767px) calc(50vw - 24px), (max-width: 1024px) calc(50vw - 32px), 340px',
     );
 
     if ( $is_lead ) {
@@ -801,3 +815,79 @@ function vf_blog_render_overlay_card( $post, $is_lead = false ) {
     return $html;
 }
 
+/**
+ * Posts shown in the top-stories overlay section.
+ *
+ * Featured posts come first; when there are none (or too few) the newest
+ * posts fill the remaining slots.
+ *
+ * @param int $limit Number of cards.
+ * @return WP_Post[]
+ */
+function vf_blog_top_stories( $limit = 3 ) {
+    static $cache = array();
+
+    $limit = max( 1, (int) $limit );
+
+    if ( isset( $cache[ $limit ] ) ) {
+        return $cache[ $limit ];
+    }
+
+    $featured = vf_blog_featured_posts();
+
+    if ( empty( $featured ) ) {
+        $featured = get_posts( array(
+            'post_type'           => 'post',
+            'post_status'         => 'publish',
+            'posts_per_page'      => $limit,
+            'ignore_sticky_posts' => true,
+            'no_found_rows'       => true,
+        ) );
+    }
+
+    $cache[ $limit ] = vf_blog_top_story_posts( $featured, $limit );
+
+    return $cache[ $limit ];
+}
+
+/**
+ * Preload the lead top-story image on the blog index.
+ *
+ * The overlay card is the LCP element on /blog/, so the browser should start
+ * fetching it before the markup is parsed.
+ */
+function vf_blog_preload_top_story_image() {
+    if ( ! is_home() ) {
+        return;
+    }
+
+    $posts = vf_blog_top_stories( 3 );
+
+    if ( empty( $posts[0] ) ) {
+        return;
+    }
+
+    $image_id = (int) get_post_thumbnail_id( $posts[0]->ID );
+
+    if ( ! $image_id ) {
+        return;
+    }
+
+    $src = wp_get_attachment_image_src( $image_id, 'medium_large' );
+
+    if ( empty( $src[0] ) ) {
+        return;
+    }
+
+    $srcset = vf_image_srcset( $image_id, 2048 );
+    $sizes  = '(max-width: 767px) calc(100vw - 32px), (max-width: 1024px) calc(100vw - 48px), 580px';
+
+    echo '<link rel="preload" as="image" href="' . esc_url( $src[0] ) . '"';
+
+    if ( $srcset ) {
+        echo ' imagesrcset="' . esc_attr( $srcset ) . '" imagesizes="' . esc_attr( $sizes ) . '"';
+    }
+
+    echo ' fetchpriority="high" />' . "\n";
+}
+add_action( 'wp_head', 'vf_blog_preload_top_story_image', 2 );

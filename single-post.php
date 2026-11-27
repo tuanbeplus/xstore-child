@@ -58,7 +58,7 @@ while ( have_posts() ) :
             </header>
 
             <figure class="vf-article__hero">
-                <?php echo vf_blog_post_thumbnail( $vf_post_id, 'large', array( 'loading' => 'eager', 'fetchpriority' => 'high' ) ); ?>
+                <?php echo vf_blog_post_thumbnail( $vf_post_id, 'large', array( 'loading' => 'eager', 'fetchpriority' => 'high', 'sizes' => '(max-width: 900px) 100vw, 860px' ) ); ?>
                 <?php if ( has_post_thumbnail() && wp_get_attachment_caption( get_post_thumbnail_id() ) ) : ?>
                     <figcaption><?php echo esc_html( wp_get_attachment_caption( get_post_thumbnail_id() ) ); ?></figcaption>
                 <?php endif; ?>
@@ -114,7 +114,7 @@ while ( have_posts() ) :
                         <article class="vf-post-card">
                             <div class="vf-post-card__media">
                                 <a class="vf-post-card__image" href="<?php echo esc_url( get_permalink( $vf_related_post->ID ) ); ?>">
-                                    <?php echo vf_blog_post_thumbnail( $vf_related_post->ID, 'medium_large', array( 'loading' => 'lazy' ) ); ?>
+                                    <?php echo vf_blog_post_thumbnail( $vf_related_post->ID, 'medium_large', array( 'loading' => 'lazy', 'sizes' => '(max-width: 767px) calc(100vw - 32px), 360px' ) ); ?>
                                 </a>
 
                                 <?php if ( $vf_related_cat ) : ?>

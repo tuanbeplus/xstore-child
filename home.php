@@ -34,25 +34,11 @@ if ( '' === $vf_blog_intro ) {
     $vf_blog_intro = __( 'Stories from the collection: World Cup shirts, club classics, and practical notes on sizing and collecting retro football kits.', 'xstore-child' );
 }
 
-// Top stories prefer posts flagged with ACF "vf_featured_post".
-// If nothing is flagged (or fewer than 3), the newest posts fill the slots.
-$vf_featured_posts = vf_blog_featured_posts();
-
-if ( empty( $vf_featured_posts ) ) {
-    $vf_featured_posts = get_posts( array(
-        'post_type'           => 'post',
-        'post_status'         => 'publish',
-        'posts_per_page'      => 3,
-        'ignore_sticky_posts' => true,
-        'no_found_rows'       => true,
-    ) );
-}
-
 $vf_grid   = $vf_posts;
 $vf_recent = vf_blog_recent_posts( 4 );
 
 // Three overlay cards: flagged posts first, newest fills the rest.
-$vf_top_stories = vf_blog_top_story_posts( $vf_featured_posts, 3 );
+$vf_top_stories = vf_blog_top_stories( 3 );
 ?>
 
 <main id="main" class="vf-main vf-archive">
@@ -109,7 +95,7 @@ $vf_top_stories = vf_blog_top_story_posts( $vf_featured_posts, 3 );
                             <article class="vf-post-card">
                                 <div class="vf-post-card__media">
                                     <a class="vf-post-card__image" href="<?php echo esc_url( get_permalink( $vf_post->ID ) ); ?>">
-                                        <?php echo vf_blog_post_thumbnail( $vf_post->ID, 'medium_large', array( 'loading' => 'lazy' ) ); ?>
+                                        <?php echo vf_blog_post_thumbnail( $vf_post->ID, 'medium_large', array( 'loading' => 'lazy', 'sizes' => '(max-width: 767px) calc(100vw - 32px), (max-width: 1024px) calc(50vw - 40px), 420px' ) ); ?>
                                     </a>
 
                                     <?php if ( $vf_cat ) : ?>
@@ -156,7 +142,7 @@ $vf_top_stories = vf_blog_top_story_posts( $vf_featured_posts, 3 );
                             <?php foreach ( $vf_recent as $vf_recent_post ) : ?>
                                 <li>
                                     <a class="vf-widget-recent__item" href="<?php echo esc_url( get_permalink( $vf_recent_post->ID ) ); ?>">
-                                        <?php echo vf_blog_post_thumbnail( $vf_recent_post->ID, 'thumbnail', array( 'loading' => 'lazy', 'width' => 72, 'height' => 72 ) ); ?>
+                                        <?php echo vf_blog_post_thumbnail( $vf_recent_post->ID, 'thumbnail', array( 'loading' => 'lazy', 'width' => 72, 'height' => 72, 'sizes' => '72px' ) ); ?>
                                         <div>
                                             <h3><?php echo esc_html( get_the_title( $vf_recent_post->ID ) ); ?></h3>
                                             <time datetime="<?php echo esc_attr( get_the_date( DATE_W3C, $vf_recent_post->ID ) ); ?>">

@@ -119,3 +119,53 @@ function get_data_currentcy() {
         }
     }
 }
+
+/**
+ * Build a srcset string from an attachment's registered sizes.
+ *
+ * The global srcset filter is disabled in inc/hooks.php, so templates that
+ * need responsive images (blog cards, hero slider) build the candidate list
+ * from the attachment metadata instead.
+ *
+ * @param int $attachment_id Attachment ID.
+ * @param int $max_width     Largest candidate width to include (0 = no limit).
+ * @return string Empty string when there are fewer than two candidates.
+ */
+function vf_image_srcset( $attachment_id, $max_width = 1600 ) {
+    $attachment_id = (int) $attachment_id;
+
+    if ( ! $attachment_id ) {
+        return '';
+    }
+
+    $sizes      = array( 'medium', 'medium_large', 'large', '1536x1536', '2048x2048', 'full' );
+    $candidates = array();
+
+    foreach ( $sizes as $size ) {
+        $src = wp_get_attachment_image_src( $attachment_id, $size );
+
+        if ( empty( $src[0] ) || empty( $src[1] ) ) {
+            continue;
+        }
+
+        if ( $max_width && (int) $src[1] > (int) $max_width ) {
+            continue;
+        }
+
+        $candidates[ $src[0] ] = (int) $src[1];
+    }
+
+    if ( count( $candidates ) < 2 ) {
+        return '';
+    }
+
+    asort( $candidates );
+
+    $parts = array();
+
+    foreach ( $candidates as $url => $width ) {
+        $parts[] = $url . ' ' . $width . 'w';
+    }
+
+    return implode( ', ', $parts );
+}

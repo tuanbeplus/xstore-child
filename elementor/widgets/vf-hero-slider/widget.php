@@ -1573,8 +1573,14 @@ class Widget_VFHeroSlider extends Widget_Base {
                         $alt_text = wp_strip_all_tags( $slide['title'] );
                     }
 
-                    // Priority on first slide
-                    $loading_attr = ( 0 === $index && 'yes' === $settings['preload_first_image'] ) ? 'fetchpriority="high"' : 'loading="lazy" decoding="async"';
+                    // Priority on first slide. data-no-lazy keeps the LCP image
+                    // out of the theme/WP Rocket lazyload pipeline so its real
+                    // src is in the initial HTML.
+                    $loading_attr = ( 0 === $index && 'yes' === $settings['preload_first_image'] )
+                        ? 'fetchpriority="high" data-no-lazy="1"'
+                        : 'loading="lazy" decoding="async"';
+
+                    $desktop_srcset = $desktop_img_id ? \vf_image_srcset( $desktop_img_id, 2048 ) : '';
                     ?>
 
                     <article class="<?php echo esc_attr( $slide_class ); ?>" 
@@ -1595,6 +1601,7 @@ class Widget_VFHeroSlider extends Widget_Base {
                                  alt="<?php echo esc_attr( $alt_text ); ?>" 
                                  <?php if ( ! empty( $img_width ) ) : ?>width="<?php echo esc_attr( $img_width ); ?>"<?php endif; ?>
                                  <?php if ( ! empty( $img_height ) ) : ?>height="<?php echo esc_attr( $img_height ); ?>"<?php endif; ?>
+                                 <?php if ( $desktop_srcset ) : ?>srcset="<?php echo esc_attr( $desktop_srcset ); ?>" sizes="100vw"<?php endif; ?>
                                  class="vf-hero-img"
                                  <?php echo $loading_attr; ?> />
                         </picture>
