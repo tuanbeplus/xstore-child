@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define('THEME_VERSION', '2.1.94');
+define('THEME_VERSION', '2.1.97');
 define('INC_DIR', get_stylesheet_directory() . '/inc/');
 
 /**
@@ -46,6 +46,21 @@ require_once INC_DIR . 'faq-schema.php';
  * 3d. AI specification endpoint (/llms.txt)
  */
 require_once INC_DIR . 'llms.php';
+
+/**
+ * 3e. Standby replacement for Remove CPT base / Remove Taxonomy URL.
+ */
+require_once INC_DIR . 'woocommerce-base-free-permalinks.php';
+
+/**
+ * 3f. Blog helpers for the single post template (assets, related content).
+ */
+require_once INC_DIR . 'blog.php';
+
+/**
+ * 3g. Admin posts list columns (Image / Featured).
+ */
+require_once INC_DIR . 'admin-blog-columns.php';
 
 /**
  * 4. WooCommerce customizations (order status, ratings, shipping estimates, size guide, etc.)

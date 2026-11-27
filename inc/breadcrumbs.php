@@ -473,7 +473,39 @@ function vf_build_breadcrumbs_trail( $settings ) {
     // 6. Standard Single Post (Blog or CPT)
     // ---------------------------------------------------------------------
     if ( is_single() ) {
-        $post_id    = get_the_ID();
+        $post_id = get_the_ID();
+
+        // Blog posts: Home > Blog > Post title (no category in the trail).
+        if ( 'post' === get_post_type( $post_id ) ) {
+            $blog_id    = (int) get_option( 'page_for_posts' );
+            $blog_title = $blog_id ? get_the_title( $blog_id ) : __( 'Blog', 'xstore-child' );
+            $blog_url   = $blog_id ? get_permalink( $blog_id ) : '';
+
+            if ( ! $blog_url ) {
+                $blog_page = get_page_by_path( 'blog' );
+                if ( $blog_page && 'publish' === get_post_status( $blog_page ) ) {
+                    $blog_url   = get_permalink( $blog_page );
+                    $blog_title = get_the_title( $blog_page );
+                }
+            }
+
+            $trail[] = [
+                'title'      => $format_title( $blog_title ),
+                'url'        => $blog_url,
+                'is_current' => false,
+            ];
+
+            if ( $show_current ) {
+                $trail[] = [
+                    'title'      => $format_title( get_the_title( $post_id ) ),
+                    'url'        => '',
+                    'is_current' => true,
+                ];
+            }
+
+            return $trail;
+        }
+
         $categories = get_the_category( $post_id );
 
         if ( ! empty( $categories ) ) {
@@ -716,8 +748,10 @@ function vf_render_breadcrumbs( $settings = array(), $echo = true ) {
                                         <a href="<?php echo esc_url( $crumb['url'] ); ?>" class="vf-bc-link">
                                             <?php echo esc_html( $crumb['title'] ); ?>
                                         </a>
-                                    <?php else : ?>
+                                    <?php elseif ( $is_last ) : ?>
                                         <span class="vf-bc-current-title" aria-current="page"><?php echo esc_html( $crumb['title'] ); ?></span>
+                                    <?php else : ?>
+                                        <span class="vf-bc-text"><?php echo esc_html( $crumb['title'] ); ?></span>
                                     <?php endif; ?>
                                 </li>
                             <?php if ( ! $is_last ) : ?>
